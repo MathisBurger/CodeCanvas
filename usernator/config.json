@@ -1,0 +1,8 @@
+{
+  "database": {
+    "username": "executor",
+    "password": "executor",
+    "host": "localhost:5432",
+    "database": "usernator"
+  }
+}
