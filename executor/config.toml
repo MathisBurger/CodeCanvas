@@ -1,0 +1,10 @@
+[coordinator.api]
+endpoints.health = true
+endpoints.jobs = true
+endpoints.tasks = true
+endpoints.nodes = true
+endpoints.queues = true
+endpoints.stats = true
+
+[runtime]
+type = "docker"
