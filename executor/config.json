@@ -1,0 +1,7 @@
+{
+  "rabbitmq": {
+    "username": "executor",
+    "password": "executor",
+    "host": "localhost:5672"
+  }
+}

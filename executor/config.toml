@@ -8,3 +8,9 @@ endpoints.stats = true
 
 [runtime]
 type = "docker"
+
+[datastore]
+type = "postgres"
+
+[datastore.postgres]
+dsn = "host=localhost user=executor password=executor dbname=executor port=5432 sslmode=disable"
