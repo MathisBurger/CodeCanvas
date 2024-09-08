@@ -7,6 +7,8 @@ import (
 
 type Configuration struct {
 	Database DatabaseConfiguration `json:"database"`
+	Smtp     SmtpConfiguration     `json:"smtp"`
+	Template TemplateConfiguration `json:"template"`
 }
 
 type DatabaseConfiguration struct {
@@ -15,6 +17,17 @@ type DatabaseConfiguration struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 	Database string `json:"database"`
+}
+
+type SmtpConfiguration struct {
+	Host     string `json:"host"`
+	Port     string `json:"port"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type TemplateConfiguration struct {
+	BaseUrl string `json:"base_url"`
 }
 
 func LoadConfiguration() (*Configuration, error) {
