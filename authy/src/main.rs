@@ -1,10 +1,13 @@
 mod config;
+mod proxy;
+mod error;
+mod http;
 
 extern crate pretty_env_logger;
 #[macro_use]
 extern crate log;
 
-use actix_web::{App, HttpServer};
+use actix_web::{App, HttpServer, web};
 use actix_web::web::Data;
 use crate::config::AppConfig;
 
@@ -35,6 +38,7 @@ async fn main() -> Result<(), std::io::Error> {
     HttpServer::new(move || {
         App::new()
             .app_data(Data::new(state.clone()))
+            .default_service(web::to(proxy::handle_proxy))
     })
         .bind("0.0.0.0:3000")
         .expect("Already in use")

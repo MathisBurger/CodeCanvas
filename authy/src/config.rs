@@ -6,6 +6,8 @@ use serde::Deserialize;
 #[derive(Deserialize, Debug, Clone)]
 pub struct AppConfig {
     pub database_url: String,
+    pub whitelist: Vec<String>,
+    pub login_uri: String,
     pub service_locations: HashMap<String, String>
 }
 

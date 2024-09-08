@@ -12,6 +12,9 @@ log = {version = "0.4.22", features = ["serde", "std"]}
 build-info = { version = "0.0.38" }
 figment = { version = "0.10.18", features = ["toml", "env"] }
 toml = "0.8.19"
+thiserror = "1.0.61"
+awc = "3.5.0"
+lru = "0.12.4"
 
 [build-dependencies]
 build-info-build = "0.0.38"
