@@ -42,7 +42,6 @@ async fn handle_login_request(resp: HttpResponse, config: AppConfig) -> Result<H
     let body = resp.into_body();
     let bytes = to_bytes(body).await.map_err(|x| ApiError::Forbidden)?;
     let json_string = String::from_utf8_lossy(bytes.as_ref());
-    println!("{}", json_string);
     let user: User = serde_json::from_str(json_string.as_ref())
         .map_err(|e| ApiError::InternalServerError)?;
     let jwt = auth::create_jwt(&user, config.jwt_secret.clone())?;
