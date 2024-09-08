@@ -15,12 +15,15 @@ impl ProxyClient {
     }
 
     /// Proxies a generic http request to a specific microservice
-    pub async fn proxy_request(&self, req: &HttpRequest, payload: web::Payload) -> Result<HttpResponse, ApiError> {
+    pub async fn proxy_request(&self, req: &HttpRequest, payload: web::Payload, headers: Vec<(&str, String)>) -> Result<HttpResponse, ApiError> {
         let service_uri = self.get_request_path(req)?;
         let client = Client::new();
-        let request = client
+        let mut request = client
             .request_from(service_uri, req.head())
             .no_decompress();
+        for header in headers {
+            //request.headers_mut().ins(header);
+        }
         let response = request.send_stream(payload)
             .await
             .map_err(|e| {

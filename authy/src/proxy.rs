@@ -1,8 +1,13 @@
+use std::fmt::format;
 use actix_web::{HttpRequest, HttpResponse, web};
+use actix_web::body::MessageBody;
+use actix_web::cookie::Cookie;
 use actix_web::dev::ResourcePath;
 use crate::error::ApiError;
 use crate::http::ProxyClient;
 use crate::{auth, State};
+use crate::config::AppConfig;
+use crate::models::user::User;
 
 /// Handles all requests in order to filter out whitelisted ones and authenticates the rest
 pub async fn handle_proxy(
@@ -15,21 +20,31 @@ pub async fn handle_proxy(
     let proxy = ProxyClient::new(config.clone());
 
     if path == config.login_uri.path() {
-        let mut resp =  proxy.proxy_request(&req, body).await?;
-        // TODO: Add JWT to response
-        return Ok(resp);
+        let resp =  proxy.proxy_request(&req, body, vec![]).await?;
+        return handle_login_request(resp, config.clone()).await;
     }
 
     if auth::check_in_list(path.clone(), config.whitelist.clone()) {
-        let resp =  proxy.proxy_request(&req, body).await?;
+        let resp =  proxy.proxy_request(&req, body, vec![]).await?;
         return Ok(resp);
     }
 
     if auth::check_in_list(path.clone(), config.blacklist.clone()) {
         return ApiError::Forbidden.into();
     }
-    // TODO: Get roles and userId and cache it
-
-    let resp =  proxy.proxy_request(&req, body).await?;
+    let claims = auth::get_user_claims(&req, config.jwt_secret.clone())?;
+    let resp =  proxy.proxy_request(&req, body, claims).await?;
     return Ok(resp);
+}
+
+async fn handle_login_request(resp: HttpResponse, config: AppConfig) -> Result<HttpResponse, ApiError> {
+    let mut body = resp.into_body().try_into_bytes().map_err(|x|ApiError::InternalServerError)?;
+    let json_string = String::from_utf8_lossy(body.as_ref());
+    let user: User = serde_json::from_str(json_string.as_ref())
+        .map_err(|e| ApiError::InternalServerError)?;
+    let jwt = auth::create_jwt(&user, config.jwt_secret.clone())?;
+    let mut mod_resp =  HttpResponse::Ok().body("");
+    let cookie = Cookie::new("session", jwt);
+    mod_resp.add_cookie(&cookie).map_err(|e|ApiError::InternalServerError)?;
+    return Ok(mod_resp);
 }

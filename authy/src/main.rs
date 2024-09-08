@@ -3,6 +3,7 @@ mod proxy;
 mod error;
 mod http;
 mod auth;
+mod models;
 
 extern crate pretty_env_logger;
 #[macro_use]

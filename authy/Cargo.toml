@@ -15,6 +15,9 @@ toml = "0.8.19"
 thiserror = "1.0.61"
 awc = "3.5.0"
 lru = "0.12.4"
+jwt = "0.16.0"
+hmac = "0.12.1"
+sha2 = "0.10.8"
 
 [build-dependencies]
 build-info-build = "0.0.38"
