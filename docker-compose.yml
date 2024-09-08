@@ -31,6 +31,14 @@ services:
     depends_on:
       - postgres
       - maildev
-
+  authy:
+    build: ./authy
+    ports: 
+      - "3002:3000"
+    environment:
+      - JWT_SECRET=secret
+      - SERVICE_LOCATIONS={usernator="http://usernator:3000"}
+    depends_on:
+      - usernator
 volumes:
   db_data:

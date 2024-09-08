@@ -34,6 +34,8 @@ async fn main() -> Result<(), std::io::Error> {
             std::process::exit(2);
         }
     };
+    let locations: Vec<String> = config.clone().service_locations.iter().map(|x|format!("{}={}", x.0, x.1)).collect();
+    println!("{}", locations.join("-"));
     let state = State {
         config: config.clone(),
     };
