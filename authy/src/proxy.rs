@@ -3,6 +3,7 @@ use actix_web::{HttpRequest, HttpResponse, web};
 use actix_web::body::MessageBody;
 use actix_web::cookie::Cookie;
 use actix_web::dev::ResourcePath;
+use awc::body::to_bytes;
 use crate::error::ApiError;
 use crate::http::ProxyClient;
 use crate::{auth, State};
@@ -38,8 +39,10 @@ pub async fn handle_proxy(
 }
 
 async fn handle_login_request(resp: HttpResponse, config: AppConfig) -> Result<HttpResponse, ApiError> {
-    let mut body = resp.into_body().try_into_bytes().map_err(|x|ApiError::InternalServerError)?;
-    let json_string = String::from_utf8_lossy(body.as_ref());
+    let body = resp.into_body();
+    let bytes = to_bytes(body).await.map_err(|x| ApiError::Forbidden)?;
+    let json_string = String::from_utf8_lossy(bytes.as_ref());
+    println!("{}", json_string);
     let user: User = serde_json::from_str(json_string.as_ref())
         .map_err(|e| ApiError::InternalServerError)?;
     let jwt = auth::create_jwt(&user, config.jwt_secret.clone())?;
