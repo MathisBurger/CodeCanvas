@@ -12,7 +12,9 @@ pub async fn handle_proxy(
     let path = req.path();
     let config = &state.as_ref().config;
     // TODO: check auth whitelist
-    // TODO: Do here some auth stuff
+    // TODO: check auth blacklist
+    // TODO: Handle JWT auth with /usernator/login
+    // TODO: Get roles and userId
     let proxy = ProxyClient::new(config.clone());
     let resp =  proxy.proxy_request(&req, body).await?;
 

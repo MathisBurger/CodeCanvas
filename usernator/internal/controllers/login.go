@@ -8,18 +8,18 @@ import (
 )
 
 type LoginRequest struct {
+	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
 func LoginUser(ctx *fiber.Ctx) error {
 
-	username := ctx.Params("username")
 	req := new(LoginRequest)
 	if err := ctx.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 	var user models.User
-	shared.Database.First(&user, "username = ?", username)
+	shared.Database.First(&user, "username = ?", req.Username)
 	if user.Username == "" {
 		return fiber.NewError(fiber.StatusNotFound, "user not found")
 	}

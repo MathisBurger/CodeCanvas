@@ -8,14 +8,17 @@ import (
 	"usernator/internal/util"
 )
 
+type ResetRequest struct {
+	Username string `json:"username"`
+}
+
 func ResetPassword(ctx *fiber.Ctx) error {
-	username := ctx.Params("username")
-	req := new(LoginRequest)
+	req := new(ResetRequest)
 	if err := ctx.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 	var user models.User
-	shared.Database.First(&user, "username = ?", username)
+	shared.Database.First(&user, "username = ?", req.Username)
 	if user.Username == "" {
 		return fiber.NewError(fiber.StatusNotFound, "user not found")
 	}

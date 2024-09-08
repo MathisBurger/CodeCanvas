@@ -1,7 +1,7 @@
 {
   "database": {
-    "username": "executor",
-    "password": "executor",
+    "username": "usernator",
+    "password": "usernator",
     "host": "localhost:5434",
     "database": "usernator"
   },

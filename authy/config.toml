@@ -1,0 +1,4 @@
+whitelist = [ "/usernator/login", "/usernator/reset_password", "/usernator/submit_password", "/usernator/register" ]
+blacklist = [ "/usernator/user" ]
+login_uri = "/usernator/login"
+service_locations = { usernator = "http://127.0.0.1:3001" }

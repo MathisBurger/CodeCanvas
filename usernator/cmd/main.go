@@ -18,10 +18,10 @@ func main() {
 
 	app := fiber.New(fiber.Config{})
 
-	app.Post("/user", controllers.CreateUser)
+	app.Post("/register", controllers.CreateUser)
 	app.Get("/user/:id", controllers.GetUser)
-	app.Post("/user/:username/login", controllers.LoginUser)
-	app.Post("/user/:username/reset_password", controllers.ResetPassword)
+	app.Post("/login", controllers.LoginUser)
+	app.Post("/reset_password", controllers.ResetPassword)
 	app.Post("/submit_password", controllers.SubmitPassword)
 
 	err = app.Listen(":3000")
