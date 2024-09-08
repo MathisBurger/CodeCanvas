@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:latest
+    ports: 
+      - "5434:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=admin
+  maildev:
+    image: maildev/maildev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+  usernator:
+    build: ./usernator
+    ports: 
+      - "3001:3000"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5434
+      - DB_USERNAME=usernator
+      - DB_PASSWORD=usernator
+      - DB_DATABASE=usernator
+      - SMTP_HOST=maildev
+      - SMTP_PORT=1025
+      - SMTP_USERNAME=app@codecanvas.de
+      - SMTP_PASSWORD=cc
+      - TEMPLATE_BASE_URL=http://localhost:3000/web
+    depends_on:
+      - postgres
+      - maildev
+
+volumes:
+  db_data:

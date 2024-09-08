@@ -16,7 +16,7 @@ type Configuration struct {
 type DatabaseConfiguration struct {
 	Host     string `json:"host" env:"DB_HOST"`
 	Port     string `json:"port" env:"DB_PORT"`
-	Username string `json:"username" env:"DB_USERRNAME"`
+	Username string `json:"username" env:"DB_USERNAME"`
 	Password string `json:"password" env:"DB_PASSWORD"`
 	Database string `json:"database" env:"DB_DATABASE"`
 }
