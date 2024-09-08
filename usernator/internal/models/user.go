@@ -1,12 +1,12 @@
 package models
 
-import "gorm.io/gorm"
+import "github.com/lib/pq"
 
 type User struct {
-	gorm.Model
-	Username   string   `gorm:"unique" json:"username"`
-	Password   string   `json:"-"`
-	Email      string   `gorm:"-" json:"email"`
-	Roles      []string `gorm:"-" json:"roles"`
-	ResetToken *string  `gorm:"-"`
+	BaseModel
+	Username   string         `gorm:"unique" json:"username"`
+	Password   string         `json:"-"`
+	Email      string         `gorm:"-" json:"email"`
+	Roles      pq.StringArray `gorm:"type:text[]" json:"roles"`
+	ResetToken *string        `gorm:"-" json:"resetToken"`
 }
