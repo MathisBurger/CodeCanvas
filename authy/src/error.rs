@@ -7,7 +7,9 @@ use thiserror::Error;
 #[derive(Debug, Error)]
 pub enum ApiError {
     #[error("BAD_REQUEST")]
-    BadRequest
+    BadRequest,
+    #[error("FORBIDDEN")]
+    Forbidden
 }
 
 #[derive(Serialize)]
@@ -18,7 +20,8 @@ struct ResponseBody {
 impl ResponseError for ApiError {
     fn status_code(&self) -> StatusCode {
         match self {
-            ApiError::BadRequest => StatusCode::BAD_REQUEST
+            ApiError::BadRequest => StatusCode::BAD_REQUEST,
+            ApiError::Forbidden => StatusCode::FORBIDDEN
         }
     }
 
