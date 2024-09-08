@@ -1,4 +1,13 @@
 services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+        - "5672:5672"
+        - "15672:15672"
+    volumes:
+        - .docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+    depends_on:
+      - postgres
   postgres:
     image: postgres:latest
     ports: 
@@ -40,5 +49,18 @@ services:
       - SERVICE_LOCATIONS={usernator="http://usernator:3000"}
     depends_on:
       - usernator
+  executor:
+    build: ./executor
+    ports:
+      - "3003:8000"
+    environment:
+      - RABBITMQ_USERNAME=executor
+      - RABBITMQ_PASSWORD=executor
+      - RABBITMQ_HOST=rabbitmq:5672
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - rabbitmq
+      - postgres
 volumes:
   db_data:

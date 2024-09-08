@@ -5,7 +5,7 @@ type Configuration struct {
 }
 
 type MessagingConfig struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Host     string `json:"host"`
+	Username string `json:"username" env:"RABBITMQ_USERNAME"`
+	Password string `json:"password" env:"RABBITMQ_PASSWORD"`
+	Host     string `json:"host" env:"RABBITMQ_HOST"`
 }
