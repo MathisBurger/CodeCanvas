@@ -26,7 +26,17 @@ func CreateCreateUserHandler() {
 	if err != nil {
 		panic(err)
 	}
-	msgs, _ := global.RabbitMQ.Consume("global_create_user", "executor", true, false, false, false, nil)
+	if _, err := global.RabbitMQ.QueueDeclare("executor_create_user", false, true, true, false, nil); err != nil {
+		panic(err.Error())
+	}
+
+	if err := global.RabbitMQ.QueueBind("executor_create_user", "", "global_create_user", false, nil); err != nil {
+		panic(err.Error())
+	}
+	msgs, err := global.RabbitMQ.Consume("executor_create_user", "", true, false, false, false, nil)
+	if err != nil {
+		panic(err.Error())
+	}
 	for msg := range msgs {
 		content := &createUser{}
 		err = json.Unmarshal(msg.Body, content)

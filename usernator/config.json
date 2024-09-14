@@ -13,5 +13,10 @@
   },
   "template": {
     "base_url": "http://127.0.0.1:3000/submit_password"
+  },
+  "messaging": {
+    "username": "usernator",
+    "password": "usernator",
+    "host": "localhost:5672"
   }
 }

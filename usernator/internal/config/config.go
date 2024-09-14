@@ -8,9 +8,10 @@ import (
 )
 
 type Configuration struct {
-	Database DatabaseConfiguration `json:"database"`
-	Smtp     SmtpConfiguration     `json:"smtp"`
-	Template TemplateConfiguration `json:"template"`
+	Database  DatabaseConfiguration `json:"database"`
+	Smtp      SmtpConfiguration     `json:"smtp"`
+	Template  TemplateConfiguration `json:"template"`
+	Messaging MessagingConfig       `json:"messaging"`
 }
 
 type DatabaseConfiguration struct {
@@ -26,6 +27,12 @@ type SmtpConfiguration struct {
 	Port     string `json:"port" env:"SMTP_PORT"`
 	Username string `json:"username" env:"SMTP_USERNAME"`
 	Password string `json:"password" env:"SMTP_PASSWORD"`
+}
+
+type MessagingConfig struct {
+	Username string `json:"username" env:"RABBITMQ_USERNAME"`
+	Password string `json:"password" env:"RABBITMQ_PASSWORD"`
+	Host     string `json:"host" env:"RABBITMQ_HOST"`
 }
 
 type TemplateConfiguration struct {

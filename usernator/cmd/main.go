@@ -15,6 +15,7 @@ func main() {
 	}
 	shared.Config = conf
 	startup.Database()
+	startup.InitRabbitMQ()
 
 	app := fiber.New(fiber.Config{})
 
