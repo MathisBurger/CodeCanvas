@@ -33,11 +33,11 @@ func LoadConfig() *config.Configuration {
 func InitRabbitMQ(c *config.Configuration) {
 	conn, err := amqp091.Dial("amqp://" + c.RabbitMQ.Username + ":" + c.RabbitMQ.Password + "@" + c.RabbitMQ.Host)
 	if err != nil {
-		panic(err.Error())
+		return
 	}
 	ch, err := conn.Channel()
 	if err != nil {
-		panic(err.Error())
+		return
 	}
 	global.RabbitMQ = ch
 }

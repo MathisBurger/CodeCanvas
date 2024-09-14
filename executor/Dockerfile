@@ -3,11 +3,14 @@ WORKDIR /app
 COPY . .
 RUN go mod tidy
 RUN go build -o ./bin/executor cmd/main.go
+RUN go build -o ./bin/config_setter cmd/config.go
 
 FROM alpine:3 AS final
 COPY --from=build /app/bin/executor ./executor
-COPY --from=build /app/config.toml config.toml
+COPY --from=build /app/bin/config_setter ./config_setter
+COPY --from=build /app/sample_config.toml ./sample_config.toml
 RUN chmod +x ./executor
+RUN chmod +x ./config_setter
 EXPOSE 8000
 ENV TORK_CONFIG ./config.toml
-CMD ./executor migration && ./executor run standalone
+CMD ./config_setter && ./executor migration ; ./executor run standalone

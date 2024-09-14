@@ -4,28 +4,17 @@ import (
 	"context"
 	"encoding/json"
 	"executor/internal/global"
+	"fmt"
 	"github.com/runabol/tork"
+	"strconv"
 	"time"
 )
 
 type createUser struct {
-	Id string `json:"id"`
+	Id uint64 `json:"id"`
 }
 
 func CreateCreateUserHandler() {
-
-	err := global.RabbitMQ.ExchangeDeclare(
-		"global_create_user", // name
-		"topic",              // type
-		true,                 // durable
-		false,                // auto-deleted
-		false,                // internal
-		false,                // no-wait
-		nil,                  // arguments
-	)
-	if err != nil {
-		panic(err)
-	}
 	if _, err := global.RabbitMQ.QueueDeclare("executor_create_user", false, true, true, false, nil); err != nil {
 		panic(err.Error())
 	}
@@ -35,18 +24,21 @@ func CreateCreateUserHandler() {
 	}
 	msgs, err := global.RabbitMQ.Consume("executor_create_user", "", true, false, false, false, nil)
 	if err != nil {
-		panic(err.Error())
+		return
 	}
-	for msg := range msgs {
+	for {
+		msg := <-msgs
+		fmt.Println("new Message received:", string(msg.Body))
 		content := &createUser{}
 		err = json.Unmarshal(msg.Body, content)
 		if err != nil {
 			continue
 		}
+		fmt.Printf("Create User with ID: %s \n", content.Id)
 		now := time.Now()
 		user := tork.User{
-			ID:           content.Id,
-			Username:     content.Id,
+			ID:           strconv.FormatUint(content.Id, 10),
+			Username:     strconv.FormatUint(content.Id, 10),
 			Password:     "",
 			PasswordHash: "",
 			CreatedAt:    &now,

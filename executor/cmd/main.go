@@ -27,7 +27,7 @@ func main() {
 	appConfig := internal.LoadConfig()
 	internal.InitRabbitMQ(appConfig)
 
-	messaging.CreateCreateUserHandler()
+	go messaging.CreateCreateUserHandler()
 
 	engine.RegisterEndpoint("POST", "/execute", handler.ExecuteHandler)
 

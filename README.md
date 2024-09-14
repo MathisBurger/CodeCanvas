@@ -7,3 +7,8 @@ Some tutors can create assignments for you to to and complete. As a registered s
 ## Service constellation
 
 ![Service Constellation](media/constellation.jpg)
+
+
+TODO:
+- Integrate executor in docker completely
+- Build RabbitMQ golang service that initializes all users and queues from a yaml or json config
