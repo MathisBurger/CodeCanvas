@@ -9,7 +9,8 @@ pub struct AppConfig {
     pub blacklist: Vec<String>,
     pub login_uri: String,
     pub service_locations: HashMap<String, String>,
-    pub jwt_secret: String
+    pub jwt_secret: String,
+    pub allowed_origin: String
 }
 
 impl AppConfig {

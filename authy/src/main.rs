@@ -44,10 +44,11 @@ async fn main() -> Result<(), std::io::Error> {
     };
     HttpServer::new(move || {
         let cors = Cors::default()
-            .allow_any_origin()
-            .allow_any_method()
-            .allow_any_header()
+            .allowed_origin(&*config.allowed_origin)
+            .allowed_methods(vec!["GET", "POST", "DELETE", "PUT"])
+            .allowed_headers(vec![header::SET_COOKIE, header::ACCEPT, header::CONTENT_TYPE, header::AUTHORIZATION])
             .send_wildcard()
+            .supports_credentials()
             .max_age(3600);
         App::new()
             .wrap(middleware::Logger::default())

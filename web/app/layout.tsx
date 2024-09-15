@@ -1,8 +1,11 @@
-import React from "react";
+'use client';
+import React, {useState} from "react";
 import {ColorSchemeScript, createTheme, MantineProvider} from '@mantine/core';
 import '@mantine/core/styles.css';
 import Header from "@/components/Header";
 import {Notifications} from "@mantine/notifications";
+import {User} from "@/service/types/usernator";
+import {CurrentUserContext} from "@/hooks/useCurrentUser";
 
 const theme = createTheme({
     /** Put your mantine theme override here */
@@ -13,6 +16,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+    const [user, setUser] = useState<User | null>(null);
+
   return (
     <html lang="en">
     <head>
@@ -26,11 +32,13 @@ export default function RootLayout({
         <ColorSchemeScript />
     </head>
     <body>
-    <MantineProvider theme={theme}>
-        <Notifications />
-        <Header />
-        {children}
-    </MantineProvider>
+        <CurrentUserContext.Provider value={{user, setUser}}>
+            <MantineProvider theme={theme}>
+                <Notifications />
+                <Header />
+                {children}
+            </MantineProvider>
+        </CurrentUserContext.Provider>
     </body>
     </html>
   );

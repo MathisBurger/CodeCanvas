@@ -1,5 +1,6 @@
 use actix_web::{HttpRequest, HttpResponse, web};
-use actix_web::cookie::Cookie;
+use actix_web::cookie::{Cookie, SameSite};
+use actix_web::cookie::time::Duration;
 use actix_web::dev::ResourcePath;
 use awc::body::to_bytes;
 use crate::error::ApiError;
@@ -44,7 +45,12 @@ async fn handle_login_request(resp: HttpResponse, config: AppConfig) -> Result<H
         .map_err(|e| ApiError::InternalServerError)?;
     let jwt = auth::create_jwt(&user, config.jwt_secret.clone())?;
     let mut mod_resp =  HttpResponse::Ok().body("");
-    let cookie = Cookie::new("session", jwt);
+    let mut cookie = Cookie::new("session", jwt);
+    cookie.set_path("/");
+    cookie.set_max_age(Duration::days(1));
+    cookie.set_http_only(false);
+    cookie.set_secure(true);
+    cookie.set_same_site(SameSite::Strict);
     mod_resp.add_cookie(&cookie).map_err(|e|ApiError::InternalServerError)?;
     return Ok(mod_resp);
 }

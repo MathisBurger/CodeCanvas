@@ -1,30 +1,31 @@
 'use client';
-import {Box, Button, Group, Image} from "@mantine/core"
+import {Avatar, Box, Button, Group, Image} from "@mantine/core"
 import Link from "next/link";
 import useApiService from "@/hooks/useApiService";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
+import useCurrentUser from "@/hooks/useCurrentUser";
+import {User} from "@/service/types/usernator";
 
 
 const Header = () => {
 
     const api = useApiService();
-    const [loggedIn, setLoggedIn] = useState(false);
+    const {user, setUser} = useCurrentUser();
 
     useEffect(() => {
         api.self()
             .then((res) => {
-                console.log(res);
-                setLoggedIn(true);
+                setUser(res as User);
             })
-            .catch(() => setLoggedIn(false))
-    }, [api])
+            .catch(() => setUser(null))
+    }, [])
 
     return (
         <Box pb={120} pr={20}>
             <header>
                 <Group justify="space-between" h="100%">
                     <Image src="/CodeCanvas.png" h={100} alt="CompanyLogo" />
-                    {!loggedIn && (
+                    {user === null ? (
                         <Group visibleFrom="sm">
                             <Link href="/login">
                                 <Button variant="default">Log in</Button>
@@ -33,6 +34,8 @@ const Header = () => {
                                 <Button>Sign up</Button>
                             </Link>
                         </Group>
+                    ) : (
+                        <Avatar name={user.username} color="initials" />
                     )}
                 </Group>
             </header>

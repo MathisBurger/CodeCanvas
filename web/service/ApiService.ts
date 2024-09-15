@@ -75,6 +75,7 @@ class ApiService {
                 method,
                 mode: "cors",
                 body: body ? JSON.stringify(body) : undefined,
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": "*/*",

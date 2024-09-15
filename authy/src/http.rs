@@ -22,7 +22,7 @@ impl ProxyClient {
             .request_from(service_uri, req.head())
             .no_decompress();
         for header in headers {
-            //request.headers_mut().ins(header);
+            request = request.insert_header(header)
         }
         let response = request.send_stream(payload)
             .await
@@ -31,7 +31,7 @@ impl ProxyClient {
                 ApiError::BadRequest
             })?;
         let mut client_resp = HttpResponse::build(response.status());
-        for (header_name, header_value) in response.headers().iter().filter(|(h, _)| *h != "connection" && *h != "X-Oneshot-UserId") {
+        for (header_name, header_value) in response.headers().iter().filter(|(h, _)| *h != "connection" && *h != "X-CodeCanvas-UserId" && *h != "X-CodeCanvas-UserRoles") {
             client_resp.insert_header((header_name.clone(), header_value.clone()));
         }
         Ok(client_resp.streaming(response))

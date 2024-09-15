@@ -7,11 +7,11 @@ import (
 )
 
 func GetSelf(ctx *fiber.Ctx) error {
-	userId := ctx.Locals("userId").(*int)
-	if userId == nil {
+	userId := ctx.Locals("userId").(int)
+	if userId == -1 {
 		return fiber.NewError(fiber.StatusNotFound, "User not found")
 	}
 	var user models.User
-	shared.Database.First(&user, "id = ?", *userId)
+	shared.Database.First(&user, "id = ?", userId)
 	return ctx.JSON(user)
 }

@@ -4,7 +4,6 @@ use actix_web::{App, HttpRequest};
 use hmac::{Hmac, Mac};
 use jwt::{SignWithKey, VerifyWithKey};
 use sha2::Sha256;
-use crate::config::AppConfig;
 use crate::error::ApiError;
 use crate::models::user::User;
 
