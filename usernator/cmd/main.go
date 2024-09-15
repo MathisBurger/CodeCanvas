@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"usernator/internal/config"
 	"usernator/internal/controllers"
+	"usernator/internal/middleware"
 	"usernator/internal/shared"
 	"usernator/internal/startup"
 )
@@ -19,7 +20,10 @@ func main() {
 
 	app := fiber.New(fiber.Config{})
 
+	app.Use(middleware.NewAuthMiddleware())
+
 	app.Post("/register", controllers.CreateUser)
+	app.Get("/self", controllers.GetSelf)
 	app.Get("/user/:id", controllers.GetUser)
 	app.Post("/login", controllers.LoginUser)
 	app.Post("/reset_password", controllers.ResetPassword)
