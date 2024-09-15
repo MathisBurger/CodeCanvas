@@ -9,7 +9,10 @@ extern crate pretty_env_logger;
 #[macro_use]
 extern crate log;
 
-use actix_web::{App, HttpServer, web};
+use std::io::BufRead;
+use actix_cors::Cors;
+use actix_web::{App, HttpServer, middleware, web};
+use actix_web::http::header;
 use actix_web::web::Data;
 use crate::config::AppConfig;
 
@@ -40,7 +43,15 @@ async fn main() -> Result<(), std::io::Error> {
         config: config.clone(),
     };
     HttpServer::new(move || {
+        let cors = Cors::default()
+            .allow_any_origin()
+            .allow_any_method()
+            .allow_any_header()
+            .send_wildcard()
+            .max_age(3600);
         App::new()
+            .wrap(middleware::Logger::default())
+            .wrap(cors)
             .app_data(Data::new(state.clone()))
             .default_service(web::to(proxy::handle_proxy))
     })

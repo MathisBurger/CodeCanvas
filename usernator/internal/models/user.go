@@ -8,5 +8,5 @@ type User struct {
 	Password   string         `json:"-"`
 	Email      string         `gorm:"-" json:"email"`
 	Roles      pq.StringArray `gorm:"type:text[]" json:"roles"`
-	ResetToken *string        `gorm:"-" json:"resetToken"`
+	ResetToken *string        `gorm:"-" json:"-"`
 }

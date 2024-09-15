@@ -1,6 +1,4 @@
-use std::fmt::format;
 use actix_web::{HttpRequest, HttpResponse, web};
-use actix_web::body::MessageBody;
 use actix_web::cookie::Cookie;
 use actix_web::dev::ResourcePath;
 use awc::body::to_bytes;

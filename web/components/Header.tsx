@@ -1,4 +1,5 @@
-import {Box, Button, Drawer, Group, Image} from "@mantine/core"
+import {Box, Button, Group, Image} from "@mantine/core"
+import Link from "next/link";
 
 
 const Header = () => {
@@ -10,7 +11,9 @@ const Header = () => {
                     <Image src="/CodeCanvas.png" h={100} />
                     <Group visibleFrom="sm">
                         <Button variant="default">Log in</Button>
-                        <Button>Sign up</Button>
+                        <Link href="/register">
+                            <Button>Sign up</Button>
+                        </Link>
                     </Group>
                 </Group>
             </header>

@@ -2,6 +2,7 @@ import React from "react";
 import {ColorSchemeScript, createTheme, MantineProvider} from '@mantine/core';
 import '@mantine/core/styles.css';
 import Header from "@/components/Header";
+import {Notifications} from "@mantine/notifications";
 
 const theme = createTheme({
     /** Put your mantine theme override here */
@@ -26,6 +27,7 @@ export default function RootLayout({
     </head>
     <body>
     <MantineProvider theme={theme}>
+        <Notifications />
         <Header />
         {children}
     </MantineProvider>
