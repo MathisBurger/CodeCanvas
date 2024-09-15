@@ -24,7 +24,7 @@ func CreateTutor(ctx *fiber.Ctx) error {
 		return err
 	}
 	currentUser := ctx.Locals("currentUser").(*models.User)
-	if !pkg.ContainsString(currentUser.Roles, "ROLE_ADMIN") {
+	if currentUser == nil || !pkg.ContainsString(currentUser.Roles, "ROLE_ADMIN") {
 		return fiber.NewError(fiber.StatusUnauthorized, "You need to be an admin in order to create a tutor")
 	}
 	var user models.User

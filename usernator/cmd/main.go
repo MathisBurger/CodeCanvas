@@ -22,9 +22,11 @@ func main() {
 
 	app.Use(middleware.NewAuthMiddleware())
 
-	app.Post("/register", controllers.RegisterUser)
 	app.Get("/self", controllers.GetSelf)
 	app.Get("/user/:id", controllers.GetUser)
+	app.Get("/all-students", controllers.GetAllStudents)
+	app.Get("/all-tutors", controllers.GetAllTutors)
+	app.Post("/register", controllers.RegisterUser)
 	app.Post("/login", controllers.LoginUser)
 	app.Post("/reset_password", controllers.ResetPassword)
 	app.Post("/submit_password", controllers.SubmitPassword)
