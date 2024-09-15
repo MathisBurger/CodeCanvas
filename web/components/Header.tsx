@@ -29,7 +29,7 @@ const Header = () => {
     }, [pathname])
 
     return (
-        <Box pb={50} pr={20}>
+        <Box pr={20}>
             <header>
                 <Group justify="space-between" h="100%">
                     <Image src="/CodeCanvas.png" h={100} alt="CompanyLogo" />

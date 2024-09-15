@@ -10,7 +10,6 @@ const DashboardPage = () => {
     return (
         <Container fluid>
             <Title>Welcome back, {user?.username}!</Title>
-            <Divider />
         </Container>
     );
 }
