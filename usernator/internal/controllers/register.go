@@ -17,7 +17,7 @@ type CreateRequest struct {
 	Email    string `json:"email"`
 }
 
-func CreateUser(ctx *fiber.Ctx) error {
+func RegisterUser(ctx *fiber.Ctx) error {
 	req := new(CreateRequest)
 	if err := ctx.BodyParser(req); err != nil {
 		return err
