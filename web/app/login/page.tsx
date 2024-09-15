@@ -6,13 +6,13 @@ import ApiError from "@/service/types/error";
 import {useRouter} from "next/navigation";
 import {notifications} from "@mantine/notifications";
 
-interface RegisterInput {
+interface LoginInput {
     name: string;
     password: string;
 }
 
 
-const RegisterPage = () => {
+const LoginPage = () => {
 
     const api = useApiService();
     const router = useRouter();
@@ -21,21 +21,17 @@ const RegisterPage = () => {
         initialValues: {
             name: '',
             password: '',
-        },
-
-        validate: {
-            password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
-        },
+        }
     });
 
-    const onSubmit = async (values: RegisterInput) => {
+    const onSubmit = async (values: LoginInput) => {
         try {
-            await api.registerUser(values.name, values.password);
-            router.push("/login");
+            await api.loginUser(values.name, values.password);
+            router.push("/dashboard");
         } catch (e) {
             if (e instanceof ApiError) {
                 notifications.show({
-                    title: 'Registration failed',
+                    title: 'Login failed',
                     message: e.message,
                     color: 'red'
                 });
@@ -47,7 +43,7 @@ const RegisterPage = () => {
         <Container>
             <Paper radius="md" p="xl" withBorder>
                 <Text size="lg" fw={500}>
-                    Welcome to CodeCanvas please sign up
+                    Login to CodeCanvas
                 </Text>
 
                 <Divider />
@@ -69,14 +65,13 @@ const RegisterPage = () => {
                             placeholder="Your password"
                             value={form.values.password}
                             onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-                            error={form.errors.password && 'Password should include at least 6 characters'}
                             radius="md"
                         />
                     </Stack>
 
                     <Group justify="space-between" mt="xl">
                         <Button type="submit" radius="xl">
-                            Sign up
+                            Login
                         </Button>
                     </Group>
                 </form>
@@ -85,4 +80,4 @@ const RegisterPage = () => {
     );
 }
 
-export default RegisterPage;
+export default LoginPage;

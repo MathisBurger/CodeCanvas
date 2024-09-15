@@ -16,8 +16,19 @@ class ApiService {
      * @param password The password of the user
      * @throws ApiError The api error
      */
-    public async registerUser(username: string, password: string): Promise<RegisterUserResponse> {
+    public async registerUser(username: string, password: string): Promise<RegisterUserResponse|string> {
         return await this.post<RegisterUserResponse>("/usernator/register", { username, password });
+    }
+
+    /**
+     * Logs in a user
+     *
+     * @param username The username of the user
+     * @param password The password of the user
+     * @throws ApiError The api error
+     */
+    public async loginUser(username: string, password: string): Promise<any> {
+        return await this.post<any>("/usernator/login", { username, password });
     }
 
     /**
@@ -28,7 +39,7 @@ class ApiService {
      * @throws ApiError The api error
      * @private
      */
-    private async post<T>(path: string, body: any): Promise<T> {
+    private async post<T>(path: string, body: any): Promise<T|string> {
         try {
             const resp = await fetch(`${this.apiUrl}${path}`, {
                 method: "POST",
@@ -39,7 +50,12 @@ class ApiService {
                     "Accept": "*/*",
                 }
             });
-            return await resp.json() as T;
+            const txt = await resp.text();
+            try {
+                return JSON.parse(txt);
+            } catch (_) {
+                return txt;
+            }
         } catch (e) {
             if(e instanceof Error) {
                 throw new ApiError(-1, e.message);
