@@ -5,23 +5,31 @@ import useApiService from "@/hooks/useApiService";
 import {useEffect} from "react";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import {User} from "@/service/types/usernator";
+import {usePathname, useRouter} from "next/navigation";
 
 
 const Header = () => {
 
     const api = useApiService();
     const {user, setUser} = useCurrentUser();
+    const router = useRouter();
+    const pathname = usePathname();
 
     useEffect(() => {
         api.self()
             .then((res) => {
                 setUser(res as User);
             })
-            .catch(() => setUser(null))
-    }, [])
+            .catch(() => {
+                setUser(null);
+                if (pathname !== "/login" && pathname !== "/register" && pathname !== "/") {
+                    router.push("/login");
+                }
+            })
+    }, [pathname])
 
     return (
-        <Box pb={120} pr={20}>
+        <Box pb={50} pr={20}>
             <header>
                 <Group justify="space-between" h="100%">
                     <Image src="/CodeCanvas.png" h={100} alt="CompanyLogo" />

@@ -6,9 +6,11 @@ import Header from "@/components/Header";
 import {Notifications} from "@mantine/notifications";
 import {User} from "@/service/types/usernator";
 import {CurrentUserContext} from "@/hooks/useCurrentUser";
+import {usePathname} from "next/navigation";
+
+
 
 const theme = createTheme({
-    /** Put your mantine theme override here */
 });
 
 export default function RootLayout({
@@ -27,7 +29,7 @@ export default function RootLayout({
             name="viewport"
             content="width=device-width, initial-scale=1.0"
         />
-        <title>My awesome app</title>
+        <title>CodeCanvas</title>
 
         <ColorSchemeScript />
     </head>

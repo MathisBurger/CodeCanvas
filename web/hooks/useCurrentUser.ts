@@ -1,3 +1,4 @@
+'use client';
 import { User } from "@/service/types/usernator";
 import {createContext, useContext} from "react";
 
