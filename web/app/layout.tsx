@@ -1,5 +1,5 @@
 'use client';
-import React, {useState} from "react";
+import React, {useMemo, useState} from "react";
 import {AppShell, ColorSchemeScript, createTheme, Group, MantineProvider} from '@mantine/core';
 import '@mantine/core/styles.css';
 import Header from "@/components/Header";
@@ -21,6 +21,8 @@ export default function RootLayout({
 }>) {
 
     const [user, setUser] = useState<User | null>(null);
+    const pathname = usePathname();
+    const showNavbar = useMemo(() => pathname !== "/login" && pathname !== "/register" && pathname !== "/", [pathname]);
 
   return (
     <html lang="en">
@@ -38,9 +40,9 @@ export default function RootLayout({
         <CurrentUserContext.Provider value={{user, setUser}}>
             <MantineProvider theme={theme}>
                 <Notifications />
-                <AppShell header={{height: 100}} navbar={{width: 250}}>
+                <AppShell header={{height: 100}} navbar={showNavbar ? {width: 250} : undefined}>
                     <AppShell.Header><Header /></AppShell.Header>
-                    <AppShell.Navbar><Navbar /></AppShell.Navbar>
+                    {showNavbar && (<AppShell.Navbar><Navbar /></AppShell.Navbar>)}
                     <AppShell.Main>{children}</AppShell.Main>
                 </AppShell>
             </MantineProvider>

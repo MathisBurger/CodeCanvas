@@ -1,4 +1,4 @@
-import {User} from "@/service/types/usernator";
+import {GetStudentsResponse, User} from "@/service/types/usernator";
 import ApiError from "@/service/types/error";
 
 class ApiService {
@@ -36,6 +36,13 @@ class ApiService {
      */
     public async loginUser(username: string, password: string): Promise<string> {
         return await this.post<never>("/usernator/login", { username, password });
+    }
+
+    /**
+     * Gets all students
+     */
+    public async getStudents(): Promise<GetStudentsResponse|string> {
+        return await this.get<GetStudentsResponse>("/usernator/all-students");
     }
 
     /**

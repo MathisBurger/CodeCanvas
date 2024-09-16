@@ -1,6 +1,6 @@
 'use client';
 import useCurrentUser from "@/hooks/useCurrentUser";
-import {Container, Divider, Title} from "@mantine/core";
+import {Container, Title} from "@mantine/core";
 
 
 const DashboardPage = () => {
