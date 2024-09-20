@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"usernator/internal/config"
 	"usernator/internal/controllers"
+	"usernator/internal/grpc"
 	"usernator/internal/middleware"
 	"usernator/internal/shared"
 	"usernator/internal/startup"
@@ -32,6 +33,7 @@ func main() {
 	app.Post("/submit_password", controllers.SubmitPassword)
 	app.Post("/createTutor", controllers.CreateTutor)
 
+	go grpc.StartGrpcServer()
 	err = app.Listen(":3000")
 	if err != nil {
 		panic(err.Error())

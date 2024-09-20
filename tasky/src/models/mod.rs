@@ -1,2 +1,2 @@
 pub mod group;
-mod group;
+pub mod database;

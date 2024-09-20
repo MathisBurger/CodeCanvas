@@ -1,0 +1,4 @@
+db_name = "tasky"
+db_username = "tasky"
+db_host = "localhost:5434"
+db_password = "tasky"

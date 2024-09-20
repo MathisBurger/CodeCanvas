@@ -1,10 +1,12 @@
 use diesel::prelude::*;
-#[derive(Queryable, Selectable, Insertable)]
-#[diesel(table_name = crate::schema::posts)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Queryable, Selectable, Insertable, Serialize, Deserialize)]
+#[diesel(table_name = crate::schema::groups)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Group {
     pub id: i32,
     pub title: String,
-    pub members: Vec<i32>,
+    pub members: Vec<Option<i32>>,
     pub tutor: i32,
 }
