@@ -22,12 +22,16 @@ pub struct CreateGroup {
     pub members: Vec<i32>,
 }
 
-#[derive(Clone)]
 pub struct GroupRepository;
-
 type DB = PooledConnection<ConnectionManager<PgConnection>>;
 
 impl GroupRepository {
+    pub fn get_all(conn: &mut DB) -> Vec<Group> {
+        dsl::groups
+            .get_results::<Group>(conn)
+            .expect("Error loading groups")
+    }
+
     pub fn get_by_id(id: i32, conn: &mut DB) -> Option<Group> {
         dsl::groups
             .find(id)

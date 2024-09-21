@@ -1,10 +1,11 @@
 use crate::api::usernator_api_client::UsernatorApiClient;
 use crate::error::ApiError;
+use crate::models::group_join_request::GroupJoinRequestRepository;
 use crate::{api::UserRequest, api::UsersRequest, models::group::Group, response::shared::User};
 use serde::Serialize;
 use tonic::transport::Channel;
 
-use super::Enrich;
+use super::{Enrich, DB};
 
 #[derive(Serialize)]
 pub struct GroupResponse {
@@ -12,13 +13,52 @@ pub struct GroupResponse {
     pub title: String,
     pub members: Vec<User>,
     pub tutor: User,
+    pub request_count: i32,
 }
 
-impl Enrich<Group, GroupResponse> for GroupResponse {
+#[derive(Serialize)]
+pub struct MinifiedGroupResponse {
+    pub id: i32,
+    pub title: String,
+    pub member_count: i32,
+    pub tutor: User,
+}
+
+#[derive(Serialize)]
+pub struct GroupsResponse {
+    groups: Vec<MinifiedGroupResponse>,
+}
+
+impl Enrich<Vec<Group>> for GroupsResponse {
+    async fn enrich(
+        from: &Vec<Group>,
+        client: &mut UsernatorApiClient<Channel>,
+        _: &mut DB,
+    ) -> Result<Self, ApiError> {
+        let mut groups: Vec<MinifiedGroupResponse> = vec![];
+        for group in from {
+            let tut = client
+                .get_user(UserRequest {
+                    user_id: u64::try_from(group.tutor)?,
+                })
+                .await?;
+            groups.push(MinifiedGroupResponse {
+                id: group.id,
+                title: group.title.clone(),
+                member_count: group.members.len() as i32,
+                tutor: tut.into_inner().into(),
+            });
+        }
+        Ok(GroupsResponse { groups })
+    }
+}
+
+impl Enrich<Group> for GroupResponse {
     async fn enrich(
         from: &Group,
         client: &mut UsernatorApiClient<Channel>,
-    ) -> Result<GroupResponse, ApiError> {
+        conn: &mut DB,
+    ) -> Result<Self, ApiError> {
         let tut = client
             .get_user(UserRequest {
                 user_id: u64::try_from(from.tutor)?,
@@ -35,6 +75,7 @@ impl Enrich<Group, GroupResponse> for GroupResponse {
                     .collect(),
             })
             .await?;
+        let request_count = GroupJoinRequestRepository::get_group_request_count(from.id, conn);
         Ok(GroupResponse {
             id: from.id,
             title: from.title.clone(),
@@ -45,6 +86,7 @@ impl Enrich<Group, GroupResponse> for GroupResponse {
                 .map(|x| x.into())
                 .collect(),
             tutor: tut.into_inner().into(),
+            request_count,
         })
     }
 }

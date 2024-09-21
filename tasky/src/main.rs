@@ -18,6 +18,7 @@ mod models;
 mod response;
 mod routes;
 mod schema;
+mod security;
 mod util;
 
 #[derive(Clone)]
