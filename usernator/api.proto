@@ -4,6 +4,7 @@ package api;
 
 service UsernatorApi {
   rpc GetUser (UserRequest) returns (UserResponse) {}
+  rpc GetUsers (UsersRequest) returns (UsersResponse) {}
 }
 
 
@@ -16,4 +17,12 @@ message UserResponse {
   string username = 2;
   string email = 3;
   repeated string roles = 4;
+}
+
+message UsersRequest {
+  repeated uint64 userIds = 1;
+}
+
+message UsersResponse {
+  repeated UserResponse users = 1;
 }

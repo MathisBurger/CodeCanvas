@@ -1,18 +1,35 @@
-use std::future::{Ready, ready};
 use actix_web::dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform};
-use actix_web::{Error, HttpMessage};
 use actix_web::error::ErrorUnauthorized;
-use tonic::codegen::futures_core::future::LocalBoxFuture;
+use actix_web::{Error, HttpMessage};
+use futures::future::LocalBoxFuture;
+use std::fmt::Display;
+use std::future::{ready, Ready};
 
 #[derive(Clone)]
 pub struct UserData {
-    pub user_id: i32
+    pub user_id: i32,
+    pub user_roles: Vec<String>,
 }
 
+pub enum UserRole {
+    RoleAdmin,
+    RoleTutor,
+    RoleStudent,
+}
+
+impl Display for UserRole {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let str = match self {
+            UserRole::RoleAdmin => "ROLE_ADMIN",
+            UserRole::RoleTutor => "ROLE_TUTOR",
+            UserRole::RoleStudent => "ROLE_STUDENT",
+        };
+        write!(f, "{}", str)
+    }
+}
 pub struct Auth;
 
 impl Auth {
-
     pub fn new() -> Self {
         Auth {}
     }
@@ -36,7 +53,7 @@ where
 }
 
 pub struct AuthMiddleware<S> {
-    service: S
+    service: S,
 }
 
 impl<S, B> Service<ServiceRequest> for AuthMiddleware<S>
@@ -52,21 +69,33 @@ where
     forward_ready!(service);
 
     fn call(&self, req: ServiceRequest) -> Self::Future {
+        let mut uid = 0;
+        let mut uroles: Vec<String> = vec![];
+
         let user_id = req.headers().get("X-CodeCanvas-UserId");
         if user_id.is_some() {
             let user_id_string = user_id.unwrap().to_str().unwrap();
             let id = user_id_string.parse::<i32>();
             if id.is_err() {
-                return Box::pin(async {
-                    Err(ErrorUnauthorized("No user id provided"))
-                });
+                return Box::pin(async { Err(ErrorUnauthorized("No user id provided")) });
             }
-            req.extensions_mut().insert(UserData{user_id: id.unwrap()});
+            uid = id.unwrap();
         } else {
-            return Box::pin(async {
-                Err(ErrorUnauthorized("No user id provided"))
-            });
+            return Box::pin(async { Err(ErrorUnauthorized("No user id provided")) });
         }
+
+        let user_roles = req.headers().get("X-CodeCanvas-UserRoles");
+        if user_roles.is_some() {
+            let user_roles_string = user_roles.unwrap().to_str().unwrap();
+            uroles = user_roles_string.split(";").map(str::to_string).collect();
+        } else {
+            return Box::pin(async { Err(ErrorUnauthorized("No user roles provided")) });
+        }
+
+        req.extensions_mut().insert(UserData {
+            user_id: uid,
+            user_roles: uroles,
+        });
 
         let fut = self.service.call(req);
 

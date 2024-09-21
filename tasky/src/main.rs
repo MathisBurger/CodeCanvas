@@ -1,24 +1,30 @@
-use std::ops::Deref;
-use actix_web::{App, HttpServer, middleware};
-use actix_web::web::Data;
-use diesel::{PgConnection, r2d2};
-use diesel::r2d2::ConnectionManager;
-use log::info;
-use crate::auth_middleware::{Auth, AuthMiddleware};
-use crate::util::config::AppConfig;
+use crate::auth_middleware::Auth;
 use crate::models::database::Database;
 use crate::routes::init_services;
+use crate::util::config::AppConfig;
+use actix_web::web::Data;
+use actix_web::{middleware, App, HttpServer};
+use api::usernator_api_client::UsernatorApiClient;
+use log::info;
+use tonic::transport::Channel;
 
-mod util;
-mod schema;
-mod models;
-mod routes;
+pub mod api {
+    tonic::include_proto!("api");
+}
+
 mod auth_middleware;
+mod error;
+mod models;
+mod response;
+mod routes;
+mod schema;
+mod util;
 
 #[derive(Clone)]
 pub struct AppState {
     pub config: AppConfig,
-    pub db: Database
+    pub db: Database,
+    pub user_api: UsernatorApiClient<Channel>,
 }
 
 #[actix_web::main]
@@ -37,13 +43,16 @@ async fn main() -> std::io::Result<()> {
             std::process::exit(2);
         }
     };
-    let mut db = Database::new(config.clone());
+    let db = Database::new(config.clone());
+    let mut usernator = UsernatorApiClient::connect(config.clone().usernator_grpc)
+        .await
+        .expect("Cannot create tonic client");
 
     let state = AppState {
         config: config.clone(),
-        db
+        db,
+        user_api: usernator,
     };
-
 
     HttpServer::new(move || {
         App::new()
@@ -52,8 +61,8 @@ async fn main() -> std::io::Result<()> {
             .app_data(Data::new(state.clone()))
             .configure(init_services)
     })
-        .bind("0.0.0.0:3000")
-        .expect("Already in use")
-        .run()
-        .await
+    .bind("0.0.0.0:3000")
+    .expect("Already in use")
+    .run()
+    .await
 }
