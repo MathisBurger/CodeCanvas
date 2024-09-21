@@ -104,3 +104,5 @@ pub async fn get_join_requests(
         GroupJoinRequestsResponse::enrich(&requests, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(resp))
 }
+
+pub async fn approve_join_request() {}
