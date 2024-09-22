@@ -29,25 +29,35 @@ pub struct GroupsResponse {
     groups: Vec<MinifiedGroupResponse>,
 }
 
+impl Enrich<Group> for MinifiedGroupResponse {
+    async fn enrich(
+        from: &Group,
+        client: &mut UsernatorApiClient<Channel>,
+        _: &mut DB,
+    ) -> Result<Self, ApiError> {
+        let tut = client
+            .get_user(UserRequest {
+                user_id: u64::try_from(from.tutor)?,
+            })
+            .await?;
+        Ok(MinifiedGroupResponse {
+            id: from.id,
+            title: from.title.clone(),
+            member_count: from.members.len() as i32,
+            tutor: tut.into_inner().into(),
+        })
+    }
+}
+
 impl Enrich<Vec<Group>> for GroupsResponse {
     async fn enrich(
         from: &Vec<Group>,
         client: &mut UsernatorApiClient<Channel>,
-        _: &mut DB,
+        db_conn: &mut DB,
     ) -> Result<Self, ApiError> {
         let mut groups: Vec<MinifiedGroupResponse> = vec![];
         for group in from {
-            let tut = client
-                .get_user(UserRequest {
-                    user_id: u64::try_from(group.tutor)?,
-                })
-                .await?;
-            groups.push(MinifiedGroupResponse {
-                id: group.id,
-                title: group.title.clone(),
-                member_count: group.members.len() as i32,
-                tutor: tut.into_inner().into(),
-            });
+            groups.push(MinifiedGroupResponse::enrich(&group, client, db_conn).await?);
         }
         Ok(GroupsResponse { groups })
     }

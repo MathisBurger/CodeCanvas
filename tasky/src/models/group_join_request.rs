@@ -1,9 +1,9 @@
+use super::DB;
 use crate::models::group::Group;
 use crate::schema::group_join_requests;
 use crate::schema::group_join_requests::dsl;
 use diesel::associations::HasTable;
 use diesel::prelude::*;
-use diesel::r2d2::{ConnectionManager, PooledConnection};
 
 #[derive(Queryable, Selectable, Identifiable, Associations)]
 #[diesel(belongs_to(Group))]
@@ -22,7 +22,6 @@ pub struct CreateGroupJoinRequest {
 }
 
 pub struct GroupJoinRequestRepository;
-type DB = PooledConnection<ConnectionManager<PgConnection>>;
 
 impl GroupJoinRequestRepository {
     pub fn get_by_id(id: i32, conn: &mut DB) -> Option<GroupJoinRequest> {

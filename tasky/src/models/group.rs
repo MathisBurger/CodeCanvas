@@ -1,7 +1,7 @@
+use super::DB;
 use crate::schema::groups::dsl;
 use diesel::associations::HasTable;
 use diesel::prelude::*;
-use diesel::r2d2::{ConnectionManager, PooledConnection};
 use serde::{Deserialize, Serialize};
 
 #[derive(Queryable, Selectable, AsChangeset, Serialize, Deserialize, Clone)]
@@ -23,7 +23,6 @@ pub struct CreateGroup {
 }
 
 pub struct GroupRepository;
-type DB = PooledConnection<ConnectionManager<PgConnection>>;
 
 impl GroupRepository {
     pub fn get_all(conn: &mut DB) -> Vec<Group> {

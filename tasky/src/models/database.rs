@@ -1,4 +1,3 @@
-use crate::models::group::GroupRepository;
 use crate::util::config::AppConfig;
 use diesel::prelude::PgConnection;
 use diesel::r2d2;
