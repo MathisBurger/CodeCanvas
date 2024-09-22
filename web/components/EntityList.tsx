@@ -1,3 +1,4 @@
+'use client';
 import {Button, ButtonProps, Group, Table} from "@mantine/core";
 
 

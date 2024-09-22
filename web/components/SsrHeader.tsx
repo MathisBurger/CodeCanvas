@@ -3,27 +3,23 @@ import {Avatar, Button, Group, Menu} from "@mantine/core";
 import Link from "next/link";
 import {User} from "@/service/types/usernator";
 import {useCookies} from "react-cookie";
-import useCurrentUser from "@/hooks/useCurrentUser";
-import {useEffect} from "react";
+import {useRouter} from "next/navigation";
 
 interface SsrHeaderProps {
-    newUser: User|null;
+    user: User|null;
 }
 
-const SsrHeader: React.FC<SsrHeaderProps> = ({newUser}) => {
+const SsrHeader: React.FC<SsrHeaderProps> = ({user}) => {
     const [s, _, removeSession] = useCookies(['session']);
-    const {user, setUser} = useCurrentUser();
+    const router = useRouter();
+
 
     const logOut = () => {
         removeSession('session');
-        //router.push("/");
-        //window.location.reload();
+        router.push("/");
+        window.location.reload();
     }
-/*
-    useEffect(() => {
-        setUser(newUser);
-    }, [newUser]);
-*/
+
     if (user === null) {
         return (
             <Group visibleFrom="sm">

@@ -1,18 +1,14 @@
 'use client';
 import React, {useMemo, useState} from "react";
-import {AppShell, ColorSchemeScript, createTheme, Group, MantineProvider} from '@mantine/core';
+import {AppShell, ColorSchemeScript, MantineProvider} from '@mantine/core';
 import '@mantine/core/styles.css';
 import Header from "@/components/Header";
 import {Notifications} from "@mantine/notifications";
-import {User} from "@/service/types/usernator";
-import {CurrentUserContext} from "@/hooks/useCurrentUser";
 import {usePathname} from "next/navigation";
 import Navbar from "@/components/Navbar";
-
-
-
-const theme = createTheme({
-});
+import { User } from "@/service/types/usernator";
+import { CurrentUserContext } from "@/hooks/useCurrentUser";
+import '@mantine/core/styles.css';
 
 export default function RootLayout({
   children,
@@ -37,8 +33,8 @@ export default function RootLayout({
         <ColorSchemeScript />
     </head>
     <body>
-        <CurrentUserContext.Provider value={{user, setUser}}>
-            <MantineProvider theme={theme}>
+    <CurrentUserContext.Provider value={{user, setUser}}>
+            <MantineProvider theme={{}}>
                 <Notifications />
                 <AppShell header={{height: 100}} navbar={showNavbar ? {width: 250} : undefined}>
                     <AppShell.Header><Header /></AppShell.Header>
@@ -46,7 +42,7 @@ export default function RootLayout({
                     <AppShell.Main>{children}</AppShell.Main>
                 </AppShell>
             </MantineProvider>
-        </CurrentUserContext.Provider>
+    </CurrentUserContext.Provider>
     </body>
     </html>
   );
