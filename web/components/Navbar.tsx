@@ -1,7 +1,7 @@
 'use client';
 import {Button, Stack} from "@mantine/core";
 import {usePathname, useRouter} from "next/navigation";
-import {IconDashboard, IconSchool} from "@tabler/icons-react";
+import {IconDashboard, IconSchool, IconUsersGroup} from "@tabler/icons-react";
 import {UserRoles} from "@/service/types/usernator";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import {isGranted} from "@/service/auth";
@@ -24,6 +24,12 @@ const routes: Route[] = [
         name: 'Students',
         icon: <IconSchool />,
         authRoles: [UserRoles.Tutor, UserRoles.Admin]
+    },
+    {
+        path: '/groups',
+        name: 'Groups',
+        icon: <IconUsersGroup />,
+        authRoles: [UserRoles.Tutor]
     }
 ]
 

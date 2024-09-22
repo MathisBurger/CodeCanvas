@@ -4,6 +4,7 @@ import {Table} from "@mantine/core";
 export interface EntityListCol {
     label: string;
     field: string;
+    getter?: (row: any) => string|number;
 }
 
 interface EntityListProps {
@@ -24,7 +25,7 @@ const EntityList: React.FC<EntityListProps> = ({cols, rows}) => {
                 {rows.map(row => (
                     <Table.Tr key={`${row}`}>
                         {cols.map(col => (
-                            <Table.Td key={`${row}_${col}`}>{row[col.field]}</Table.Td>
+                            <Table.Td key={`${row}_${col}`}>{col.getter ? col.getter(row) : row[col.field]}</Table.Td>
                         ))}
                     </Table.Tr>
                 ))}

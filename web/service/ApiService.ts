@@ -1,5 +1,6 @@
 import {GetStudentsResponse, User} from "@/service/types/usernator";
 import ApiError from "@/service/types/error";
+import {GroupsResponse} from "@/service/types/tasky";
 
 class ApiService {
 
@@ -43,6 +44,13 @@ class ApiService {
      */
     public async getStudents(): Promise<GetStudentsResponse|string> {
         return await this.get<GetStudentsResponse>("/usernator/all-students");
+    }
+
+    /**
+     * Gets all groups
+     */
+    public async getGroups(): Promise<GroupsResponse|string> {
+        return await this.get<GroupsResponse>("/tasky/groups");
     }
 
     /**
