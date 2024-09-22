@@ -1,19 +1,17 @@
-'use client';
+'use server';
 import {Container, Title} from "@mantine/core";
 import useApiService from "@/hooks/useApiService";
-import {useEffect, useState} from "react";
-import EntityList, {EntityListCol} from "@/components/EntityList";
-import {GroupsResponse, MinifiedGroup} from "@/service/types/tasky";
+import EntityList, {EntityListCol, EntityListRowAction} from "@/components/EntityList";
+import {GroupsResponse} from "@/service/types/tasky";
+import {useRouter} from "next/navigation";
 
 
-const GroupsPage = () => {
+const GroupsPage = async () => {
 
     const api = useApiService();
-    const [groups, setGroups] = useState<MinifiedGroup[]>([]);
+    const groups = (await api.getGroups() as GroupsResponse).groups;
+    const router = useRouter();
 
-    useEffect(() => {
-        api.getGroups().then((response) => setGroups((response as GroupsResponse).groups));
-    }, []);
 
     const cols: EntityListCol[] = [
         {
@@ -35,10 +33,18 @@ const GroupsPage = () => {
         }
     ]
 
+    const actions: EntityListRowAction[] = [
+        {
+            color: 'blue',
+            name: 'View',
+            onClick: (row) => router.push(`/groups/${row.id}`)
+        }
+    ];
+
     return (
         <Container fluid>
             <Title>Groups</Title>
-            <EntityList cols={cols} rows={groups} />
+            <EntityList cols={cols} rows={groups} rowActions={actions} />
         </Container>
     );
 }

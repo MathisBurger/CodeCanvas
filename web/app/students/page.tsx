@@ -1,19 +1,15 @@
-'use client';
-import {useEffect, useState} from "react";
-import {GetStudentsResponse, User} from "@/service/types/usernator";
+'use server';
+import {GetStudentsResponse} from "@/service/types/usernator";
 import useApiService from "@/hooks/useApiService";
 import {Container, Title} from "@mantine/core";
 import EntityList, {EntityListCol} from "@/components/EntityList";
 
 
-const StudentsPage = () => {
+const StudentsPage = async () => {
 
     const api = useApiService();
-    const [students, setStudents] = useState<User[]>([]);
+    const students = (await api.getStudents() as GetStudentsResponse).students;
 
-    useEffect(() => {
-        api.getStudents().then((response) => setStudents((response as GetStudentsResponse).students));
-    }, []);
 
     const cols: EntityListCol[] = [
         {

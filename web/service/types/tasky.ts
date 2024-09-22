@@ -10,6 +10,14 @@ export interface MinifiedGroup {
     tutor: TaskyUser;
 }
 
+export interface Group {
+    id: number;
+    title: string;
+    members: TaskyUser[];
+    tutor: TaskyUser;
+    request_count: number;
+}
+
 export interface TaskyUser {
     id: number;
     username: string;

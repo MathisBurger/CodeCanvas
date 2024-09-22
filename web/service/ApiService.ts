@@ -1,13 +1,15 @@
 import {GetStudentsResponse, User} from "@/service/types/usernator";
 import ApiError from "@/service/types/error";
-import {GroupsResponse} from "@/service/types/tasky";
+import {Group, GroupsResponse} from "@/service/types/tasky";
 
 class ApiService {
 
     private apiUrl: string;
+    private session: string|undefined = undefined;
 
-    constructor() {
+    constructor(session: string|undefined = undefined) {
         this.apiUrl = process.env.API_URL ?? "http://localhost:3002";
+        this.session = session;
     }
 
     /**
@@ -54,6 +56,15 @@ class ApiService {
     }
 
     /**
+     * Gets a specific group
+     *
+     * @param id The ID of the group
+     */
+    public async getGroup(id: number): Promise<Group|string> {
+        return await this.get<Group>("/tasky/groups/" + id);
+    }
+
+    /**
      * Executes a general get request
      *
      * @param path The path
@@ -86,15 +97,21 @@ class ApiService {
      */
     private async fetch<T>(path: string, method: string, body?: object): Promise<T|string> {
         try {
+            const headers = {
+                "Content-Type": "application/json",
+                "Accept": "*/*",
+            };
+            if (this.session) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                headers["Cookie"] = `session=${this.session}`;
+            }
             const resp = await fetch(`${this.apiUrl}${path}`, {
                 method,
                 mode: "cors",
                 body: body ? JSON.stringify(body) : undefined,
                 credentials: 'include',
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "*/*",
-                }
+                headers: headers
             });
             const txt = await resp.text();
             const obj = this.getObject(txt);

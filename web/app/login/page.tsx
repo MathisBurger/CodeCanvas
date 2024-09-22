@@ -1,10 +1,10 @@
 'use client';
 import { useForm } from '@mantine/form';
 import {Button, Container, Divider, Group, Paper, PasswordInput, Stack, Text, TextInput} from "@mantine/core";
-import useApiService from "@/hooks/useApiService";
 import ApiError from "@/service/types/error";
 import {useRouter} from "next/navigation";
 import {notifications} from "@mantine/notifications";
+import useApiServiceClient from "@/hooks/useApiServiceClient";
 
 interface LoginInput {
     name: string;
@@ -14,7 +14,7 @@ interface LoginInput {
 
 const LoginPage = () => {
 
-    const api = useApiService();
+    const api = useApiServiceClient();
     const router = useRouter();
 
     const form = useForm({
