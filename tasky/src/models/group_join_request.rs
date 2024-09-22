@@ -25,6 +25,14 @@ pub struct GroupJoinRequestRepository;
 type DB = PooledConnection<ConnectionManager<PgConnection>>;
 
 impl GroupJoinRequestRepository {
+    pub fn get_by_id(id: i32, conn: &mut DB) -> Option<GroupJoinRequest> {
+        dsl::group_join_requests
+            .find(id)
+            .first::<GroupJoinRequest>(conn)
+            .optional()
+            .expect("Error loading group join request")
+    }
+
     pub fn create_request(req: CreateGroupJoinRequest, conn: &mut DB) -> GroupJoinRequest {
         diesel::insert_into(dsl::group_join_requests::table())
             .values(&req)
@@ -46,5 +54,11 @@ impl GroupJoinRequestRepository {
             .filter(dsl::group_id.eq(group_id))
             .get_results::<GroupJoinRequest>(conn)
             .expect("Cannot get requests")
+    }
+
+    pub fn delete_request(req: GroupJoinRequest, conn: &mut DB) {
+        diesel::delete(dsl::group_join_requests.filter(dsl::id.eq(req.id)))
+            .execute(conn)
+            .expect("Cannot delete request");
     }
 }

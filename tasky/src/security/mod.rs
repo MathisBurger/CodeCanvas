@@ -1,6 +1,7 @@
 use crate::auth_middleware::{UserData, UserRole};
 
 pub mod group;
+pub mod group_join_request;
 
 #[derive(PartialEq)]
 pub enum SecurityAction {

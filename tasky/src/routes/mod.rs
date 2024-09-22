@@ -7,5 +7,7 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(group::get_group)
         .service(group::create_join_request)
         .service(group::get_join_requests)
+        .service(group::approve_join_request)
+        .service(group::reject_join_request)
         .service(group::get_all_groups);
 }

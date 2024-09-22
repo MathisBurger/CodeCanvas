@@ -4,7 +4,7 @@ use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, PooledConnection};
 use serde::{Deserialize, Serialize};
 
-#[derive(Queryable, Selectable, Serialize, Deserialize, Clone)]
+#[derive(Queryable, Selectable, AsChangeset, Serialize, Deserialize, Clone)]
 #[diesel(table_name = crate::schema::groups)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Group {
@@ -57,5 +57,12 @@ impl GroupRepository {
             .returning(Group::as_returning())
             .get_result::<Group>(conn)
             .expect("Cannot create new group")
+    }
+
+    pub fn update_group(group: Group, conn: &mut DB) {
+        diesel::update(dsl::groups.filter(dsl::id.eq(group.id)))
+            .set::<Group>(group)
+            .execute(conn)
+            .expect("Cannot update group");
     }
 }
