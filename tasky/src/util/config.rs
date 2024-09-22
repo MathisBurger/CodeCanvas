@@ -2,6 +2,7 @@ use figment::providers::{Env, Format, Toml};
 use figment::{Error, Figment};
 use serde::Deserialize;
 
+/// The generic app config
 #[derive(Deserialize, Debug, Clone)]
 pub struct AppConfig {
     pub db_name: String,
@@ -12,6 +13,7 @@ pub struct AppConfig {
 }
 
 impl AppConfig {
+    /// Parses the app config
     pub fn parse() -> Result<Self, Error> {
         let config: AppConfig = Figment::new()
             .merge(Toml::file("config.toml"))

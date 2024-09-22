@@ -4,12 +4,15 @@ use diesel::r2d2;
 use diesel::r2d2::ConnectionManager;
 
 pub type DBPool = r2d2::Pool<ConnectionManager<PgConnection>>;
+
+/// Database that is shared between requests
 #[derive(Clone)]
 pub struct Database {
     pub db: DBPool,
 }
 
 impl Database {
+    /// Initializes a database connection and returns the instance of the Database struct
     pub fn new(config: AppConfig) -> Self {
         let db_uri = format!(
             "postgres://{}:{}@{}/{}",

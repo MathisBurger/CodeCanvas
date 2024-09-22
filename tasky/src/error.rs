@@ -6,6 +6,7 @@ use actix_web::{HttpResponse, ResponseError};
 use serde::Serialize;
 use thiserror::Error;
 
+/// The api error
 #[derive(Debug, Error)]
 pub enum ApiError {
     #[error("BAD_REQUEST")]
@@ -18,11 +19,13 @@ pub enum ApiError {
     Unauthorized,
 }
 
+/// The response body
 #[derive(Serialize)]
 struct ResponseBody {
     message: String,
 }
 
+/// Implements response error trait for api error
 impl ResponseError for ApiError {
     fn status_code(&self) -> StatusCode {
         match self {

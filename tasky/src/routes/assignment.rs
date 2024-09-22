@@ -17,6 +17,7 @@ use crate::security::IsGranted;
 use crate::security::SecurityAction;
 use crate::AppState;
 
+/// Request to create an assignment
 #[derive(Deserialize)]
 struct CreateAssignmentRequest {
     pub title: String,
@@ -25,6 +26,7 @@ struct CreateAssignmentRequest {
     pub language: AssignmentLanguage,
 }
 
+/// Request to update an assignment
 #[derive(Deserialize)]
 struct UpdateAssignmentRequest {
     pub title: String,
@@ -32,6 +34,7 @@ struct UpdateAssignmentRequest {
     pub description: String,
 }
 
+/// Endpoint to create an assignment on a group
 #[post("/groups/{group_id}/assignments")]
 pub async fn create_assignment(
     data: web::Data<AppState>,
@@ -62,6 +65,7 @@ pub async fn create_assignment(
     Ok(HttpResponse::Ok().json(enriched))
 }
 
+/// Endpoint to get an specific assignment on a group
 #[get("/groups/{group_id}/assignments/{id}")]
 pub async fn get_assignment(
     data: web::Data<AppState>,
@@ -86,6 +90,7 @@ pub async fn get_assignment(
     Ok(HttpResponse::Ok().json(enrichted))
 }
 
+/// Endpoint to update an specific assignment on a group
 #[post("/groups/{group_id}/assignments/{id}/update")]
 pub async fn update_assignment(
     data: web::Data<AppState>,

@@ -9,6 +9,8 @@ use diesel::{
 };
 use serde::{Deserialize, Serialize};
 
+/// The language of an assignment
+/// This language is the language the assignment should be completed with
 #[derive(diesel_derive_enum::DbEnum, Debug, Clone, Deserialize, Serialize)]
 #[ExistingTypePath = "crate::schema::sql_types::AssignmentLanguage"]
 pub enum AssignmentLanguage {
@@ -16,6 +18,7 @@ pub enum AssignmentLanguage {
     Golang,
 }
 
+/// The assignment entity
 #[derive(Queryable, Selectable, AsChangeset, Clone)]
 #[diesel(table_name = crate::schema::assignments)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
@@ -28,6 +31,7 @@ pub struct Assignment {
     pub language: AssignmentLanguage,
 }
 
+/// Used to create a new assignment
 #[derive(Insertable)]
 #[diesel(table_name = crate::schema::assignments)]
 pub struct CreateAssignment {
@@ -41,6 +45,7 @@ pub struct CreateAssignment {
 pub struct AssignmentRepository;
 
 impl AssignmentRepository {
+    /// Creates a new assignment
     pub fn create_assignment(assignment: &CreateAssignment, conn: &mut DB) -> Assignment {
         diesel::insert_into(dsl::assignments::table())
             .values(assignment)
@@ -49,6 +54,7 @@ impl AssignmentRepository {
             .expect("Cannot create new assignment")
     }
 
+    /// Gets an assignment by ID and group_id
     pub fn get_assignment_by_id_and_group(
         id: i32,
         group_id: i32,
@@ -61,6 +67,7 @@ impl AssignmentRepository {
             .expect("Error loading group")
     }
 
+    /// Updates an assignment
     pub fn update_assignment(assignment: Assignment, conn: &mut DB) {
         diesel::update(dsl::assignments.filter(dsl::id.eq(assignment.id)))
             .set::<Assignment>(assignment)

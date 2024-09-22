@@ -7,6 +7,7 @@ use crate::{error::ApiError, models::group_join_request::GroupJoinRequest};
 
 use super::{shared::User, Enrich, DB};
 
+/// The group join request response
 #[derive(Serialize)]
 pub struct GroupJoinRequestResponse {
     pub id: i32,
@@ -14,6 +15,7 @@ pub struct GroupJoinRequestResponse {
     pub group_id: i32,
 }
 
+/// The group join requests response
 #[derive(Serialize)]
 pub struct GroupJoinRequestsResponse {
     requests: Vec<GroupJoinRequestResponse>,

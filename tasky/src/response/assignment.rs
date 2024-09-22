@@ -11,6 +11,7 @@ use crate::{
 
 use super::{group::MinifiedGroupResponse, Enrich};
 
+/// The assignment response
 #[derive(Serialize)]
 pub struct AssignmentResponse {
     pub id: i32,

@@ -5,18 +5,22 @@ use futures::future::LocalBoxFuture;
 use std::fmt::Display;
 use std::future::{ready, Ready};
 
+/// User data retrieved from Headers
 #[derive(Clone)]
 pub struct UserData {
     pub user_id: i32,
+    // TODO: make simpler with UserRole instead of String => might be also more memory efficient
     pub user_roles: Vec<String>,
 }
 
+/// All roles a user can have
 pub enum UserRole {
     RoleAdmin,
     RoleTutor,
     RoleStudent,
 }
 
+/// Implements display for a user role
 impl Display for UserRole {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let str = match self {
@@ -30,11 +34,13 @@ impl Display for UserRole {
 pub struct Auth;
 
 impl Auth {
+    /// Creates a new auth middleware
     pub fn new() -> Self {
         Auth {}
     }
 }
 
+/// Implements transform for a service request
 impl<S, B> Transform<S, ServiceRequest> for Auth
 where
     S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
@@ -52,10 +58,12 @@ where
     }
 }
 
+/// Auth middleware
 pub struct AuthMiddleware<S> {
     service: S,
 }
 
+/// Implements service trait for auth middleware
 impl<S, B> Service<ServiceRequest> for AuthMiddleware<S>
 where
     S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,

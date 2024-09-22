@@ -7,6 +7,7 @@ use tonic::transport::Channel;
 
 use super::{Enrich, DB};
 
+/// The group response
 #[derive(Serialize)]
 pub struct GroupResponse {
     pub id: i32,
@@ -16,6 +17,7 @@ pub struct GroupResponse {
     pub request_count: i32,
 }
 
+/// The minified group response
 #[derive(Serialize)]
 pub struct MinifiedGroupResponse {
     pub id: i32,
@@ -24,6 +26,7 @@ pub struct MinifiedGroupResponse {
     pub tutor: User,
 }
 
+/// The groups response
 #[derive(Serialize)]
 pub struct GroupsResponse {
     groups: Vec<MinifiedGroupResponse>,

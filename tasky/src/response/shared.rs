@@ -1,6 +1,7 @@
 use crate::api::UserResponse;
 use serde::Serialize;
 
+/// The external user from usernator grpc server
 #[derive(Clone, Serialize)]
 pub struct User {
     id: u64,
@@ -8,6 +9,7 @@ pub struct User {
     email: String,
 }
 
+/// Converts from user into user response
 impl Into<User> for UserResponse {
     fn into(self) -> User {
         User {
