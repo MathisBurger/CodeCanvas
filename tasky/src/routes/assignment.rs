@@ -45,9 +45,13 @@ pub async fn create_assignment(
     let user_data = user.into_inner();
     let conn = &mut data.db.db.get().unwrap();
     let mut group =
-        GroupRepository::get_by_id(path.into_inner().0, conn).ok_or(ApiError::BadRequest)?;
+        GroupRepository::get_by_id(path.into_inner().0, conn).ok_or(ApiError::BadRequest {
+            message: "No access to group".to_string(),
+        })?;
     if !group.is_granted(SecurityAction::Update, &user_data) {
-        return Err(ApiError::Forbidden);
+        return Err(ApiError::Forbidden {
+            message: "No access to group".to_string(),
+        });
     }
     let mut create_assignment = CreateAssignment {
         title: req.title.clone(),
@@ -57,7 +61,9 @@ pub async fn create_assignment(
         language: req.language.clone(),
     };
     if !create_assignment.is_granted(SecurityAction::Create, &user_data) {
-        return Err(ApiError::Forbidden);
+        return Err(ApiError::Forbidden {
+            message: "Not allowed to create an assignment".to_string(),
+        });
     }
     let assignment = AssignmentRepository::create_assignment(&create_assignment, conn);
     let enriched =
@@ -75,15 +81,23 @@ pub async fn get_assignment(
     let user_data = user.into_inner();
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
-    let mut group = GroupRepository::get_by_id(path_data.0, conn).ok_or(ApiError::BadRequest)?;
+    let mut group = GroupRepository::get_by_id(path_data.0, conn).ok_or(ApiError::BadRequest {
+        message: "No access to group".to_string(),
+    })?;
     if !group.is_granted(SecurityAction::Update, &user_data) {
-        return Err(ApiError::Forbidden);
+        return Err(ApiError::Forbidden {
+            message: "No access to group".to_string(),
+        });
     }
     let mut assignment =
         AssignmentRepository::get_assignment_by_id_and_group(path_data.0, path_data.1, conn)
-            .ok_or(ApiError::BadRequest)?;
+            .ok_or(ApiError::BadRequest {
+                message: "No access to assignment".to_string(),
+            })?;
     if !assignment.is_granted(SecurityAction::Read, &user_data) {
-        return Err(ApiError::Forbidden);
+        return Err(ApiError::Forbidden {
+            message: "No access to assignment".to_string(),
+        });
     }
     let enrichted =
         AssignmentResponse::enrich(&assignment, &mut data.user_api.clone(), conn).await?;
@@ -101,15 +115,23 @@ pub async fn update_assignment(
     let user_data = user.into_inner();
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
-    let mut group = GroupRepository::get_by_id(path_data.0, conn).ok_or(ApiError::BadRequest)?;
+    let mut group = GroupRepository::get_by_id(path_data.0, conn).ok_or(ApiError::BadRequest {
+        message: "No access to group".to_string(),
+    })?;
     if !group.is_granted(SecurityAction::Update, &user_data) {
-        return Err(ApiError::Forbidden);
+        return Err(ApiError::Forbidden {
+            message: "No access to group".to_string(),
+        });
     }
     let mut assignment =
         AssignmentRepository::get_assignment_by_id_and_group(path_data.0, path_data.1, conn)
-            .ok_or(ApiError::BadRequest)?;
+            .ok_or(ApiError::BadRequest {
+                message: "No access to assignment".to_string(),
+            })?;
     if !assignment.is_granted(SecurityAction::Read, &user_data) {
-        return Err(ApiError::Forbidden);
+        return Err(ApiError::Forbidden {
+            message: "No access to assignment".to_string(),
+        });
     }
     assignment.title = req.title.clone();
     assignment.due_date = req.due_date.clone();

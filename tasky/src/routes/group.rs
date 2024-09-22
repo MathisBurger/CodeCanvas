@@ -32,7 +32,9 @@ pub async fn create_group(
         members: vec![],
     };
     if !new_group.is_granted(SecurityAction::Create, &user) {
-        return Err(ApiError::Unauthorized);
+        return Err(ApiError::Unauthorized {
+            message: "User is not allowed to create a group".to_string(),
+        });
     }
     let resp = GroupRepository::insert_group(new_group, conn);
     let enriched = GroupResponse::enrich(&resp, &mut data.user_api.clone(), conn).await?;
@@ -57,11 +59,15 @@ pub async fn get_group(
 ) -> Result<HttpResponse, ApiError> {
     let conn = &mut data.db.db.get().unwrap();
     let mut group =
-        GroupRepository::get_by_id(path.into_inner().0, conn).ok_or(ApiError::BadRequest)?;
+        GroupRepository::get_by_id(path.into_inner().0, conn).ok_or(ApiError::BadRequest {
+            message: "No access to group".to_string(),
+        })?;
     if group.is_granted(SecurityAction::Read, &user) {
         let enriched = GroupResponse::enrich(&group, &mut data.user_api.clone(), conn).await?;
         return Ok(HttpResponse::Ok().json(enriched));
     }
 
-    Err(ApiError::Unauthorized)
+    Err(ApiError::Unauthorized {
+        message: "Not authorized for action".to_string(),
+    })
 }

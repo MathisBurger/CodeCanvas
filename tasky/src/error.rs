@@ -10,13 +10,13 @@ use thiserror::Error;
 #[derive(Debug, Error)]
 pub enum ApiError {
     #[error("BAD_REQUEST")]
-    BadRequest,
+    BadRequest { message: String },
     #[error("FORBIDDEN")]
-    Forbidden,
+    Forbidden { message: String },
     #[error("INTERNAL_SERVER_ERROR")]
-    InternalServerError,
+    InternalServerError { message: String },
     #[error("UNAUTHORIZED")]
-    Unauthorized,
+    Unauthorized { message: String },
 }
 
 /// The response body
@@ -29,10 +29,10 @@ struct ResponseBody {
 impl ResponseError for ApiError {
     fn status_code(&self) -> StatusCode {
         match self {
-            ApiError::BadRequest => StatusCode::BAD_REQUEST,
-            ApiError::Forbidden => StatusCode::FORBIDDEN,
-            ApiError::InternalServerError => StatusCode::INTERNAL_SERVER_ERROR,
-            ApiError::Unauthorized => StatusCode::UNAUTHORIZED,
+            ApiError::BadRequest { message: _ } => StatusCode::BAD_REQUEST,
+            ApiError::Forbidden { message: _ } => StatusCode::FORBIDDEN,
+            ApiError::InternalServerError { message: _ } => StatusCode::INTERNAL_SERVER_ERROR,
+            ApiError::Unauthorized { message: _ } => StatusCode::UNAUTHORIZED,
         }
     }
 
@@ -45,13 +45,17 @@ impl ResponseError for ApiError {
 }
 
 impl From<tonic::Status> for ApiError {
-    fn from(value: tonic::Status) -> Self {
-        ApiError::InternalServerError
+    fn from(_: tonic::Status) -> Self {
+        ApiError::InternalServerError {
+            message: "Invalid grpc call from sub microservice".to_string(),
+        }
     }
 }
 
 impl From<TryFromIntError> for ApiError {
-    fn from(value: TryFromIntError) -> Self {
-        ApiError::BadRequest
+    fn from(_: TryFromIntError) -> Self {
+        ApiError::BadRequest {
+            message: "Cannot convert between integer bit sizes".to_string(),
+        }
     }
 }

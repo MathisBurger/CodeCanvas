@@ -33,15 +33,9 @@ impl StaticSecurity {
     /// Checks if the static security action is granted for user
     pub fn is_granted(action: StaticSecurityAction, user: &UserData) -> bool {
         match action {
-            StaticSecurityAction::IsAdmin => {
-                user.user_roles.contains(&UserRole::RoleAdmin.to_string())
-            }
-            StaticSecurityAction::IsTutor => {
-                user.user_roles.contains(&UserRole::RoleTutor.to_string())
-            }
-            StaticSecurityAction::IsStudent => {
-                user.user_roles.contains(&UserRole::RoleStudent.to_string())
-            }
+            StaticSecurityAction::IsAdmin => user.user_roles.contains(&UserRole::RoleAdmin),
+            StaticSecurityAction::IsTutor => user.user_roles.contains(&UserRole::RoleTutor),
+            StaticSecurityAction::IsStudent => user.user_roles.contains(&UserRole::RoleStudent),
         }
     }
 }
