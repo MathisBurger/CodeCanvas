@@ -1,7 +1,11 @@
 use std::path::Path;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    configure("../usernator/api.proto")
+    if env!("IS_DOCKER") == "true" {
+        return configure("./api.proto");
+    } else {
+        return configure("../usernator/api.proto");
+    }
 }
 
 fn configure(proto: impl AsRef<Path>) -> Result<(), Box<dyn std::error::Error>> {

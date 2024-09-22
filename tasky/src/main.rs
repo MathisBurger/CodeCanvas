@@ -45,7 +45,9 @@ async fn main() -> std::io::Result<()> {
         }
     };
     let db = Database::new(config.clone());
-    let mut usernator = UsernatorApiClient::connect(config.clone().usernator_grpc)
+    let user_api_uri = config.clone().usernator_grpc;
+    info!(target: "startup", "{}", format!("Connecting to usernator: {}", user_api_uri));
+    let mut usernator = UsernatorApiClient::connect(user_api_uri)
         .await
         .expect("Cannot create tonic client");
 

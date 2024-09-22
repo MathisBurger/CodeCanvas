@@ -7,8 +7,10 @@ RUN cargo build --release
 RUN rm src/*.rs
 
 COPY . .
+RUN apt-get update -y && apt-get install --no-install-recommends --assume-yes protobuf-compiler
 
 RUN rm ./target/release/deps/tasky*
+ENV IS_DOCKER="true"
 RUN cargo build --release
 
 FROM gcr.io/distroless/cc-debian12

@@ -50,9 +50,23 @@ services:
       - "3002:3000"
     environment:
       - JWT_SECRET=secret
-      - SERVICE_LOCATIONS={usernator="http://usernator:3000"}
+      - SERVICE_LOCATIONS={usernator="http://usernator:3000", tasky="http://tasky:3000"}
     depends_on:
       - usernator
+      - tasky
+  tasky:
+    build: ./tasky
+    ports: 
+      - "3005:3000"
+    environment:
+      - DB_NAME=tasky
+      - DB_USERNAME=tasky
+      - DB_PASSWORD=tasky
+      - DB_HOST=postgres:5432
+      - USERNATOR_GRPC=http://usernator:3001
+    depends_on:
+      - usernator
+      - postgres
   executor:
     build: ./executor
     ports:
