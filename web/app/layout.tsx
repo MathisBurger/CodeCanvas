@@ -36,6 +36,7 @@ export default function RootLayout({
     <CurrentUserContext.Provider value={{user, setUser}}>
             <MantineProvider theme={{}}>
                 <Notifications />
+                {/* @ts-ignore */}
                 <AppShell header={{height: 100}} navbar={showNavbar ? {width: 250} : undefined}>
                     <AppShell.Header><Header /></AppShell.Header>
                     {showNavbar && (<AppShell.Navbar><Navbar /></AppShell.Navbar>)}
