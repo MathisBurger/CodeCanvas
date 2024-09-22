@@ -38,6 +38,9 @@ const SsrHeader: React.FC<SsrHeaderProps> = ({user}) => {
                 <Avatar name={user.username} color="initials" />
             </Menu.Target>
             <Menu.Dropdown>
+                <Menu.Item onClick={() => router.push("/settings")}>
+                    Settings
+                </Menu.Item>
                 <Menu.Item color="red" onClick={logOut}>
                     Log out
                 </Menu.Item>
