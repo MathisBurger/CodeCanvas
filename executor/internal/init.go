@@ -9,6 +9,7 @@ import (
 	"github.com/sethvargo/go-envconfig"
 	"log"
 	"os"
+	"time"
 )
 
 func LoadConfig() *config.Configuration {
@@ -30,7 +31,8 @@ func LoadConfig() *config.Configuration {
 	return c
 }
 
-func InitRabbitMQ(c *config.Configuration) {
+func InitRabbitMQ(c *config.Configuration, rmqInit chan bool) {
+	time.Sleep(15 * time.Second)
 	conn, err := amqp091.Dial("amqp://" + c.RabbitMQ.Username + ":" + c.RabbitMQ.Password + "@" + c.RabbitMQ.Host)
 	if err != nil {
 		return
@@ -40,4 +42,5 @@ func InitRabbitMQ(c *config.Configuration) {
 		return
 	}
 	global.RabbitMQ = ch
+	rmqInit <- true
 }

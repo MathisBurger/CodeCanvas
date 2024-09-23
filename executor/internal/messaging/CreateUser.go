@@ -14,7 +14,8 @@ type createUser struct {
 	Id uint64 `json:"id"`
 }
 
-func CreateCreateUserHandler() {
+func CreateCreateUserHandler(rmqChan chan bool) {
+	<-rmqChan
 	if _, err := global.RabbitMQ.QueueDeclare("executor_create_user", false, true, true, false, nil); err != nil {
 		panic(err.Error())
 	}

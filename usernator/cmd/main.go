@@ -17,7 +17,8 @@ func main() {
 	}
 	shared.Config = conf
 	startup.Database()
-	startup.InitRabbitMQ()
+	go startup.InitRabbitMQ()
+	go startup.InitTaskyGrpcClient()
 
 	app := fiber.New(fiber.Config{})
 

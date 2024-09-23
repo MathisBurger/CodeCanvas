@@ -71,7 +71,7 @@ async fn main() -> std::io::Result<()> {
         app_state: state.clone(),
     };
 
-    let grpc_sock_addr: SocketAddr = "0.0.0.0:3008".parse().unwrap();
+    let grpc_sock_addr: SocketAddr = "0.0.0.0:3001".parse().unwrap();
 
     let grpc = async move {
         tokio::task::spawn(

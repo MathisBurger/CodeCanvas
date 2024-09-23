@@ -40,4 +40,7 @@ COPY --from=build /lib/${ARCH}-linux-gnu/libkeyutils.so* /lib/${ARCH}-linux-gnu/
 WORKDIR /app
 COPY --from=build /tasky/target/release/tasky /app/tasky
 COPY --from=build /tasky/config.toml /app/config.toml
+
+EXPOSE 3000
+EXPOSE 3001
 CMD ["./tasky"]
