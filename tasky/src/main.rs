@@ -1,19 +1,29 @@
+use std::net::SocketAddr;
+
 use crate::auth_middleware::Auth;
 use crate::models::database::Database;
 use crate::routes::init_services;
+use crate::tasky_grpc::tasky_api_server::TaskyApiServer;
 use crate::util::config::AppConfig;
 use actix_web::web::Data;
 use actix_web::{middleware, App, HttpServer};
 use api::usernator_api_client::UsernatorApiClient;
+use futures::future::join;
+use grpc::MyTaskyApi;
 use log::info;
-use tonic::transport::Channel;
+use tonic::transport::{Channel, Server};
 
 pub mod api {
     tonic::include_proto!("api");
 }
 
+pub mod tasky_grpc {
+    tonic::include_proto!("tasky_grpc");
+}
+
 mod auth_middleware;
 mod error;
+mod grpc;
 mod models;
 mod response;
 mod routes;
@@ -57,7 +67,21 @@ async fn main() -> std::io::Result<()> {
         user_api: usernator,
     };
 
-    HttpServer::new(move || {
+    let tasky_api = MyTaskyApi {
+        app_state: state.clone(),
+    };
+
+    let grpc_sock_addr: SocketAddr = "0.0.0.0:3008".parse().unwrap();
+
+    let grpc = async move {
+        tokio::task::spawn(
+            Server::builder()
+                .add_service(TaskyApiServer::new(tasky_api))
+                .serve(grpc_sock_addr),
+        )
+    };
+
+    let actix = HttpServer::new(move || {
         App::new()
             .wrap(middleware::Logger::default())
             .wrap(Auth::new())
@@ -66,6 +90,9 @@ async fn main() -> std::io::Result<()> {
     })
     .bind("0.0.0.0:3000")
     .expect("Already in use")
-    .run()
-    .await
+    .run();
+
+    let _ret = join(grpc, actix).await;
+
+    Ok(())
 }

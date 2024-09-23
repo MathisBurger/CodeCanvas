@@ -1,6 +1,6 @@
 import {GetStudentsResponse, User} from "@/service/types/usernator";
 import ApiError from "@/service/types/error";
-import {Group, GroupJoinRequestResponse, GroupsResponse} from "@/service/types/tasky";
+import {Group, GroupJoinRequest, GroupJoinRequestResponse, GroupsResponse} from "@/service/types/tasky";
 
 class ApiService {
 
@@ -10,60 +10,36 @@ class ApiService {
         this.apiUrl = process.env.API_URL ?? "http://localhost:3002";
     }
 
-    /**
-     * The logged-in user
-     */
     public async self(): Promise<User|string> {
         return await this.get<User>("/usernator/self");
     }
 
-    /**
-     * Registers a user
-     *
-     * @param username The username of the user
-     * @param password The password of the user
-     * @throws ApiError The api error
-     */
     public async registerUser(username: string, password: string): Promise<User|string> {
         return await this.post<User>("/usernator/register", { username, password });
     }
 
-    /**
-     * Logs in a user
-     *
-     * @param username The username of the user
-     * @param password The password of the user
-     * @throws ApiError The api error
-     */
     public async loginUser(username: string, password: string): Promise<string> {
         return await this.post<never>("/usernator/login", { username, password });
     }
 
-    /**
-     * Gets all students
-     */
     public async getStudents(): Promise<GetStudentsResponse|string> {
         return await this.get<GetStudentsResponse>("/usernator/all-students");
     }
 
-    /**
-     * Gets all groups
-     */
     public async getGroups(): Promise<GroupsResponse|string> {
         return await this.get<GroupsResponse>("/tasky/groups");
     }
 
-    /**
-     * Gets a specific group
-     *
-     * @param id The ID of the group
-     */
     public async getGroup(id: number): Promise<Group|string> {
         return await this.get<Group>("/tasky/groups/" + id);
     }
 
     public async getGroupJoinRequests(id: number): Promise<GroupJoinRequestResponse|string> {
         return await this.get<GroupJoinRequestResponse>(`/tasky/groups/${id}/join_requests`);
+    }
+
+    public async createGroupJoinRequest(id: number): Promise<GroupJoinRequest|string> {
+        return await this.post<GroupJoinRequest>(`/tasky/groups/${id}/create_join_request`, {});
     }
 
     public async approveGroupJoinRequest(groupId: number, id: number): Promise<Group|string> {

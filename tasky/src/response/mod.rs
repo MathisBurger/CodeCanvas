@@ -6,6 +6,7 @@ use tonic::transport::Channel;
 pub mod assignment;
 pub mod group;
 pub mod group_join_request;
+pub mod grpc;
 mod shared;
 
 type DB = PooledConnection<ConnectionManager<PgConnection>>;

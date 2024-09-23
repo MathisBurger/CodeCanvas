@@ -1,0 +1,23 @@
+syntax = "proto3";
+option go_package = "./tasky_grpc";
+package tasky_grpc;
+
+service TaskyApi {
+  rpc GetUserGroups (GroupsRequest) returns (GroupsResponse) {}
+}
+
+
+message GroupsRequest {
+  uint64 userId = 1;
+}
+
+message GroupsResponse {
+  repeated Group groups = 1;
+}
+
+message Group {
+    uint64 id = 1;
+    string title = 2;
+    uint64 member_count = 3;
+    uint64 tutor_id = 4;
+}

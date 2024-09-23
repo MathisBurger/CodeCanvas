@@ -71,4 +71,16 @@ impl GroupRepository {
             .execute(conn)
             .expect("Cannot update group");
     }
+
+    /// Gets all groups a user is member or tutor of
+    pub fn get_groups_for_member(member_id: i32, conn: &mut DB) -> Vec<Group> {
+        dsl::groups
+            .filter(
+                dsl::tutor
+                    .eq(member_id)
+                    .or(dsl::members.contains(vec![Some(member_id)])),
+            )
+            .get_results::<Group>(conn)
+            .expect("Cannot fetch groups for member")
+    }
 }
