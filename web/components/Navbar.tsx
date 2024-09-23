@@ -29,7 +29,7 @@ const routes: Route[] = [
         path: '/groups',
         name: 'Groups',
         icon: <IconUsersGroup />,
-        authRoles: [UserRoles.Tutor]
+        authRoles: [UserRoles.Tutor, UserRoles.Student]
     }
 ]
 

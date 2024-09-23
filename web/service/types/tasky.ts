@@ -23,3 +23,13 @@ export interface TaskyUser {
     username: string;
     email: string;
 }
+
+export interface GroupJoinRequest {
+    id: number;
+    requestor: TaskyUser;
+    group_id: number;
+}
+
+export interface GroupJoinRequestResponse {
+    requests: GroupJoinRequest[];
+}

@@ -1,6 +1,6 @@
 import {GetStudentsResponse, User} from "@/service/types/usernator";
 import ApiError from "@/service/types/error";
-import {Group, GroupsResponse} from "@/service/types/tasky";
+import {Group, GroupJoinRequestResponse, GroupsResponse} from "@/service/types/tasky";
 
 class ApiService {
 
@@ -62,6 +62,18 @@ class ApiService {
      */
     public async getGroup(id: number): Promise<Group|string> {
         return await this.get<Group>("/tasky/groups/" + id);
+    }
+
+    public async getGroupJoinRequests(id: number): Promise<GroupJoinRequestResponse|string> {
+        return await this.get<GroupJoinRequestResponse>(`/tasky/groups/${id}/join_requests`);
+    }
+
+    public async approveGroupJoinRequest(groupId: number, id: number): Promise<Group|string> {
+        return await this.get<Group>(`/tasky/groups/${groupId}/join_requests/${id}/approve`);
+    }
+
+    public async rejectGroupJoinRequest(groupId: number, id: number): Promise<Group|string> {
+        return await this.get<Group>(`/tasky/groups/${groupId}/join_requests/${id}/reject`);
     }
 
     /**
