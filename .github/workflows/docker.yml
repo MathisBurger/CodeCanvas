@@ -9,7 +9,9 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v4
       - name: Create proto symlinks
-        run: ln ./usernator/api.proto ./tasky/api.proto
+        run: |
+          ln ./usernator/api.proto ./tasky/api.proto
+          ln ./tasky/tasky.proto ./usernator/tasky.proto
       - name: set up buildx
         uses: docker/setup-buildx-action@v1
       - name: log in to ghcr
