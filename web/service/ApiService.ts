@@ -5,11 +5,9 @@ import {Group, GroupJoinRequestResponse, GroupsResponse} from "@/service/types/t
 class ApiService {
 
     private apiUrl: string;
-    private session: string|undefined = undefined;
 
-    constructor(session: string|undefined = undefined) {
+    constructor() {
         this.apiUrl = process.env.API_URL ?? "http://localhost:3002";
-        this.session = session;
     }
 
     /**
@@ -109,21 +107,15 @@ class ApiService {
      */
     private async fetch<T>(path: string, method: string, body?: object): Promise<T|string> {
         try {
-            const headers = {
-                "Content-Type": "application/json",
-                "Accept": "*/*",
-            };
-            if (this.session) {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-expect-error
-                headers["Cookie"] = `session=${this.session}`;
-            }
             const resp = await fetch(`${this.apiUrl}${path}`, {
                 method,
                 mode: "cors",
                 body: body ? JSON.stringify(body) : undefined,
                 credentials: 'include',
-                headers: headers
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "*/*",
+                }
             });
             const txt = await resp.text();
             const obj = this.getObject(txt);

@@ -1,14 +1,15 @@
 'use server';
 import {GetStudentsResponse} from "@/service/types/usernator";
-import useApiService from "@/hooks/useApiService";
+import useApiServiceClient from "@/hooks/useApiServiceClient";
 import {Container, Title} from "@mantine/core";
 import EntityList, {EntityListCol} from "@/components/EntityList";
+import useClientQuery from "@/hooks/useClientQuery";
 
 
-const StudentsPage = async () => {
+const StudentsPage = () => {
 
-    const api = useApiService();
-    const students = (await api.getStudents() as GetStudentsResponse).students;
+    const api = useApiServiceClient();
+    const students = useClientQuery<GetStudentsResponse|string>(() => api.getStudents()) as GetStudentsResponse;
 
 
     const cols: EntityListCol[] = [
@@ -25,7 +26,7 @@ const StudentsPage = async () => {
     return (
         <Container fluid>
             <Title>Students</Title>
-            <EntityList cols={cols} rows={students} />
+            <EntityList cols={cols} rows={students.students} />
         </Container>
     )
 }

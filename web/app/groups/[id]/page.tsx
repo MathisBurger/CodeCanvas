@@ -1,12 +1,15 @@
-'use server';
-import {Badge, Container, Group, Tabs, Title} from "@mantine/core";
-import useApiService from "@/hooks/useApiService";
+'use client';
+import {Badge, Container, Group, Title} from "@mantine/core";
 import {Group as GroupType} from "@/service/types/tasky";
 import { TabsComponent } from "./client";
+import useClientQuery from "@/hooks/useClientQuery";
+import useApiServiceClient from "@/hooks/useApiServiceClient";
 
 
-const GroupDetailsPage = async ({params}: {params: {id: string}}) => {
+const GroupDetailsPage = ({params}: {params: {id: string}}) => {
     const id = parseInt(`${params.id}`, 10);
+    const api = useApiServiceClient();
+    const group = useClientQuery<GroupType|string>(() => api.getGroup(id)) as GroupType;
     if (isNaN(id)) {
         return (
             <Container fluid>
@@ -14,8 +17,6 @@ const GroupDetailsPage = async ({params}: {params: {id: string}}) => {
             </Container>
         )
     }
-    const api = useApiService();
-    const group = (await api.getGroup(id)) as GroupType;
 
     return (
         <Container fluid>

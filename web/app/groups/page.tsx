@@ -1,21 +1,22 @@
-'use server';
+'use client';
 import {Container, Title} from "@mantine/core";
-import useApiService from "@/hooks/useApiService";
 import {GroupsResponse} from "@/service/types/tasky";
 import GroupsDisplayComponent from "@/app/groups/displayComponent";
+import useApiServiceClient from "@/hooks/useApiServiceClient";
+import useClientQuery from "@/hooks/useClientQuery";
 
 
-const GroupsPage = async () => {
+const GroupsPage = () => {
 
-    const api = useApiService();
-    const groups = (await api.getGroups() as GroupsResponse).groups;
+    const api = useApiServiceClient();
+    const groups = useClientQuery<GroupsResponse|string>(() => api.getGroups()) as GroupsResponse
 
 
 
     return (
         <Container fluid>
             <Title>Groups</Title>
-            <GroupsDisplayComponent  groups={groups}/>
+            <GroupsDisplayComponent  groups={groups?.groups ?? []}/>
         </Container>
     );
 }
