@@ -1,19 +1,19 @@
 'use client';
 
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 
-interface ClientQueryProps<T> {
-    query: () => T;
-}
-
-function useClientQuery<T>(query: () => Promise<T>) {
+function useClientQuery<T>(query: () => Promise<T>, deps?: any[]): [T|null, () => void] {
     const [state, setState] = useState<T|null>(null);
 
     useEffect(() => {
         query().then((result) => setState(result as T));
-    }, []);
+    }, deps ?? []);
 
-    return state;
+    const refetch = useCallback(() => {
+        query().then((result) => setState(result as T));
+    }, deps ?? []);
+
+    return [state, refetch];
 }
 
 export default useClientQuery;

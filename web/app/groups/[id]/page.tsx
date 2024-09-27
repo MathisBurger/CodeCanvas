@@ -9,7 +9,7 @@ import useApiServiceClient from "@/hooks/useApiServiceClient";
 const GroupDetailsPage = ({params}: {params: {id: string}}) => {
     const id = parseInt(`${params.id}`, 10);
     const api = useApiServiceClient();
-    const group = useClientQuery<GroupType|string>(() => api.getGroup(id)) as GroupType;
+    const [group, refetch] = useClientQuery<GroupType>(() => api.getGroup(id));
     if (isNaN(id)) {
         return (
             <Container fluid>
@@ -21,10 +21,10 @@ const GroupDetailsPage = ({params}: {params: {id: string}}) => {
     return (
         <Container fluid>
             <Group>
-                <Title>{group.title}</Title>
-                <Badge>{group.tutor.username}</Badge>
+                <Title>{group?.title ?? "Loading"}</Title>
+                <Badge>{group?.tutor?.username ?? "Loading"}</Badge>
             </Group>
-            <TabsComponent group={group} />
+            <TabsComponent group={group} refetch={refetch} />
         </Container>
     )
 }

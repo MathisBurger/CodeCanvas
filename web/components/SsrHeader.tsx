@@ -4,6 +4,7 @@ import Link from "next/link";
 import {User} from "@/service/types/usernator";
 import {useCookies} from "react-cookie";
 import {useRouter} from "next/navigation";
+import useCurrentUser from "@/hooks/useCurrentUser";
 
 interface SsrHeaderProps {
     user: User|null;
@@ -11,13 +12,15 @@ interface SsrHeaderProps {
 
 const SsrHeader: React.FC<SsrHeaderProps> = ({user}) => {
     const [s, _, removeSession] = useCookies(['session']);
+    const {setUser} = useCurrentUser();
     const router = useRouter();
 
 
     const logOut = () => {
         removeSession('session');
-        router.push("/");
-        window.location.reload();
+        router.push("/login");
+        setUser(null);
+        //window.location.reload();
     }
 
     if (user === null) {

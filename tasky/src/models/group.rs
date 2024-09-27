@@ -1,7 +1,7 @@
 use super::DB;
 use crate::schema::groups::dsl;
-use diesel::associations::HasTable;
 use diesel::prelude::*;
+use diesel::{associations::HasTable, dsl::not};
 use serde::{Deserialize, Serialize};
 
 /// Group entity in the database
@@ -72,7 +72,7 @@ impl GroupRepository {
             .expect("Cannot update group");
     }
 
-    /// Gets all groups a user is member or tutor of
+    /// Gets all groups a user is not member or tutor of
     pub fn get_groups_for_member(member_id: i32, conn: &mut DB) -> Vec<Group> {
         dsl::groups
             .filter(
@@ -80,6 +80,16 @@ impl GroupRepository {
                     .eq(member_id)
                     .or(dsl::members.contains(vec![Some(member_id)])),
             )
+            .get_results::<Group>(conn)
+            .expect("Cannot fetch groups for member")
+    }
+
+    /// Gets all groups a user is member or tutor of
+    pub fn get_groups_for_not_member(member_id: i32, conn: &mut DB) -> Vec<Group> {
+        dsl::groups
+            .filter(not(dsl::tutor
+                .eq(member_id)
+                .or(dsl::members.contains(vec![Some(member_id)]))))
             .get_results::<Group>(conn)
             .expect("Cannot fetch groups for member")
     }

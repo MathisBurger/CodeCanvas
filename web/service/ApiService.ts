@@ -2,6 +2,10 @@ import {GetStudentsResponse, User} from "@/service/types/usernator";
 import ApiError from "@/service/types/error";
 import {Group, GroupJoinRequest, GroupJoinRequestResponse, GroupsResponse} from "@/service/types/tasky";
 
+export interface GenericMessage {
+    message: string;
+}
+
 class ApiService {
 
     private apiUrl: string;
@@ -14,40 +18,44 @@ class ApiService {
         return await this.get<User>("/usernator/self");
     }
 
-    public async registerUser(username: string, password: string): Promise<User|string> {
+    public async registerUser(username: string, password: string): Promise<User> {
         return await this.post<User>("/usernator/register", { username, password });
     }
 
-    public async loginUser(username: string, password: string): Promise<string> {
-        return await this.post<never>("/usernator/login", { username, password });
+    public async loginUser(username: string, password: string): Promise<GenericMessage> {
+        return await this.post<GenericMessage>("/usernator/login", { username, password });
     }
 
-    public async getStudents(): Promise<GetStudentsResponse|string> {
+    public async getStudents(): Promise<GetStudentsResponse> {
         return await this.get<GetStudentsResponse>("/usernator/all-students");
     }
 
-    public async getGroups(): Promise<GroupsResponse|string> {
+    public async getGroups(): Promise<GroupsResponse> {
         return await this.get<GroupsResponse>("/tasky/groups");
     }
 
-    public async getGroup(id: number): Promise<Group|string> {
+    public async getMyGroups(): Promise<GroupsResponse> {
+        return await this.get<GroupsResponse>("/tasky/my_groups");
+    }
+
+    public async getGroup(id: number): Promise<Group> {
         return await this.get<Group>("/tasky/groups/" + id);
     }
 
-    public async getGroupJoinRequests(id: number): Promise<GroupJoinRequestResponse|string> {
+    public async getGroupJoinRequests(id: number): Promise<GroupJoinRequestResponse> {
         return await this.get<GroupJoinRequestResponse>(`/tasky/groups/${id}/join_requests`);
     }
 
-    public async createGroupJoinRequest(id: number): Promise<GroupJoinRequest|string> {
+    public async createGroupJoinRequest(id: number): Promise<GroupJoinRequest> {
         return await this.post<GroupJoinRequest>(`/tasky/groups/${id}/create_join_request`, {});
     }
 
-    public async approveGroupJoinRequest(groupId: number, id: number): Promise<Group|string> {
-        return await this.get<Group>(`/tasky/groups/${groupId}/join_requests/${id}/approve`);
+    public async approveGroupJoinRequest(groupId: number, id: number): Promise<Group> {
+        return await this.post<Group>(`/tasky/groups/${groupId}/join_requests/${id}/approve`, {});
     }
 
-    public async rejectGroupJoinRequest(groupId: number, id: number): Promise<Group|string> {
-        return await this.get<Group>(`/tasky/groups/${groupId}/join_requests/${id}/reject`);
+    public async rejectGroupJoinRequest(groupId: number, id: number): Promise<Group> {
+        return await this.post<Group>(`/tasky/groups/${groupId}/join_requests/${id}/reject`, {});
     }
 
     /**
@@ -57,7 +65,7 @@ class ApiService {
      * @throws ApiError The api error
      * @private
      */
-    private async get<T>(path: string): Promise<T|string> {
+    private async get<T>(path: string): Promise<T> {
         return await this.fetch<T>(path, "GET", undefined);
     }
 
@@ -69,7 +77,7 @@ class ApiService {
      * @throws ApiError The api error
      * @private
      */
-    private async post<T>(path: string, body: object): Promise<T|string> {
+    private async post<T>(path: string, body: object): Promise<T> {
         return await this.fetch<T>(path, "POST", body);
     }
 
@@ -81,7 +89,7 @@ class ApiService {
      * @param body The body if exists
      * @private
      */
-    private async fetch<T>(path: string, method: string, body?: object): Promise<T|string> {
+    private async fetch<T>(path: string, method: string, body?: object): Promise<T> {
         try {
             const resp = await fetch(`${this.apiUrl}${path}`, {
                 method,
@@ -96,7 +104,7 @@ class ApiService {
             const txt = await resp.text();
             const obj = this.getObject(txt);
             if (resp.status !== 200) {
-                throw new ApiError(resp.status, typeof obj == "object" ? obj.message : obj);
+                throw new ApiError(resp.status, obj.message);
             }
             return obj;
 
@@ -108,11 +116,11 @@ class ApiService {
         }
     }
 
-    private getObject(text: string): any|string {
+    private getObject(text: string): any|GenericMessage {
         try {
             return JSON.parse(text);
         } catch (_) {
-            return text;
+            return {message: text} as GenericMessage;
         }
     }
 }

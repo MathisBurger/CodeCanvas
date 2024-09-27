@@ -6,7 +6,10 @@ import {User, UserRoles} from "@/service/types/usernator";
  * @param user The user
  * @param roles The roles required for this action
  */
-export const isGranted = (user: User, roles: UserRoles[]): boolean => {
+export const isGranted = (user: User|null, roles: UserRoles[]): boolean => {
+    if (null === user) {
+        return false;
+    }
     const all = [...user.roles, ...roles];
     return new Set(all).size !== all.length;
 }

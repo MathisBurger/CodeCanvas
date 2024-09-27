@@ -6,7 +6,6 @@ import {usePathname, useRouter} from "next/navigation";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import { User } from "@/service/types/usernator";
 import { useEffect } from "react";
-import {useColorScheme} from "@mantine/hooks";
 
 
 const Header = () => {

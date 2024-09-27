@@ -2,9 +2,10 @@
 import {Badge, Tabs} from "@mantine/core";
 import React from "react";
 import {Group, GroupJoinRequestResponse, TaskyUser} from "@/service/types/tasky";
-import EntityList, {EntityListCol} from "@/components/EntityList";
+import EntityList, {EntityListCol, EntityListRowAction} from "@/components/EntityList";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import useClientQuery from "@/hooks/useClientQuery";
+import {UserRoles} from "@/service/types/usernator";
 
 const MembersComponent: React.FC<{members: TaskyUser[]}> = ({members}) => {
 
@@ -24,10 +25,10 @@ const MembersComponent: React.FC<{members: TaskyUser[]}> = ({members}) => {
     )
 }
 
-export const JoinRequestsComponent: React.FC<{group: Group}> = ({group}) => {
+export const JoinRequestsComponent: React.FC<{group: Group|null, refetchParent: () => void}> = ({group, refetchParent}) => {
 
     const api = useApiServiceClient();
-    const requests = useClientQuery<GroupJoinRequestResponse|string>(() => api.getGroupJoinRequests(group.id));
+    const [requests, refetch] = useClientQuery<GroupJoinRequestResponse>(() => api.getGroupJoinRequests(group?.id ?? -1), [group?.id]);
 
     const cols: EntityListCol[] = [
         {
@@ -39,15 +40,30 @@ export const JoinRequestsComponent: React.FC<{group: Group}> = ({group}) => {
             label: 'Username',
             getter: (row) => row.requestor.username
         }
-    ]
+    ];
+
+    const actions: EntityListRowAction[] = [
+        {
+            name: 'Approve',
+            color: 'green',
+            onClick: (row) => api.approveGroupJoinRequest(row.group_id, row.id).then(() => {refetch(); refetchParent();}),
+            auth: [UserRoles.Tutor, UserRoles.Admin]
+        },
+        {
+            name: 'Reject',
+            color: 'red',
+            onClick: (row) => api.rejectGroupJoinRequest(row.group_id, row.id).then(() => {refetch(); refetchParent();}),
+            auth: [UserRoles.Tutor, UserRoles.Admin]
+        }
+    ];
 
     return (
-        <EntityList cols={cols} rows={requests ? (requests as GroupJoinRequestResponse).requests : []} />
+        <EntityList cols={cols} rows={requests ? (requests as GroupJoinRequestResponse).requests : []} rowActions={actions} />
     );
 }
 
 
-export const TabsComponent: React.FC<{group: Group}> = ({group}) => (
+export const TabsComponent: React.FC<{group: Group|null, refetch: () => void}> = ({group, refetch}) => (
     <Tabs defaultValue="assignments" style={{marginTop: '2em'}}>
         <Tabs.List>
             <Tabs.Tab value="assignments">
@@ -56,7 +72,7 @@ export const TabsComponent: React.FC<{group: Group}> = ({group}) => (
             <Tabs.Tab value="members">
                 Members
             </Tabs.Tab>
-            <Tabs.Tab value="joinRequests" rightSection={group.request_count > 0 ? <Badge color="red">{group.request_count}</Badge> : null}>
+            <Tabs.Tab value="joinRequests" rightSection={group && group.request_count > 0 ? <Badge color="red">{group.request_count}</Badge> : null}>
                 Join Requests
             </Tabs.Tab>
         </Tabs.List>
@@ -65,10 +81,10 @@ export const TabsComponent: React.FC<{group: Group}> = ({group}) => (
                 Assignments
             </Tabs.Panel>
             <Tabs.Panel value="members">
-                <MembersComponent members={group.members} />
+                <MembersComponent members={group?.members ?? []} />
             </Tabs.Panel>
             <Tabs.Panel value="joinRequests">
-                <JoinRequestsComponent group={group} />
+                <JoinRequestsComponent group={group} refetchParent={refetch} />
             </Tabs.Panel>
         </div>
     </Tabs>

@@ -9,13 +9,13 @@ import useClientQuery from "@/hooks/useClientQuery";
 const GroupsPage = () => {
 
     const api = useApiServiceClient();
-    const [groups] = useClientQuery<GroupsResponse>(() => api.getGroups())
+    const [groups] = useClientQuery<GroupsResponse>(() => api.getMyGroups())
 
 
 
     return (
         <Container fluid>
-            <Title>Groups</Title>
+            <Title>My Groups</Title>
             <GroupsDisplayComponent  groups={groups?.groups ?? []}/>
         </Container>
     );

@@ -26,6 +26,12 @@ const routes: Route[] = [
         authRoles: [UserRoles.Tutor, UserRoles.Admin]
     },
     {
+        path: '/my-groups',
+        name: 'My Groups',
+        icon: <IconUsersGroup />,
+        authRoles: [UserRoles.Tutor, UserRoles.Student]
+    },
+    {
         path: '/groups',
         name: 'Groups',
         icon: <IconUsersGroup />,

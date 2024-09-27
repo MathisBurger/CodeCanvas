@@ -41,11 +41,26 @@ pub async fn create_group(
     Ok(HttpResponse::Ok().json(enriched))
 }
 
-/// Endpoint to fetch all groups
+/// Endpoint to fetch all groups you are not a member of
 #[get("/groups")]
-pub async fn get_all_groups(data: web::Data<AppState>) -> Result<HttpResponse, ApiError> {
+pub async fn get_all_groups(
+    data: web::Data<AppState>,
+    user: web::ReqData<UserData>,
+) -> Result<HttpResponse, ApiError> {
     let conn = &mut data.db.db.get().unwrap();
-    let groups = GroupRepository::get_all(conn);
+    let groups = GroupRepository::get_groups_for_not_member(user.into_inner().user_id, conn);
+    let resp = GroupsResponse::enrich(&groups, &mut data.user_api.clone(), conn).await?;
+    Ok(HttpResponse::Ok().json(resp))
+}
+
+/// Endpoint to fetch all groups you are a member of
+#[get("/my_groups")]
+pub async fn get_all_my_groups(
+    data: web::Data<AppState>,
+    user: web::ReqData<UserData>,
+) -> Result<HttpResponse, ApiError> {
+    let conn = &mut data.db.db.get().unwrap();
+    let groups = GroupRepository::get_groups_for_member(user.into_inner().user_id, conn);
     let resp = GroupsResponse::enrich(&groups, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(resp))
 }

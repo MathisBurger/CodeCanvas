@@ -1,5 +1,9 @@
 'use client';
 import {Button, ButtonProps, Group, Table} from "@mantine/core";
+import {UserRoles} from "@/service/types/usernator";
+import {useMemo} from "react";
+import {isGranted} from "@/service/auth";
+import useCurrentUser from "@/hooks/useCurrentUser";
 
 
 export interface EntityListCol {
@@ -12,6 +16,8 @@ export interface EntityListRowAction {
     color: ButtonProps['color'];
     name: string;
     onClick: (row: any) => void;
+    auth?: UserRoles[];
+    authFunc?: (row: any) => boolean;
 }
 
 interface EntityListProps {
@@ -22,13 +28,23 @@ interface EntityListProps {
 
 const EntityList: React.FC<EntityListProps> = ({cols, rows, rowActions}) => {
 
+    const {user} = useCurrentUser();
+    const filteredRowActions = useMemo<undefined|EntityListRowAction[]>(() => {
+        if (rowActions) {
+            return rowActions
+                .filter((a) => a.auth ? isGranted(user, a.auth) : true)
+        }
+        return undefined;
+    }, [rowActions])
+
+
     return (
         <Table stickyHeader>
             <Table.Thead>
                 {cols.map(col => (
                     <Table.Th key={col.label}>{col.label}</Table.Th>
                 ))}
-                {rowActions && (
+                {filteredRowActions && (
                     <Table.Th>Actions</Table.Th>
                 )}
             </Table.Thead>
@@ -38,10 +54,10 @@ const EntityList: React.FC<EntityListProps> = ({cols, rows, rowActions}) => {
                         {cols.map(col => (
                             <Table.Td key={`${row}_${col}`}>{col.getter ? col.getter(row) : row[col.field]}</Table.Td>
                         ))}
-                        {rowActions && (
+                        {filteredRowActions && (
                             <Table.Td>
                                 <Group justify="center">
-                                    {rowActions.map(action => (
+                                    {filteredRowActions.filter((a) => a.authFunc ? a.authFunc(row) : true).map(action => (
                                         <Button
                                             onClick={() => action.onClick(row)}
                                             color={action.color}
