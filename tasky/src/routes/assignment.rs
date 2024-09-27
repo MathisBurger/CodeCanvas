@@ -12,6 +12,7 @@ use crate::models::assignment::AssignmentRepository;
 use crate::models::assignment::CreateAssignment;
 use crate::models::group::GroupRepository;
 use crate::response::assignment::AssignmentResponse;
+use crate::response::assignment::AssignmentsResponse;
 use crate::response::Enrich;
 use crate::security::IsGranted;
 use crate::security::SecurityAction;
@@ -32,6 +33,30 @@ struct UpdateAssignmentRequest {
     pub title: String,
     pub due_date: NaiveDateTime,
     pub description: String,
+}
+
+/// Gets all assignments on a group
+#[get("/groups/{group_id}/assignments")]
+pub async fn get_all_group_assignments(
+    data: web::Data<AppState>,
+    user: web::ReqData<UserData>,
+    path: web::Path<(i32,)>,
+) -> Result<HttpResponse, ApiError> {
+    let user_data = user.into_inner();
+    let conn = &mut data.db.db.get().unwrap();
+    let mut group =
+        GroupRepository::get_by_id(path.into_inner().0, conn).ok_or(ApiError::BadRequest {
+            message: "No access to group".to_string(),
+        })?;
+    if !group.is_granted(SecurityAction::Update, &user_data) {
+        return Err(ApiError::Forbidden {
+            message: "No access to group".to_string(),
+        });
+    }
+    let assignments = AssignmentRepository::get_all_group_assignments(group.id, conn);
+    let enriched =
+        AssignmentsResponse::enrich(&assignments, &mut data.user_api.clone(), conn).await?;
+    Ok(HttpResponse::Ok().json(enriched))
 }
 
 /// Endpoint to create an assignment on a group

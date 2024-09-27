@@ -54,6 +54,14 @@ impl AssignmentRepository {
             .expect("Cannot create new assignment")
     }
 
+    /// Gets assignments by group_id
+    pub fn get_all_group_assignments(group_id: i32, conn: &mut DB) -> Vec<Assignment> {
+        dsl::assignments
+            .filter(dsl::group_id.eq(group_id))
+            .get_results::<Assignment>(conn)
+            .expect("Error loading group")
+    }
+
     /// Gets an assignment by ID and group_id
     pub fn get_assignment_by_id_and_group(
         id: i32,

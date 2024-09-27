@@ -1,3 +1,4 @@
+import {MinifiedGroup, TaskyUser} from "@/service/types/tasky";
 
 export enum UserRoles {
     Student='ROLE_STUDENT',
@@ -13,6 +14,7 @@ export interface User {
     username: string;
     email: string;
     roles: UserRoles[];
+    groups: MinifiedGroup[];
 }
 
 export interface GetStudentsResponse {

@@ -22,6 +22,28 @@ pub struct AssignmentResponse {
     pub language: AssignmentLanguage,
 }
 
+/// A vec of assignments
+#[derive(Serialize)]
+pub struct AssignmentsResponse {
+    assignments: Vec<AssignmentResponse>,
+}
+
+impl Enrich<Vec<Assignment>> for AssignmentsResponse {
+    async fn enrich(
+        from: &Vec<Assignment>,
+        client: &mut crate::api::usernator_api_client::UsernatorApiClient<
+            tonic::transport::Channel,
+        >,
+        db_conn: &mut super::DB,
+    ) -> Result<Self, ApiError> {
+        let mut resp: Vec<AssignmentResponse> = vec![];
+        for assignment in from {
+            resp.push(AssignmentResponse::enrich(assignment, client, db_conn).await?);
+        }
+        Ok(AssignmentsResponse { assignments: resp })
+    }
+}
+
 impl Enrich<Assignment> for AssignmentResponse {
     async fn enrich(
         from: &Assignment,

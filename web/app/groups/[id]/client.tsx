@@ -6,6 +6,7 @@ import EntityList, {EntityListCol, EntityListRowAction} from "@/components/Entit
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import useClientQuery from "@/hooks/useClientQuery";
 import {UserRoles} from "@/service/types/usernator";
+import GroupAssignmentsTab from "@/components/assignments/GroupAssignmentsTab";
 
 const MembersComponent: React.FC<{members: TaskyUser[]}> = ({members}) => {
 
@@ -78,7 +79,7 @@ export const TabsComponent: React.FC<{group: Group|null, refetch: () => void}> =
         </Tabs.List>
         <div style={{marginTop: '2em'}}>
             <Tabs.Panel value="assignments">
-                Assignments
+                <GroupAssignmentsTab group={group} />
             </Tabs.Panel>
             <Tabs.Panel value="members">
                 <MembersComponent members={group?.members ?? []} />

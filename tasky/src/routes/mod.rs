@@ -14,6 +14,7 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(group_join_request::get_join_requests)
         .service(group_join_request::approve_join_request)
         .service(group_join_request::reject_join_request)
+        .service(assignment::get_all_group_assignments)
         .service(assignment::create_assignment)
         .service(assignment::get_assignment)
         .service(assignment::update_assignment);

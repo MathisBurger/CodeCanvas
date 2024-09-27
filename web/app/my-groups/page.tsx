@@ -16,7 +16,7 @@ const GroupsPage = () => {
     return (
         <Container fluid>
             <Title>My Groups</Title>
-            <GroupsDisplayComponent  groups={groups?.groups ?? []}/>
+            <GroupsDisplayComponent  groups={groups?.groups ?? []} page="my-groups"/>
         </Container>
     );
 }
