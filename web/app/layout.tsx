@@ -9,6 +9,12 @@ import Navbar from "@/components/Navbar";
 import { User } from "@/service/types/usernator";
 import { CurrentUserContext } from "@/hooks/useCurrentUser";
 import '@mantine/core/styles.css';
+import '@mantine/tiptap/styles.css';
+import '@mantine/dates/styles.css';
+import '@mantine/notifications/styles.css';
+import '@mantine/code-highlight/styles.css';
+import '@mantine/dropzone/styles.css';
+import {DatesProvider} from "@mantine/dates";
 
 export default function RootLayout({
   children,
@@ -35,13 +41,15 @@ export default function RootLayout({
     <body>
     <CurrentUserContext.Provider value={{user, setUser}}>
             <MantineProvider theme={{}}>
-                <Notifications />
-                {/* @ts-ignore */}
-                <AppShell header={{height: 100}} navbar={showNavbar ? {width: 250} : undefined}>
-                    <AppShell.Header><Header /></AppShell.Header>
-                    {showNavbar && (<AppShell.Navbar><Navbar /></AppShell.Navbar>)}
-                    <AppShell.Main>{children}</AppShell.Main>
-                </AppShell>
+                <DatesProvider settings={{timezone: null}}>
+                    <Notifications />
+                    {/* @ts-ignore */}
+                    <AppShell header={{height: 100}} navbar={showNavbar ? {width: 250} : undefined}>
+                        <AppShell.Header><Header /></AppShell.Header>
+                        {showNavbar && (<AppShell.Navbar><Navbar /></AppShell.Navbar>)}
+                        <AppShell.Main>{children}</AppShell.Main>
+                    </AppShell>
+                </DatesProvider>
             </MantineProvider>
     </CurrentUserContext.Provider>
     </body>

@@ -33,3 +33,21 @@ export interface GroupJoinRequest {
 export interface GroupJoinRequestResponse {
     requests: GroupJoinRequest[];
 }
+
+export enum AssignmentLanguage {
+    QuestionBased = 'QuestionBased',
+    Java = "Java",
+    Golang = "Golang",
+}
+
+export interface Assignment {
+    id: number;
+    title: string;
+    due_date: string;
+    description: string;
+    language: AssignmentLanguage
+}
+
+export interface AssignmentsResponse {
+    assignments: Assignment[];
+}

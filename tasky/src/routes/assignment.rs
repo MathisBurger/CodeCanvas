@@ -3,7 +3,6 @@ use actix_web::post;
 use actix_web::web;
 use actix_web::HttpResponse;
 use chrono::NaiveDateTime;
-use serde::Deserialize;
 
 use crate::auth_middleware::UserData;
 use crate::error::ApiError;
@@ -17,11 +16,27 @@ use crate::response::Enrich;
 use crate::security::IsGranted;
 use crate::security::SecurityAction;
 use crate::AppState;
+use chrono::{DateTime, Utc};
+use serde::{Deserialize, Deserializer};
+
+fn deserialize_naive_datetime<'de, D>(deserializer: D) -> Result<NaiveDateTime, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let s: String = Deserialize::deserialize(deserializer)?;
+    // Parse as DateTime<Utc> to handle the Z suffix
+    let datetime = DateTime::parse_from_rfc3339(&s)
+        .map_err(serde::de::Error::custom)?
+        .with_timezone(&Utc);
+    // Convert to NaiveDateTime (without timezone)
+    Ok(datetime.naive_utc())
+}
 
 /// Request to create an assignment
 #[derive(Deserialize)]
 struct CreateAssignmentRequest {
     pub title: String,
+    #[serde(deserialize_with = "deserialize_naive_datetime")]
     pub due_date: NaiveDateTime,
     pub description: String,
     pub language: AssignmentLanguage,
@@ -31,6 +46,7 @@ struct CreateAssignmentRequest {
 #[derive(Deserialize)]
 struct UpdateAssignmentRequest {
     pub title: String,
+    #[serde(deserialize_with = "deserialize_naive_datetime")]
     pub due_date: NaiveDateTime,
     pub description: String,
 }

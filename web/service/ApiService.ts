@@ -1,6 +1,14 @@
 import {GetStudentsResponse, User} from "@/service/types/usernator";
 import ApiError from "@/service/types/error";
-import {Group, GroupJoinRequest, GroupJoinRequestResponse, GroupsResponse} from "@/service/types/tasky";
+import {
+    Assignment,
+    AssignmentLanguage, AssignmentsResponse,
+    Group,
+    GroupJoinRequest,
+    GroupJoinRequestResponse,
+    GroupsResponse
+} from "@/service/types/tasky";
+import dayjs from "dayjs";
 
 export interface GenericMessage {
     message: string;
@@ -56,6 +64,14 @@ class ApiService {
 
     public async rejectGroupJoinRequest(groupId: number, id: number): Promise<Group> {
         return await this.post<Group>(`/tasky/groups/${groupId}/join_requests/${id}/reject`, {});
+    }
+
+    public async createAssignment(groupId: number, title: string, due_date: Date, description: string, language: AssignmentLanguage): Promise<Assignment> {
+        return await this.post<Assignment>(`/tasky/groups/${groupId}/assignments`, {title, due_date, description, language});
+    }
+
+    public async getAssignmentsForGroup(id: number): Promise<AssignmentsResponse> {
+        return await this.get<AssignmentsResponse>(`/tasky/groups/${id}/assignments`)
     }
 
     /**

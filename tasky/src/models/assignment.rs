@@ -14,8 +14,12 @@ use serde::{Deserialize, Serialize};
 #[derive(diesel_derive_enum::DbEnum, Debug, Clone, Deserialize, Serialize)]
 #[ExistingTypePath = "crate::schema::sql_types::AssignmentLanguage"]
 pub enum AssignmentLanguage {
+    #[serde(rename = "Java")]
     Java,
+    #[serde(rename = "Golang")]
     Golang,
+    #[serde(rename = "QuestionBased")]
+    QuestionBased,
 }
 
 /// The assignment entity

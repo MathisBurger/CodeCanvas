@@ -1,7 +1,7 @@
 // @generated automatically by Diesel CLI.
 
 pub mod sql_types {
-    #[derive(diesel::query_builder::QueryId, diesel::sql_types::SqlType, serde::Deserialize)]
+    #[derive(diesel::query_builder::QueryId, serde::Deserialize, diesel::sql_types::SqlType)]
     #[diesel(postgres_type(name = "assignment_language"))]
     pub struct AssignmentLanguage;
 }
@@ -41,4 +41,8 @@ diesel::table! {
 diesel::joinable!(assignments -> groups (group_id));
 diesel::joinable!(group_join_requests -> groups (group_id));
 
-diesel::allow_tables_to_appear_in_same_query!(assignments, group_join_requests, groups,);
+diesel::allow_tables_to_appear_in_same_query!(
+    assignments,
+    group_join_requests,
+    groups,
+);
