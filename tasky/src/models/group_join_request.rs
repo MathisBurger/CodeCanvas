@@ -53,10 +53,28 @@ impl GroupJoinRequestRepository {
             .expect("Cannot get count") as i32
     }
 
+    /// Checks if a request exists
+    pub fn request_exists(group_id: i32, user_id: i32, conn: &mut DB) -> bool {
+        dsl::group_join_requests
+            .filter(dsl::group_id.eq(group_id).and(dsl::requestor.eq(user_id)))
+            .first::<GroupJoinRequest>(conn)
+            .optional()
+            .expect("Cannot get count")
+            .is_some()
+    }
+
     /// Gets all group requests for a group by group_id
     pub fn get_group_requests(group_id: i32, conn: &mut DB) -> Vec<GroupJoinRequest> {
         dsl::group_join_requests
             .filter(dsl::group_id.eq(group_id))
+            .get_results::<GroupJoinRequest>(conn)
+            .expect("Cannot get requests")
+    }
+
+    /// Gets all group requests for a group by group_id
+    pub fn get_user_requests(user_id: i32, conn: &mut DB) -> Vec<GroupJoinRequest> {
+        dsl::group_join_requests
+            .filter(dsl::requestor.eq(user_id))
             .get_results::<GroupJoinRequest>(conn)
             .expect("Cannot get requests")
     }

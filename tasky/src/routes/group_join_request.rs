@@ -28,6 +28,11 @@ pub async fn create_join_request(
             message: "The user is already member or not a student".to_string(),
         });
     }
+    if GroupJoinRequestRepository::request_exists(group.id, user.user_id, conn) {
+        return Err(ApiError::Forbidden {
+            message: "User already sent a request".to_string(),
+        });
+    }
     let request = GroupJoinRequestRepository::create_request(
         CreateGroupJoinRequest {
             requestor: user.user_id,

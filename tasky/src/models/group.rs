@@ -1,3 +1,4 @@
+use super::group_join_request::GroupJoinRequestRepository;
 use super::DB;
 use crate::schema::groups::dsl;
 use diesel::prelude::*;
@@ -86,9 +87,14 @@ impl GroupRepository {
 
     /// Gets all groups a user is member or tutor of
     pub fn get_groups_for_not_member(member_id: i32, conn: &mut DB) -> Vec<Group> {
+        let requested: Vec<i32> = GroupJoinRequestRepository::get_user_requests(member_id, conn)
+            .into_iter()
+            .map(|x| x.group_id)
+            .collect();
         dsl::groups
             .filter(not(dsl::tutor
                 .eq(member_id)
+                .or(dsl::id.eq_any(requested))
                 .or(dsl::members.contains(vec![Some(member_id)]))))
             .get_results::<Group>(conn)
             .expect("Cannot fetch groups for member")

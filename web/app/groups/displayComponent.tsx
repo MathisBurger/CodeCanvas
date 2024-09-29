@@ -10,10 +10,11 @@ import {isGranted} from "@/service/auth";
 
 interface DisplayComponentProps {
     groups: MinifiedGroup[];
+    refetch?: () => void;
     page: 'my-groups'|'groups'
 }
 
-const GroupsDisplayComponent = ({groups, page}: DisplayComponentProps) => {
+const GroupsDisplayComponent = ({groups, page, refetch}: DisplayComponentProps) => {
 
     const router = useRouter();
     const cols: EntityListCol[] = [
@@ -53,10 +54,11 @@ const GroupsDisplayComponent = ({groups, page}: DisplayComponentProps) => {
                 notifications.show({
                     title: 'Join Request created',
                     message: 'Created join request on group ' + row.title
-                })
+                });
+                if (refetch) refetch();
             }),
             auth: [UserRoles.Student],
-            authFunc: (row) => user?.groups.map(g => g.id).indexOf(row.id) === -1 && page === 'groups'
+            authFunc: (row) => (user?.groups ?? []).map(g => g.id).indexOf(row.id) === -1 && page === 'groups'
         }
     ];
 
