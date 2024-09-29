@@ -13,6 +13,6 @@ Some tutors can create assignments for you to to and complete. As a registered s
 
 TODO:
 - Integrate executor in docker completely
-- Build RabbitMQ golang service that initializes all users and queues from a yaml or json config
-- No multilpe JOIN requests => Dont show already requested groups under /groups
+- Build golang service that initializes all users and queues from a yaml or json config for RabbitMQ, postgres and MongoDB
 - Execute diesel migrations on docker container startup
+- Optimize tasky SQL requests with JOINs

@@ -33,6 +33,8 @@ pub struct Assignment {
     pub group_id: i32,
     pub description: String,
     pub language: AssignmentLanguage,
+    pub completed_by: Vec<Option<i32>>,
+    pub file_structure: Option<serde_json::Value>,
 }
 
 /// Used to create a new assignment

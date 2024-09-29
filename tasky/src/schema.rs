@@ -18,6 +18,8 @@ diesel::table! {
         group_id -> Int4,
         description -> Text,
         language -> AssignmentLanguage,
+        completed_by -> Array<Nullable<Int4>>,
+        file_structure -> Nullable<Jsonb>,
     }
 }
 
