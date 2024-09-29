@@ -1,9 +1,8 @@
 import {AssignmentLanguage, Group as TaskyGroup} from "@/service/types/tasky"
-import {Button, Group, Modal, Select, Textarea, TextInput} from "@mantine/core";
+import {Button, Group, Modal, Select, TextInput} from "@mantine/core";
 import {DateTimePicker} from "@mantine/dates";
 import {useForm} from "@mantine/form";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
-import {useRouter} from "next/navigation";
 import RichTextInput from "@/components/form/RichTextInput";
 import { notifications } from "@mantine/notifications";
 
@@ -18,7 +17,6 @@ interface CreateAssignmentModalProps {
 const CreateAssignmentModal = ({group, onClose, refetch}: CreateAssignmentModalProps) => {
 
     const api = useApiServiceClient();
-    const router = useRouter();
 
     const form = useForm({
         mode: 'uncontrolled',

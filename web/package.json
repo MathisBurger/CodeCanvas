@@ -37,7 +37,8 @@
     "react": "^18",
     "react-cookie": "^7.2.0",
     "react-dom": "^18",
-    "recharts": "^2.12.7"
+    "recharts": "^2.12.7",
+    "sass": "^1.79.4"
   },
   "devDependencies": {
     "@types/node": "^20",
