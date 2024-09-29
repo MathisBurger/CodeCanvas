@@ -6,4 +6,4 @@ pub mod database;
 pub mod group;
 pub mod group_join_request;
 
-type DB = PooledConnection<ConnectionManager<PgConnection>>;
+pub type DB = PooledConnection<ConnectionManager<PgConnection>>;

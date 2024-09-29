@@ -35,6 +35,9 @@ pub struct Assignment {
     pub language: AssignmentLanguage,
     pub completed_by: Vec<Option<i32>>,
     pub file_structure: Option<serde_json::Value>,
+    pub runner_cpu: String,
+    pub runner_memory: String,
+    pub runner_timeout: String,
 }
 
 /// Used to create a new assignment

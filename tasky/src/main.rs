@@ -11,6 +11,7 @@ use api::usernator_api_client::UsernatorApiClient;
 use futures::future::join;
 use grpc::MyTaskyApi;
 use log::info;
+use mongodb::Client;
 use tonic::transport::{Channel, Server};
 
 pub mod api {
@@ -24,7 +25,9 @@ pub mod tasky_grpc {
 mod auth_middleware;
 mod error;
 mod grpc;
+mod handler;
 mod models;
+mod mongo;
 mod response;
 mod routes;
 mod schema;
@@ -35,6 +38,7 @@ mod util;
 pub struct AppState {
     pub config: AppConfig,
     pub db: Database,
+    pub mongodb: mongodb::Database,
     pub user_api: UsernatorApiClient<Channel>,
 }
 
@@ -57,13 +61,16 @@ async fn main() -> std::io::Result<()> {
     let db = Database::new(config.clone());
     let user_api_uri = config.clone().usernator_grpc;
     info!(target: "startup", "{}", format!("Connecting to usernator: {}", user_api_uri));
-    let mut usernator = UsernatorApiClient::connect(user_api_uri)
+    let usernator = UsernatorApiClient::connect(user_api_uri)
         .await
         .expect("Cannot create tonic client");
+
+    let mongodb = mongo::connect(config.clone()).await;
 
     let state = AppState {
         config: config.clone(),
         db,
+        mongodb,
         user_api: usernator,
     };
 

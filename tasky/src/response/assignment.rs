@@ -1,6 +1,7 @@
 use crate::api::UsersRequest;
+use bson::oid::ObjectId;
 use chrono::NaiveDateTime;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use crate::{
     error::ApiError,
@@ -11,6 +12,19 @@ use crate::{
 };
 
 use super::{group::MinifiedGroupResponse, shared::User, Enrich};
+
+#[derive(Serialize, Deserialize)]
+pub struct AssignmentFile {
+    pub filename: String,
+    pub object_id: Option<String>,
+    pub is_test_file: bool,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct AssignmentFileStructure {
+    pub files: Option<Vec<AssignmentFile>>,
+    pub folders: Option<Vec<AssignmentFileStructure>>,
+}
 
 /// The assignment response
 #[derive(Serialize)]
@@ -23,6 +37,9 @@ pub struct AssignmentResponse {
     pub language: AssignmentLanguage,
     pub completed_by: Vec<User>,
     pub file_structure: String,
+    pub runner_cpu: String,
+    pub runner_memory: String,
+    pub runner_timeout: String,
 }
 
 /// A vec of assignments
@@ -87,6 +104,9 @@ impl Enrich<Assignment> for AssignmentResponse {
                     .unwrap_or(serde_json::Value::Null),
             )
             .unwrap(),
+            runner_cpu: from.runner_cpu.clone(),
+            runner_memory: from.runner_memory.clone(),
+            runner_timeout: from.runner_timeout.clone(),
         })
     }
 }

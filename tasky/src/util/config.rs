@@ -10,6 +10,10 @@ pub struct AppConfig {
     pub db_password: String,
     pub db_host: String,
     pub usernator_grpc: String,
+    pub mongo_host: String,
+    pub mongo_username: String,
+    pub mongo_password: String,
+    pub mongo_database: String,
 }
 
 impl AppConfig {

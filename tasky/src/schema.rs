@@ -20,6 +20,12 @@ diesel::table! {
         language -> AssignmentLanguage,
         completed_by -> Array<Nullable<Int4>>,
         file_structure -> Nullable<Jsonb>,
+        #[max_length = 5]
+        runner_cpu -> Varchar,
+        #[max_length = 5]
+        runner_memory -> Varchar,
+        #[max_length = 5]
+        runner_timeout -> Varchar,
     }
 }
 

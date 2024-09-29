@@ -37,7 +37,7 @@ const GroupAssignmentsTab = ({group}: GroupAssignmentsTabProps) => {
                 <CreateOrUpdateAssignmentModal groupId={group.id ?? -1} onClose={() => setCreateModalOpen(false)} refetch={refetch} action="create" />
             )}
             <Flex direction="column" gap="xl">
-                {(assignments?.assignments ?? []).map((a) => (
+                {(assignments?.assignments ?? []).reverse().map((a) => (
                     <AssignmentCard assignment={a} groupId={group?.id ?? -1} key={a.id} />
                 ))}
             </Flex>
