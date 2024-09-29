@@ -6,8 +6,8 @@ import useClientQuery from "@/hooks/useClientQuery";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 
 
-const GroupDetailsPage = ({params}: {params: {id: string}}) => {
-    const id = parseInt(`${params.id}`, 10);
+const GroupDetailsPage = ({params}: {params: {groupId: string}}) => {
+    const id = parseInt(`${params.groupId}`, 10);
     const api = useApiServiceClient();
     const [group, refetch] = useClientQuery<GroupType>(() => api.getGroup(id));
     if (isNaN(id)) {

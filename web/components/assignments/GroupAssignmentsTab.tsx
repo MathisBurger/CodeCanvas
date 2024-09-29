@@ -7,7 +7,7 @@ import {isGranted} from "@/service/auth";
 import {UserRoles} from "@/service/types/usernator";
 import {IconPlus} from "@tabler/icons-react";
 import {useState} from "react";
-import CreateAssignmentModal from "@/components/assignments/CreateAssignmentModal";
+import CreateOrUpdateAssignmentModal from "@/components/assignments/CreateOrUpdateAssignmentModal";
 import useClientQuery from "@/hooks/useClientQuery";
 import AssignmentCard from "@/components/assignments/AssignmentCard";
 
@@ -25,7 +25,7 @@ const GroupAssignmentsTab = ({group}: GroupAssignmentsTabProps) => {
     const {user} = useCurrentUser();
 
     return (
-        <Container fluid>
+        <Container fluid pb={30}>
             <Group justify="end" mb={20}>
                 {user && isGranted(user, [UserRoles.Tutor]) && user.groups.map(g => g.id).indexOf(group?.id ?? -1) > -1 && (
                     <Button onClick={() => setCreateModalOpen(true)}>
@@ -34,11 +34,11 @@ const GroupAssignmentsTab = ({group}: GroupAssignmentsTabProps) => {
                 )}
             </Group>
             {createModalOpen && group && (
-                <CreateAssignmentModal group={group} onClose={() => setCreateModalOpen(false)} refetch={refetch} />
+                <CreateOrUpdateAssignmentModal groupId={group.id ?? -1} onClose={() => setCreateModalOpen(false)} refetch={refetch} action="create" />
             )}
             <Flex direction="column" gap="xl">
                 {(assignments?.assignments ?? []).map((a) => (
-                    <AssignmentCard assignment={a} />
+                    <AssignmentCard assignment={a} groupId={group?.id ?? -1} key={a.id} />
                 ))}
             </Flex>
         </Container>

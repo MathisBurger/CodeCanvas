@@ -24,6 +24,7 @@ const RichTextInput = ({content, setContent}: RichTextInputProps) => {
             TextAlign.configure({ types: ['heading', 'paragraph'] }),
         ],
         content,
+        immediatelyRender: false,
         onUpdate(props) {
             setContent(props.editor.getHTML());
         }

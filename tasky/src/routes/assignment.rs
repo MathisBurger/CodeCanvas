@@ -131,7 +131,7 @@ pub async fn get_assignment(
         });
     }
     let mut assignment =
-        AssignmentRepository::get_assignment_by_id_and_group(path_data.0, path_data.1, conn)
+        AssignmentRepository::get_assignment_by_id_and_group(path_data.1, path_data.0, conn)
             .ok_or(ApiError::BadRequest {
                 message: "No access to assignment".to_string(),
             })?;
@@ -165,7 +165,7 @@ pub async fn update_assignment(
         });
     }
     let mut assignment =
-        AssignmentRepository::get_assignment_by_id_and_group(path_data.0, path_data.1, conn)
+        AssignmentRepository::get_assignment_by_id_and_group(path_data.1, path_data.0, conn)
             .ok_or(ApiError::BadRequest {
                 message: "No access to assignment".to_string(),
             })?;

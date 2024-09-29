@@ -38,7 +38,15 @@ impl ResponseError for ApiError {
 
     fn error_response(&self) -> HttpResponse<BoxBody> {
         let response_body = ResponseBody {
-            message: format!("{}", self),
+            message: format!(
+                "{}",
+                match self {
+                    ApiError::BadRequest { message } => message,
+                    ApiError::Forbidden { message } => message,
+                    ApiError::InternalServerError { message } => message,
+                    ApiError::Unauthorized { message } => message,
+                }
+            ),
         };
         HttpResponse::build(self.status_code()).json(response_body)
     }

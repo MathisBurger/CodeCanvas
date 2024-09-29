@@ -1,25 +1,27 @@
+'use client';
 import { Assignment } from "@/service/types/tasky";
-import {Badge, Card, Group, Text, Title} from '@mantine/core';
+import {Badge, Card, Group, Title} from '@mantine/core';
 import RichTextDisplay from "@/components/display/RichTextDisplay";
-import {useMemo} from "react";
-import dayjs from "dayjs";
+import AssignmentDateDisplay from "@/components/assignments/AssignmentDateDisplay";
+import {useRouter} from "next/navigation";
 
 interface AssignmentCardProps {
     assignment: Assignment;
+    groupId: number;
 }
 
-const AssignmentCard = ({assignment}: AssignmentCardProps) => {
+const AssignmentCard = ({assignment, groupId}: AssignmentCardProps) => {
 
-    const dueDate = useMemo(() => new Date(assignment.due_date), [assignment.due_date]);
-    const dueDateIsOver = useMemo(() => dueDate.getTime() < new Date().getTime(), [dueDate]);
-    const formattedDueDate = useMemo(() => dayjs(dueDate).format("DD/MM/YYYY hh:mm"), [dueDate])
+    const router = useRouter();
+
+    const navigateTo = () => router.push(`/groups/${groupId}/assignments/${assignment.id}`);
 
     return (
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
+        <Card shadow="sm" padding="lg" radius="md" withBorder onClick={navigateTo}>
             <Group>
                 <Title order={4}>{assignment.title}</Title>
                 <Badge color="indigo">{assignment.language}</Badge>
-                <Text c={dueDateIsOver ? "red" : "gray"} td={dueDateIsOver ? "line-through" : undefined}>{formattedDueDate}</Text>
+                <AssignmentDateDisplay date={assignment.due_date} />
             </Group>
             <RichTextDisplay content={assignment.description} fullSize={false} />
         </Card>

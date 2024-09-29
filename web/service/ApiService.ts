@@ -74,6 +74,14 @@ class ApiService {
         return await this.get<AssignmentsResponse>(`/tasky/groups/${id}/assignments`)
     }
 
+    public async getAssignmentForGroup(groupId: number, assignmentId: number): Promise<Assignment> {
+        return await this.get<Assignment>(`/tasky/groups/${groupId}/assignments/${assignmentId}`);
+    }
+
+    public async updateAssignment(groupId: number, assignmentId: number, title: string, due_date: Date, description: string): Promise<Assignment> {
+        return await this.post<Assignment>(`/tasky/groups/${groupId}/assignments/${assignmentId}/update`, {title, due_date, description});
+    }
+
     /**
      * Executes a general get request
      *
