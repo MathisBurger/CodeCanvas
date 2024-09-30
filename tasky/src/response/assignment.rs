@@ -24,6 +24,7 @@ pub struct AssignmentFile {
 pub struct AssignmentFileStructure {
     pub files: Option<Vec<AssignmentFile>>,
     pub folders: Option<Vec<AssignmentFileStructure>>,
+    pub current_folder_name: Option<String>,
 }
 
 /// The assignment response
@@ -36,7 +37,7 @@ pub struct AssignmentResponse {
     pub description: String,
     pub language: AssignmentLanguage,
     pub completed_by: Vec<User>,
-    pub file_structure: String,
+    pub file_structure: Option<AssignmentFileStructure>,
     pub runner_cpu: String,
     pub runner_memory: String,
     pub runner_timeout: String,
@@ -85,6 +86,13 @@ impl Enrich<Assignment> for AssignmentResponse {
                 user_ids: completed_by,
             })
             .await?;
+        let file_structure = serde_json::from_value(
+            from.file_structure
+                .clone()
+                .unwrap_or(serde_json::Value::Null),
+        )
+        .ok();
+
         Ok(AssignmentResponse {
             id: from.id,
             title: from.title.clone(),
@@ -98,12 +106,7 @@ impl Enrich<Assignment> for AssignmentResponse {
                 .into_iter()
                 .map(|x| x.into())
                 .collect(),
-            file_structure: serde_json::from_value(
-                from.file_structure
-                    .clone()
-                    .unwrap_or(serde_json::Value::Null),
-            )
-            .unwrap(),
+            file_structure,
             runner_cpu: from.runner_cpu.clone(),
             runner_memory: from.runner_memory.clone(),
             runner_timeout: from.runner_timeout.clone(),

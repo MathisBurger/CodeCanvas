@@ -1,3 +1,4 @@
+import {FileStructureTree} from "@/components/FileStructure";
 
 export interface GroupsResponse {
     groups: MinifiedGroup[];
@@ -45,7 +46,12 @@ export interface Assignment {
     title: string;
     due_date: string;
     description: string;
-    language: AssignmentLanguage
+    language: AssignmentLanguage;
+    file_structure: FileStructureTree|null;
+    completed_by: TaskyUser[];
+    runner_cpu: string;
+    runner_memory: string;
+    runner_timeout: string;
 }
 
 export interface AssignmentsResponse {

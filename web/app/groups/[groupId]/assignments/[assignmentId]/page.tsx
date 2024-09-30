@@ -11,6 +11,7 @@ import {UserRoles} from "@/service/types/usernator";
 import {useState} from "react";
 import CreateOrUpdateAssignmentModal from "@/components/assignments/CreateOrUpdateAssignmentModal";
 import CentralLoading from "@/components/CentralLoading";
+import AssignmentCreateOrUpdateCodeTestModal from "@/components/assignments/AssignmentCreateOrUpdateCodeTestModal";
 
 
 const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId: string}}) => {
@@ -20,6 +21,7 @@ const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId
     const api = useApiServiceClient();
     const {user} = useCurrentUser();
     const [updateModalOpen, setUpdateModalOpen] = useState(false);
+    const [fileStructureModalOpen, setFileStructureModalOpen] = useState(false);
     const [assignment, refetch] = useClientQuery(() => api.getAssignmentForGroup(groupId, assignmentId), [assignmentId, groupId]);
 
     if (isNaN(groupId) || isNaN(assignmentId)) {
@@ -44,6 +46,9 @@ const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId
                 {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && (
                     <Button onClick={() => setUpdateModalOpen(true)}>Edit</Button>
                 )}
+                {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && assignment.file_structure === null && (
+                    <Button onClick={() => setFileStructureModalOpen(true)}>Create code tests</Button>
+                )}
             </Group>
             <RichTextDisplay content={assignment?.description ?? ""} fullSize={true} />
             {updateModalOpen && (
@@ -54,6 +59,9 @@ const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId
                     action="update"
                     assignment={assignment ?? undefined}
                 />
+            )}
+            {fileStructureModalOpen && (
+                <AssignmentCreateOrUpdateCodeTestModal onClose={() => setFileStructureModalOpen(false)} />
             )}
         </Container>
     )
