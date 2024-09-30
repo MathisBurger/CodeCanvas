@@ -18,11 +18,14 @@ use crate::models::database::DBPool;
 use crate::models::group::Group;
 use crate::models::group::GroupRepository;
 use crate::models::DB;
+use crate::mongo::test_file::TestFileCollection;
 use crate::response::assignment::AssignmentResponse;
 use crate::response::assignment::AssignmentsResponse;
 use crate::response::Enrich;
 use crate::security::IsGranted;
 use crate::security::SecurityAction;
+use crate::security::StaticSecurity;
+use crate::util::mongo::parse_object_ids;
 use crate::AppState;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Deserializer};
@@ -184,7 +187,35 @@ pub async fn create_assignment_test(
     Ok(HttpResponse::Ok().json(enriched))
 }
 
-pub async fn view_assignment_test() {}
+#[derive(Deserialize)]
+struct CodeTestQuery {
+    pub object_ids: String,
+}
+
+/// Endpoint to fetch all code test files
+#[get("/groups/{group_id}/assignments/{id}/code_test_files")]
+pub async fn view_assignment_test(
+    data: web::Data<AppState>,
+    user: web::ReqData<UserData>,
+    path: web::Path<(i32, i32)>,
+    query: web::Query<CodeTestQuery>,
+) -> Result<HttpResponse, ApiError> {
+    let user_data = user.into_inner();
+    let path_data = path.into_inner();
+    let conn = &mut data.db.db.get().unwrap();
+    let (group, mut assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
+    if !StaticSecurity::is_granted(
+        crate::security::StaticSecurityAction::CanViewTestStructure,
+        &user_data,
+    ) {
+        return Err(ApiError::Forbidden {
+            message: "You cannot view test structure".to_string(),
+        });
+    }
+    let ids = parse_object_ids(query.object_ids.clone())?;
+    let files = TestFileCollection::get_for_assignment(assignment.id, ids, &data.mongodb).await;
+    Ok(HttpResponse::Ok().json(files))
+}
 
 /// Gets group and assignment from request params and connection.
 /// Furthermore, it handles all the user security checks

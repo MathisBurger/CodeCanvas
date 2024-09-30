@@ -1,4 +1,4 @@
-use std::{collections::HashMap, iter::Map};
+use std::{collections::HashMap, io::Read, iter::Map};
 
 use actix_multipart::{
     form::{json::Json, tempfile::TempFile, MultipartForm},
@@ -10,12 +10,16 @@ use serde::Deserialize;
 
 use crate::{
     error::ApiError,
-    models::{assignment::Assignment, DB},
+    models::{
+        assignment::{Assignment, AssignmentRepository},
+        DB,
+    },
+    mongo::test_file::{TestFile, TestFileCollection},
     response::assignment::{AssignmentFile, AssignmentFileStructure},
 };
 
 #[derive(Deserialize)]
-struct RunnerData {
+pub(self) struct RunnerData {
     pub runner_cpu: String,
     pub runner_memory: String,
     pub runner_timeout: String,
@@ -33,19 +37,52 @@ pub async fn handle_create_multipart(
     form: CreateCodeTestMultipart,
     mongodb: &Database,
     db: &mut DB,
-    assignment: Assignment,
+    mut assignment: Assignment,
 ) -> Result<Assignment, ApiError> {
     // TODO: Validate runner cofig
     let mut file_structure = form.file_structure.0;
     let mut filename_map = build_filename_map(&form.files)?;
     let mut actual_files: Vec<&mut AssignmentFile> = vec![];
     validate_test_file_structure(&mut file_structure, &mut filename_map, &mut actual_files)?;
-    // TODO: Create mongodb entries and only update file-structure refs. Then store structure.
 
-    file_structure.files.unwrap();
-    Err(ApiError::BadRequest {
-        message: "".to_string(),
-    })
+    let mongo_files = TestFileCollection::create_many(
+        actual_files
+            .iter()
+            .map(|f| {
+                let mut content = String::new();
+                let size = filename_map
+                    .get(&f.filename)
+                    .unwrap()
+                    .1
+                    .file
+                    .as_file()
+                    .read_to_string(&mut content)
+                    .unwrap();
+                TestFile {
+                    id: None,
+                    file_name: f.filename.clone(),
+                    assignment_id: assignment.id,
+                    content,
+                    content_size: size,
+                }
+            })
+            .collect(),
+        mongodb,
+    )
+    .await;
+    for (i, file) in actual_files.into_iter().enumerate() {
+        file.object_id = Some(mongo_files.get(i).unwrap().to_hex());
+    }
+    let file_structure_value =
+        serde_json::to_value(file_structure).map_err(|e| ApiError::InternalServerError {
+            message: "Cannot convert file structure to JSON".to_string(),
+        })?;
+    assignment.file_structure = Some(file_structure_value);
+    assignment.runner_cpu = form.runner_config.runner_cpu.clone();
+    assignment.runner_memory = form.runner_config.runner_memory.clone();
+    assignment.runner_timeout = form.runner_config.runner_timeout.clone();
+    AssignmentRepository::update_assignment(assignment.clone(), db);
+    Ok(assignment)
 }
 
 /// Validates whether the given file structure is valid or not
@@ -58,7 +95,7 @@ fn validate_test_file_structure<'a>(
     // Search all folders recursively
     if structure.folders.is_some() {
         let folders = structure.folders.as_mut().unwrap();
-        for mut folder in folders {
+        for folder in folders {
             validate_test_file_structure(folder, files, actual_files)?;
         }
     }

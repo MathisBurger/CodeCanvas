@@ -25,6 +25,7 @@ pub enum StaticSecurityAction {
     IsTutor,
     IsAdmin,
     IsStudent,
+    CanViewTestStructure,
 }
 
 pub struct StaticSecurity;
@@ -36,6 +37,10 @@ impl StaticSecurity {
             StaticSecurityAction::IsAdmin => user.user_roles.contains(&UserRole::RoleAdmin),
             StaticSecurityAction::IsTutor => user.user_roles.contains(&UserRole::RoleTutor),
             StaticSecurityAction::IsStudent => user.user_roles.contains(&UserRole::RoleStudent),
+            StaticSecurityAction::CanViewTestStructure => {
+                user.user_roles.contains(&UserRole::RoleTutor)
+                    || user.user_roles.contains(&UserRole::RoleAdmin)
+            }
         }
     }
 }

@@ -17,5 +17,7 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(assignment::get_all_group_assignments)
         .service(assignment::create_assignment)
         .service(assignment::get_assignment)
-        .service(assignment::update_assignment);
+        .service(assignment::update_assignment)
+        .service(assignment::create_assignment_test)
+        .service(assignment::view_assignment_test);
 }
