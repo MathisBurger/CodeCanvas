@@ -1,7 +1,8 @@
+'use client';
 import { useState } from "react";
 import FileStructure, {FileStructureTree} from "@/components/FileStructure";
-import CentralLoading from "@/components/CentralLoading";
 import {Modal} from "@mantine/core";
+import {useSetState} from "@mantine/hooks";
 
 interface AssignmentCreateOrUpdateCodeTestModalProps {
     onClose: () => void;
@@ -9,36 +10,10 @@ interface AssignmentCreateOrUpdateCodeTestModalProps {
 
 const AssignmentCreateOrUpdateCodeTestModal = ({onClose}: AssignmentCreateOrUpdateCodeTestModalProps) => {
 
-    const [fileStructure, setFileStructure] = useState<FileStructureTree|null>({
-        current_folder_name: null,
-        folders: [
-            {
-                current_folder_name: 'Lol',
-                folders: [],
-                files: [
-                    {
-                        filename: 'Lol2',
-                        object_id: null,
-                        is_test_file: true
-                    }
-                ]
-            }
-        ],
-        files: [
-            {
-                filename: 'Lol1',
-                object_id: null,
-                is_test_file: true
-            }
-        ]
-    });
-
-    if (fileStructure === null) {
-        return <CentralLoading />;
-    }
+    const [fileStructure, setFileStructure] = useSetState<FileStructureTree>({folders: [], files: [], current_folder_name: null});
 
     return (
-        <Modal opened onClose={onClose}>
+        <Modal opened={true} onClose={onClose} size="xl">
             <FileStructure structure={fileStructure} setStructure={setFileStructure} editable={true} />
         </Modal>
     )

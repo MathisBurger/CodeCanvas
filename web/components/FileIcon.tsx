@@ -1,6 +1,7 @@
 import {IconFile} from "@tabler/icons-react";
 import { CssIcon, NpmIcon, TypeScriptCircleIcon } from '@mantinex/dev-icons';
 import { IconFolder, IconFolderOpen } from '@tabler/icons-react';
+import {GoIcon, JavaIcon} from "@/components/Icons";
 
 
 interface FileIconProps {
@@ -20,6 +21,12 @@ const FileIcon = ({name, isFolder, expanded}: FileIconProps) => {
 
     if (name.endsWith('.css')) {
         return <CssIcon size={18} />;
+    }
+    if (name.endsWith('.java')) {
+        return <JavaIcon size={18} />;
+    }
+    if (name.endsWith('.go')) {
+        return <GoIcon size={18} />;
     }
 
     if (isFolder) {
