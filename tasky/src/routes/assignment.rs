@@ -182,6 +182,11 @@ pub async fn create_assignment_test(
             message: "You are not allowed to create code tests".to_string(),
         });
     }
+    if assignment.language == AssignmentLanguage::QuestionBased {
+        return Err(ApiError::BadRequest {
+            message: "Cannot create code tests on question based assignment".to_string(),
+        });
+    }
     let updated = handle_create_multipart(form, &data.mongodb, conn, assignment).await?;
     let enriched = AssignmentResponse::enrich(&updated, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(enriched))

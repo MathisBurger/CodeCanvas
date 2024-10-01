@@ -56,6 +56,7 @@ interface FileStructureElementProps {
 
 export const FileStructureElement = (props: FileStructureElementProps & GroupProps) => {
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {label:_, isFolder: _1, expanded: _2, isTestFile: _3, setIsTestFile: _4, ...elementProps} = props;
 
     return (

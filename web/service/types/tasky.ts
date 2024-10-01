@@ -57,3 +57,9 @@ export interface Assignment {
 export interface AssignmentsResponse {
     assignments: Assignment[];
 }
+
+export interface RunnerConfig {
+    runner_cpu: string;
+    runner_memory: string;
+    runner_timeout: string;
+}

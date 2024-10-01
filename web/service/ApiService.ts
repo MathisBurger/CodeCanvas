@@ -6,9 +6,10 @@ import {
     Group,
     GroupJoinRequest,
     GroupJoinRequestResponse,
-    GroupsResponse
+    GroupsResponse,
+    RunnerConfig
 } from "@/service/types/tasky";
-import dayjs from "dayjs";
+import {FileStructureTree} from "@/components/FileStructure";
 
 export interface GenericMessage {
     message: string;
@@ -80,6 +81,39 @@ class ApiService {
 
     public async updateAssignment(groupId: number, assignmentId: number, title: string, due_date: Date, description: string): Promise<Assignment> {
         return await this.post<Assignment>(`/tasky/groups/${groupId}/assignments/${assignmentId}/update`, {title, due_date, description});
+    }
+
+    public async createCodeTests(groupId: number, assignmentId: number, fileStructure: FileStructureTree, files: File[], runnerConfig: RunnerConfig): Promise<Assignment> {
+        try {
+            const formData = new FormData();
+            formData.set("file_structure", new Blob([JSON.stringify(fileStructure)], {type: 'application/json'}));
+            for (const file of files) {
+                formData.append("files", file, file.name);
+            }
+            formData.set("runner_config", new Blob([JSON.stringify(runnerConfig)], {type: 'application/json'}));
+
+            const resp = await fetch(`${this.apiUrl}/tasky/groups/${groupId}/assignments/${assignmentId}/code_test`, {
+                method: "POST",
+                mode: "cors",
+                body: formData,
+                credentials: 'include',
+                headers: {
+                    "Accept": "application/json",
+                }
+            });
+            const txt = await resp.text();
+            const obj = this.getObject(txt);
+            if (resp.status !== 200) {
+                throw new ApiError(resp.status, obj.message);
+            }
+            return obj;
+
+        } catch (e) {
+            if(e instanceof Error) {
+                throw new ApiError(-1, e.message);
+            }
+            throw new ApiError(-1, `${e}`);
+        }
     }
 
     /**

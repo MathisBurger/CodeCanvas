@@ -12,6 +12,7 @@ import {useState} from "react";
 import CreateOrUpdateAssignmentModal from "@/components/assignments/CreateOrUpdateAssignmentModal";
 import CentralLoading from "@/components/CentralLoading";
 import AssignmentCreateOrUpdateCodeTestModal from "@/components/assignments/AssignmentCreateOrUpdateCodeTestModal";
+import {AssignmentLanguage} from "@/service/types/tasky";
 
 
 const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId: string}}) => {
@@ -46,8 +47,11 @@ const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId
                 {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && (
                     <Button onClick={() => setUpdateModalOpen(true)}>Edit</Button>
                 )}
-                {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && assignment.file_structure === null && (
+                {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && assignment.file_structure === null && assignment.language !== AssignmentLanguage.QuestionBased && (
                     <Button onClick={() => setFileStructureModalOpen(true)}>Create code tests</Button>
+                )}
+                {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && assignment.file_structure !== null && assignment.language !== AssignmentLanguage.QuestionBased && (
+                    <Button>Show code tests</Button>
                 )}
             </Group>
             <RichTextDisplay content={assignment?.description ?? ""} fullSize={true} />
@@ -61,7 +65,12 @@ const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId
                 />
             )}
             {fileStructureModalOpen && (
-                <AssignmentCreateOrUpdateCodeTestModal onClose={() => setFileStructureModalOpen(false)} />
+                <AssignmentCreateOrUpdateCodeTestModal
+                    onClose={() => setFileStructureModalOpen(false)}
+                    groupId={groupId}
+                    assignmentId={assignmentId}
+                    refetch={refetch}
+                />
             )}
         </Container>
     )
