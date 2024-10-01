@@ -1,5 +1,5 @@
 import {IconPlus} from "@tabler/icons-react";
-import {Checkbox, FocusTrap, Group, GroupProps, TextInput} from "@mantine/core";
+import {Checkbox, FocusTrap, Group, GroupProps, TextInput, Text} from "@mantine/core";
 import {useState} from "react";
 import FileIcon from "@/components/FileIcon";
 import {useForm} from "@mantine/form";
@@ -52,19 +52,20 @@ interface FileStructureElementProps {
     isFolder: boolean;
     expanded: boolean;
     setIsTestFile: (is: boolean) => void;
+    editable: boolean;
 }
 
 export const FileStructureElement = (props: FileStructureElementProps & GroupProps) => {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const {label:_, isFolder: _1, expanded: _2, isTestFile: _3, setIsTestFile: _4, ...elementProps} = props;
+    const {label:_, isFolder: _1, expanded: _2, isTestFile: _3, setIsTestFile: _4, editable: _5, ...elementProps} = props;
 
     return (
         <Group gap={5} {...elementProps}>
             <FileIcon name={props.label} isFolder={props.isFolder}
                       expanded={props.expanded}/>
-            <span>{props.label}</span>
-            {!props.isFolder && (
+            <Text>{props.label}</Text>
+            {!props.isFolder && props.editable &&  (
                 <Checkbox
                     label="Test file"
                     checked={props.isTestFile}

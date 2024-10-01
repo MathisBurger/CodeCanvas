@@ -1,7 +1,7 @@
 'use client';
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import useClientQuery from "@/hooks/useClientQuery";
-import {Badge, Button, Container, Group, Title} from "@mantine/core";
+import {Badge, Button, Container, Group, Tabs, Title} from "@mantine/core";
 import AssignmentDateDisplay from "@/components/assignments/AssignmentDateDisplay";
 import NavigateBack from "@/components/NavigateBack";
 import RichTextDisplay from "@/components/display/RichTextDisplay";
@@ -13,6 +13,7 @@ import CreateOrUpdateAssignmentModal from "@/components/assignments/CreateOrUpda
 import CentralLoading from "@/components/CentralLoading";
 import AssignmentCreateOrUpdateCodeTestModal from "@/components/assignments/AssignmentCreateOrUpdateCodeTestModal";
 import {AssignmentLanguage} from "@/service/types/tasky";
+import FileStructureDisplay from "@/components/FileStructureDisplay";
 
 
 const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId: string}}) => {
@@ -50,11 +51,26 @@ const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId
                 {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && assignment.file_structure === null && assignment.language !== AssignmentLanguage.QuestionBased && (
                     <Button onClick={() => setFileStructureModalOpen(true)}>Create code tests</Button>
                 )}
-                {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && assignment.file_structure !== null && assignment.language !== AssignmentLanguage.QuestionBased && (
-                    <Button>Show code tests</Button>
-                )}
             </Group>
-            <RichTextDisplay content={assignment?.description ?? ""} fullSize={true} />
+            <Tabs defaultValue="task">
+                <Tabs.List>
+                    <Tabs.Tab value="task">Task</Tabs.Tab>
+                    {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && assignment.file_structure !== null && assignment.language !== AssignmentLanguage.QuestionBased && (
+                        <Tabs.Tab value="codeTests">Code Tests</Tabs.Tab>
+                    )}
+                </Tabs.List>
+                <Tabs.Panel mt={20} value="task"><RichTextDisplay content={assignment?.description ?? ""} fullSize={true} /></Tabs.Panel>
+                {assignment.file_structure !== null && (
+                    <Tabs.Panel value="codeTests" mt={20}>
+                        <FileStructureDisplay
+                            structure={assignment.file_structure}
+                            groupId={groupId}
+                            assignmentId={assignmentId}
+                        />
+                    </Tabs.Panel>
+                )}
+            </Tabs>
+
             {updateModalOpen && (
                 <CreateOrUpdateAssignmentModal
                     groupId={groupId}

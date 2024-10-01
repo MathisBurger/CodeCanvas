@@ -13,14 +13,15 @@ use crate::{
 
 use super::{group::MinifiedGroupResponse, shared::User, Enrich};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct AssignmentFile {
     pub filename: String,
     pub object_id: Option<String>,
+    pub file_size: Option<usize>,
     pub is_test_file: bool,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct AssignmentFileStructure {
     pub files: Option<Vec<AssignmentFile>>,
     pub folders: Option<Vec<AssignmentFileStructure>>,

@@ -73,6 +73,10 @@ services:
       - DB_PASSWORD=tasky
       - DB_HOST=postgres:5432
       - USERNATOR_GRPC=http://usernator:3001
+      - MONGO_HOST="mongodb:27017"
+      - MONGO_USERNAME=tasky
+      - MONGO_PASSWORD=tasky
+      - MONGO_DATABASE=executor_files
     depends_on:
       - usernator
       - postgres

@@ -94,7 +94,9 @@ export const TabsComponent: React.FC<{group: Group|null, refetch: () => void}> =
                 </Tabs.Panel>
                 {isGranted(user, [UserRoles.Admin, UserRoles.Tutor]) && (
                     <Tabs.Panel value="joinRequests">
-                        <JoinRequestsComponent group={group} refetchParent={refetch} />
+                        {group !== null && (
+                            <JoinRequestsComponent group={group} refetchParent={refetch} />
+                        )}
                     </Tabs.Panel>
                 )}
             </div>

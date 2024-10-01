@@ -63,3 +63,11 @@ export interface RunnerConfig {
     runner_memory: string;
     runner_timeout: string;
 }
+
+export interface MongoTestFile {
+    _id: {$oid: string};
+    file_name: string;
+    content_size: string;
+    content: string;
+    assignment_id: string;
+}

@@ -7,6 +7,7 @@ import {
     GroupJoinRequest,
     GroupJoinRequestResponse,
     GroupsResponse,
+    MongoTestFile,
     RunnerConfig
 } from "@/service/types/tasky";
 import {FileStructureTree} from "@/components/FileStructure";
@@ -81,6 +82,10 @@ class ApiService {
 
     public async updateAssignment(groupId: number, assignmentId: number, title: string, due_date: Date, description: string): Promise<Assignment> {
         return await this.post<Assignment>(`/tasky/groups/${groupId}/assignments/${assignmentId}/update`, {title, due_date, description});
+    }
+
+    public async getCodeTestsFiles(groupId: number, assignmentId: number, fileIds: string[]): Promise<MongoTestFile[]> {
+        return this.get<MongoTestFile[]>(`/tasky/groups/${groupId}/assignments/${assignmentId}/code_test_files?object_ids=${fileIds.join(',')}`);
     }
 
     public async createCodeTests(groupId: number, assignmentId: number, fileStructure: FileStructureTree, files: File[], runnerConfig: RunnerConfig): Promise<Assignment> {

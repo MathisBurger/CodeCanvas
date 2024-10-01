@@ -39,7 +39,7 @@ pub async fn handle_create_multipart(
     db: &mut DB,
     mut assignment: Assignment,
 ) -> Result<Assignment, ApiError> {
-    // TODO: Validate runner cofig
+    // TODO: Validate runner config
     let mut file_structure = form.file_structure.0;
     if !file_structure_contains_files(&file_structure) {
         return Err(ApiError::BadRequest {
@@ -50,26 +50,30 @@ pub async fn handle_create_multipart(
     let mut actual_files: Vec<&mut AssignmentFile> = vec![];
     validate_test_file_structure(&mut file_structure, &mut filename_map, &mut actual_files)?;
 
+    let mut file_data: Vec<(String, String, usize)> = vec![];
+    for file in &mut actual_files {
+        let mut content = String::new();
+        let size = filename_map
+            .get(&file.filename)
+            .unwrap()
+            .1
+            .file
+            .as_file()
+            .read_to_string(&mut content)
+            .unwrap();
+        file.file_size = Some(size);
+        file_data.push((file.filename.clone(), content, size));
+    }
+
     let mongo_files = TestFileCollection::create_many(
-        actual_files
+        file_data
             .iter()
-            .map(|f| {
-                let mut content = String::new();
-                let size = filename_map
-                    .get(&f.filename)
-                    .unwrap()
-                    .1
-                    .file
-                    .as_file()
-                    .read_to_string(&mut content)
-                    .unwrap();
-                TestFile {
-                    id: None,
-                    file_name: f.filename.clone(),
-                    assignment_id: assignment.id,
-                    content,
-                    content_size: size,
-                }
+            .map(|f| TestFile {
+                id: None,
+                file_name: f.0.clone(),
+                assignment_id: assignment.id,
+                content: f.1.clone(),
+                content_size: f.2,
             })
             .collect(),
         mongodb,
@@ -134,12 +138,13 @@ fn validate_test_file_structure<'a>(
 
 /// Checks if a file structure contains files
 fn file_structure_contains_files(structure: &AssignmentFileStructure) -> bool {
-    if structure.files.unwrap_or_default().len() > 0 {
+    if structure.files.clone().unwrap_or_default().len() > 0 {
         return true;
     }
-    if structure.folders.unwrap_or_default().len() > 0 {
-        for folder in structure.folders.unwrap() {
-            if is_file_structure_empty(&folder) {
+    let folders = structure.folders.clone().unwrap_or_default();
+    if folders.len() > 0 {
+        for folder in folders {
+            if file_structure_contains_files(&folder) {
                 return true;
             }
         }
