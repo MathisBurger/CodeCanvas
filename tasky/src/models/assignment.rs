@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 
 /// The language of an assignment
 /// This language is the language the assignment should be completed with
-#[derive(diesel_derive_enum::DbEnum, Debug, Clone, Deserialize, Serialize)]
+#[derive(diesel_derive_enum::DbEnum, Debug, Clone, Deserialize, Serialize, PartialEq)]
 #[ExistingTypePath = "crate::schema::sql_types::AssignmentLanguage"]
 pub enum AssignmentLanguage {
     #[serde(rename = "Java")]

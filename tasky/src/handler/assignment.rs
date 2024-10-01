@@ -41,6 +41,11 @@ pub async fn handle_create_multipart(
 ) -> Result<Assignment, ApiError> {
     // TODO: Validate runner cofig
     let mut file_structure = form.file_structure.0;
+    if !file_structure_contains_files(&file_structure) {
+        return Err(ApiError::BadRequest {
+            message: "File structure does not contain any file".to_string(),
+        });
+    }
     let mut filename_map = build_filename_map(&form.files)?;
     let mut actual_files: Vec<&mut AssignmentFile> = vec![];
     validate_test_file_structure(&mut file_structure, &mut filename_map, &mut actual_files)?;
@@ -125,6 +130,21 @@ fn validate_test_file_structure<'a>(
     }
 
     Ok(())
+}
+
+/// Checks if a file structure contains files
+fn file_structure_contains_files(structure: &AssignmentFileStructure) -> bool {
+    if structure.files.unwrap_or_default().len() > 0 {
+        return true;
+    }
+    if structure.folders.unwrap_or_default().len() > 0 {
+        for folder in structure.folders.unwrap() {
+            if is_file_structure_empty(&folder) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 /// Builds a map with the filename as key and a tuple of bool and the file reference as value
