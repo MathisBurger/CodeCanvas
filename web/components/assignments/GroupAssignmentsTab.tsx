@@ -1,5 +1,5 @@
 'use client';
-import {AssignmentsResponse, Group as TaskyGroup} from "@/service/types/tasky";
+import {Assignment, AssignmentsResponse, Group as TaskyGroup} from "@/service/types/tasky";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import {Button, Container, Flex, Group} from "@mantine/core";
 import useCurrentUser from "@/hooks/useCurrentUser";
@@ -13,6 +13,14 @@ import AssignmentCard from "@/components/assignments/AssignmentCard";
 
 interface GroupAssignmentsTabProps {
     group: TaskyGroup|null;
+}
+
+const assignmentSort = (a: Assignment, b: Assignment) =>  {
+    const timeA = new Date(a.due_date).getTime();
+    const timeB =  new Date(b.due_date).getTime();
+    if (timeA < timeB) return 1;
+    if (timeA > timeB) return -1;
+    return 0;
 }
 
 const GroupAssignmentsTab = ({group}: GroupAssignmentsTabProps) => {
@@ -37,7 +45,7 @@ const GroupAssignmentsTab = ({group}: GroupAssignmentsTabProps) => {
                 <CreateOrUpdateAssignmentModal groupId={group.id ?? -1} onClose={() => setCreateModalOpen(false)} refetch={refetch} action="create" />
             )}
             <Flex direction="column" gap="xl">
-                {(assignments?.assignments ?? []).reverse().map((a) => (
+                {(assignments?.assignments ?? []).sort(assignmentSort).map((a) => (
                     <AssignmentCard assignment={a} groupId={group?.id ?? -1} key={a.id} />
                 ))}
             </Flex>
