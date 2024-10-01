@@ -36,6 +36,9 @@ const FileStructureDisplay = ({structure, groupId, assignmentId}: FileStructureD
     const [loading, setLoading] = useState(false);
 
     const getApiCall = useCallback(async (ids: string[]): Promise<MongoTestFile[]> => {
+        if (ids.length === 0) {
+            return (async () => [])();
+        }
         return api.getCodeTestsFiles(groupId, assignmentId, ids);
     }, [groupId, assignmentId]);
 

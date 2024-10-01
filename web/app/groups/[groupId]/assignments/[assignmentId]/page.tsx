@@ -14,6 +14,7 @@ import CentralLoading from "@/components/CentralLoading";
 import AssignmentCreateOrUpdateCodeTestModal from "@/components/assignments/AssignmentCreateOrUpdateCodeTestModal";
 import {AssignmentLanguage} from "@/service/types/tasky";
 import FileStructureDisplay from "@/components/FileStructureDisplay";
+import AssignmentDetailsTaskTab from "@/components/assignments/AssignmentDetailsTaskTab";
 
 
 const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId: string}}) => {
@@ -59,11 +60,13 @@ const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId
                         <Tabs.Tab value="codeTests">Code Tests</Tabs.Tab>
                     )}
                 </Tabs.List>
-                <Tabs.Panel mt={20} value="task"><RichTextDisplay content={assignment?.description ?? ""} fullSize={true} /></Tabs.Panel>
-                {assignment.file_structure !== null && (
+                <Tabs.Panel mt={20} value="task">
+                    <AssignmentDetailsTaskTab assignment={Object.assign({}, assignment)} />
+                </Tabs.Panel>
+                {assignment.file_structure !== null && isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) &&  (
                     <Tabs.Panel value="codeTests" mt={20}>
                         <FileStructureDisplay
-                            structure={assignment.file_structure}
+                            structure={Object.assign({}, assignment.file_structure)}
                             groupId={groupId}
                             assignmentId={assignmentId}
                         />
