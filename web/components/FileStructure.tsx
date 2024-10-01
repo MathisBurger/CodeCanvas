@@ -118,6 +118,31 @@ const createFile = (structure: FileStructureTree, path: string, fileName: string
     return structure;
 }
 
+const updateTestFileState = (structure: FileStructureTree, path: string, fileName: string, state: boolean): FileStructureTree => {
+    const spl = path.split('/');
+    if (spl.length === 2) {
+        // @ts-ignore
+        for (const [index, file] of structure.files.entries()) {
+            if (file.filename === fileName) {
+                file.is_test_file = state;
+                structure.files[index] = file;
+                return structure;
+            }
+        }
+    }
+    if (spl.length > 2) {
+        // @ts-ignore
+        for (const [index, folder] of (structure.folders ?? []).entries()) {
+            if (folder.current_folder_name === spl[1]) {
+                // @ts-ignore
+                structure.folders[index] = updateTestFileState(folder, spl.splice(1).join('/'), fileName, state);
+                return structure;
+            }
+        }
+    }
+    return structure;
+}
+
 const FileStructure = ({structure, setStructure, editable}: FileStructureProps) => {
 
     const [fileNames, treeData] = useMemo(() => buildDataFromStructure(structure, '', editable), [structure, editable]);
@@ -140,6 +165,8 @@ const FileStructure = ({structure, setStructure, editable}: FileStructureProps) 
                             label={(node.label ?? '') as string}
                             isFolder={hasChildren}
                             expanded={expanded}
+                            isTestFile={node?.nodeProps?.is_test_file ?? false}
+                            setIsTestFile={(s) => setStructure(updateTestFileState(structure, node.value, node.label as string, s))}
                             {...elementProps}
                         />
                     )}

@@ -1,7 +1,7 @@
 'use client';
 import { useState } from "react";
 import FileStructure, {FileStructureTree} from "@/components/FileStructure";
-import {Modal} from "@mantine/core";
+import {Alert, Modal} from "@mantine/core";
 import {useSetState} from "@mantine/hooks";
 
 interface AssignmentCreateOrUpdateCodeTestModalProps {
@@ -14,6 +14,7 @@ const AssignmentCreateOrUpdateCodeTestModal = ({onClose}: AssignmentCreateOrUpda
 
     return (
         <Modal opened={true} onClose={onClose} size="xl">
+            <Alert color="red" variant="light" title="Performance issues" mb={30}>Please note that large structures can lead to performance issues. This will be optimized soon.</Alert>
             <FileStructure structure={fileStructure} setStructure={setFileStructure} editable={true} />
         </Modal>
     )

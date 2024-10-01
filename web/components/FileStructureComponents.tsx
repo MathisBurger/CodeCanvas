@@ -48,13 +48,15 @@ export const FileStructureNewInput = (props: FileStructureNewInputProps & GroupP
 
 interface FileStructureElementProps {
     label: string;
+    isTestFile: boolean;
     isFolder: boolean;
     expanded: boolean;
+    setIsTestFile: (is: boolean) => void;
 }
 
 export const FileStructureElement = (props: FileStructureElementProps & GroupProps) => {
 
-    const {label:_, isFolder: _1, expanded: _2, ...elementProps} = props;
+    const {label:_, isFolder: _1, expanded: _2, isTestFile: _3, setIsTestFile: _4, ...elementProps} = props;
 
     return (
         <Group gap={5} {...elementProps}>
@@ -62,7 +64,12 @@ export const FileStructureElement = (props: FileStructureElementProps & GroupPro
                       expanded={props.expanded}/>
             <span>{props.label}</span>
             {!props.isFolder && (
-                <Checkbox label="Test file" style={{justifySelf: 'flex-end'}} />
+                <Checkbox
+                    label="Test file"
+                    checked={props.isTestFile}
+                    onChange={(e) => props.setIsTestFile(e.target.checked)}
+                    style={{marginLeft: 'auto'}}
+                />
             )}
         </Group>
     )
