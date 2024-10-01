@@ -12,9 +12,11 @@ import '@mantine/core/styles.css';
 import '@mantine/tiptap/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/notifications/styles.css';
+import '@mantine/spotlight/styles.css';
 import '@mantine/code-highlight/styles.css';
 import '@mantine/dropzone/styles.css';
 import {DatesProvider} from "@mantine/dates";
+import SpotlightWrapper from "@/components/spotlight/SpotlightWrapper";
 
 export default function RootLayout({
   children,
@@ -49,6 +51,7 @@ export default function RootLayout({
                         {showNavbar && (<AppShell.Navbar><Navbar /></AppShell.Navbar>)}
                         <AppShell.Main>{children}</AppShell.Main>
                     </AppShell>
+                    <SpotlightWrapper />
                 </DatesProvider>
             </MantineProvider>
     </CurrentUserContext.Provider>

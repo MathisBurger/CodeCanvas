@@ -1,5 +1,5 @@
 'use client';
-import {Avatar, Button, Group, Menu} from "@mantine/core";
+import {Avatar, Button, Group, Kbd, Menu, Text} from "@mantine/core";
 import Link from "next/link";
 import {User} from "@/service/types/usernator";
 import {useCookies} from "react-cookie";
@@ -36,19 +36,27 @@ const SsrHeader: React.FC<SsrHeaderProps> = ({user}) => {
         );
     }
     return (
-        <Menu>
-            <Menu.Target>
-                <Avatar name={user.username} color="initials" />
-            </Menu.Target>
-            <Menu.Dropdown>
-                <Menu.Item onClick={() => router.push("/settings")}>
-                    Settings
-                </Menu.Item>
-                <Menu.Item color="red" onClick={logOut}>
-                    Log out
-                </Menu.Item>
-            </Menu.Dropdown>
-        </Menu>
+        <Group>
+            <Group>
+                <Text>Spotlight actions:</Text>
+                <div dir="ltr">
+                    <Kbd>CMD</Kbd> + <Kbd>K</Kbd> or <Kbd>CTRL</Kbd> + <Kbd>K</Kbd>
+                </div>
+            </Group>
+            <Menu>
+                <Menu.Target>
+                    <Avatar name={user.username} color="initials"/>
+                </Menu.Target>
+                <Menu.Dropdown>
+                    <Menu.Item onClick={() => router.push("/settings")}>
+                        Settings
+                    </Menu.Item>
+                    <Menu.Item color="red" onClick={logOut}>
+                        Log out
+                    </Menu.Item>
+                </Menu.Dropdown>
+            </Menu>
+        </Group>
     )
 }
 
