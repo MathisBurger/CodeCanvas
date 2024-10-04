@@ -46,11 +46,23 @@ diesel::table! {
     }
 }
 
+diesel::table! {
+    solutions (id) {
+        id -> Int4,
+        submitter_id -> Int4,
+        assignment_id -> Int4,
+        approved_by_tutor -> Bool,
+        file_structure -> Nullable<Jsonb>,
+    }
+}
+
 diesel::joinable!(assignments -> groups (group_id));
 diesel::joinable!(group_join_requests -> groups (group_id));
+diesel::joinable!(solutions -> assignments (assignment_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     assignments,
     group_join_requests,
     groups,
+    solutions,
 );

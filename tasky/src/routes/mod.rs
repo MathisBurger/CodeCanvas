@@ -3,6 +3,7 @@ use actix_web::web;
 mod assignment;
 mod group;
 mod group_join_request;
+mod solution;
 
 /// Initializes all endpoints
 pub fn init_services(cfg: &mut web::ServiceConfig) {
@@ -19,5 +20,6 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(assignment::get_assignment)
         .service(assignment::update_assignment)
         .service(assignment::create_assignment_test)
-        .service(assignment::view_assignment_test);
+        .service(assignment::view_assignment_test)
+        .service(solution::create_solution);
 }

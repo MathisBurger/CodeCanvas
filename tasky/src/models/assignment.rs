@@ -84,6 +84,15 @@ impl AssignmentRepository {
             .expect("Error loading group")
     }
 
+    /// Gets an assignment by ID
+    pub fn get_assignment_by_id(id: i32, conn: &mut DB) -> Option<Assignment> {
+        dsl::assignments
+            .filter(dsl::id.eq(id))
+            .first::<Assignment>(conn)
+            .optional()
+            .expect("Error loading group")
+    }
+
     /// Updates an assignment
     pub fn update_assignment(assignment: Assignment, conn: &mut DB) {
         diesel::update(dsl::assignments.filter(dsl::id.eq(assignment.id)))

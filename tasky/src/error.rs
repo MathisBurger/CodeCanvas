@@ -7,7 +7,7 @@ use serde::Serialize;
 use thiserror::Error;
 
 /// The api error
-#[derive(Debug, Error)]
+#[derive(Debug, Error, Serialize)]
 pub enum ApiError {
     #[error("BAD_REQUEST")]
     BadRequest { message: String },

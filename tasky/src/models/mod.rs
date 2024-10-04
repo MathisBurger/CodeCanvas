@@ -5,5 +5,6 @@ pub mod assignment;
 pub mod database;
 pub mod group;
 pub mod group_join_request;
+pub mod solution;
 
 pub type DB = PooledConnection<ConnectionManager<PgConnection>>;

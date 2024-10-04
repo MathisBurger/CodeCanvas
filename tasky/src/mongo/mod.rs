@@ -1,6 +1,7 @@
 use futures::StreamExt;
 use std::fmt::format;
 
+pub mod task_file;
 pub mod test_file;
 
 use bson::Bson;

@@ -8,6 +8,7 @@ pub mod group;
 pub mod group_join_request;
 pub mod grpc;
 mod shared;
+pub mod solution;
 
 type DB = PooledConnection<ConnectionManager<PgConnection>>;
 
