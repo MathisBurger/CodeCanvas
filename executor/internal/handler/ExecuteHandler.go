@@ -12,14 +12,15 @@ func ExecuteHandler(c web.Context) error {
 		c.Error(http.StatusBadRequest, err)
 		return nil
 	}
+	c.Set("username", req.Solution.SubmitterId)
 
 	task, err := services.BuildTask(req)
 	if err != nil {
 		c.Error(http.StatusBadRequest, err)
 	}
-	err = services.ExecuteTask(c, task)
+	job, err := services.ExecuteTask(c, task)
 	if err != nil {
 		c.Error(http.StatusInternalServerError, err)
 	}
-	return c.JSON(http.StatusOK, req)
+	return c.JSON(http.StatusOK, job)
 }
