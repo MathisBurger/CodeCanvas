@@ -21,8 +21,29 @@ pub struct SolutionResponse {
     pub id: i32,
     pub sumbitter: User,
     pub assignment: AssignmentResponse,
-    pub approved_by_tutor: bool,
+    pub approval_status: Option<String>,
     pub file_structure: Option<AssignmentFileStructure>,
+}
+
+#[derive(Serialize)]
+pub struct SolutionsResponse {
+    pub solutions: Vec<SolutionResponse>,
+}
+
+impl Enrich<Vec<Solution>> for SolutionsResponse {
+    async fn enrich(
+        from: &Vec<Solution>,
+        client: &mut UsernatorApiClient<tonic::transport::Channel>,
+        db_conn: &mut super::DB,
+    ) -> Result<Self, ApiError> {
+        let mut responses: Vec<SolutionResponse> = vec![];
+        for solution in from {
+            responses.push(SolutionResponse::enrich(solution, client, db_conn).await?);
+        }
+        Ok(SolutionsResponse {
+            solutions: responses,
+        })
+    }
 }
 
 impl Enrich<Solution> for SolutionResponse {
@@ -49,7 +70,7 @@ impl Enrich<Solution> for SolutionResponse {
             id: from.id,
             sumbitter: submitter.into_inner().into(),
             assignment: assigment_response,
-            approved_by_tutor: from.approved_by_tutor,
+            approval_status: from.approval_status.clone(),
             file_structure,
         });
     }

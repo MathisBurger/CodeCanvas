@@ -51,8 +51,9 @@ diesel::table! {
         id -> Int4,
         submitter_id -> Int4,
         assignment_id -> Int4,
-        approved_by_tutor -> Bool,
         file_structure -> Nullable<Jsonb>,
+        #[max_length = 20]
+        approval_status -> Nullable<Varchar>,
     }
 }
 

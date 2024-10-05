@@ -1,10 +1,6 @@
-use crate::schema::solutions::dsl;
+use crate::schema::solutions::{dsl, submitter_id};
 use diesel::associations::HasTable;
 use diesel::prelude::*;
-use diesel::{
-    prelude::{Insertable, Queryable},
-    Selectable,
-};
 
 use super::DB;
 
@@ -15,8 +11,8 @@ pub struct Solution {
     pub id: i32,
     pub submitter_id: i32,
     pub assignment_id: i32,
-    pub approved_by_tutor: bool,
     pub file_structure: Option<serde_json::Value>,
+    pub approval_status: Option<String>,
 }
 
 #[derive(Insertable)]
@@ -24,7 +20,6 @@ pub struct Solution {
 pub struct NewSolution {
     pub submitter_id: i32,
     pub assignment_id: i32,
-    pub approved_by_tutor: bool,
 }
 
 pub struct SolutionRepository;
@@ -34,6 +29,14 @@ impl SolutionRepository {
         dsl::solutions
             .filter(dsl::assignment_id.eq(id))
             .get_results::<Solution>(conn)
+            .expect("Cannot fetch solutions")
+    }
+
+    pub fn get_solution_by_id(id: i32, conn: &mut DB) -> Option<Solution> {
+        dsl::solutions
+            .filter(dsl::id.eq(id))
+            .first::<Solution>(conn)
+            .optional()
             .expect("Cannot fetch solutions")
     }
 

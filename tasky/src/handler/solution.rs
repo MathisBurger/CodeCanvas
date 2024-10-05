@@ -1,6 +1,6 @@
 use super::file_structure::*;
-use crate::models::DB;
 use crate::response::assignment::AssignmentFile;
+use crate::{models::DB, security::IsGranted};
 use actix_multipart::form::{tempfile::TempFile, MultipartForm};
 use diesel::sql_types::Json;
 use mongodb::Database;
@@ -30,6 +30,17 @@ pub async fn handle_create_multipart(
     db: &mut DB,
     assignment: &Assignment,
 ) -> Result<Solution, ApiError> {
+    let mut new_solution = NewSolution {
+        submitter_id: user_data.user_id,
+        assignment_id: assignment.id,
+    };
+    if !new_solution.is_granted(crate::security::SecurityAction::Create, user_data) {
+        return Err(ApiError::Forbidden {
+            message: "You cannot create a new solution".to_string(),
+        });
+    }
+    let mut solution = SolutionRepository::create_solution(new_solution, db);
+
     if assignment.file_structure.is_none() {
         return Err(ApiError::BadRequest {
             message: "No code tests submitted. Therefore, no solutions can be handed in."
@@ -48,13 +59,6 @@ pub async fn handle_create_multipart(
         &mut actual_files,
         false,
     )?;
-
-    let new_solution = NewSolution {
-        submitter_id: user_data.user_id,
-        assignment_id: assignment.id,
-        approved_by_tutor: false,
-    };
-    let mut solution = SolutionRepository::create_solution(new_solution, db);
 
     let mut file_data: Vec<(String, String, usize)> = vec![];
     for file in &mut actual_files {

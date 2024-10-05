@@ -3,6 +3,7 @@ use crate::auth_middleware::{UserData, UserRole};
 pub mod assignment;
 pub mod group;
 pub mod group_join_request;
+pub mod solution;
 
 /// Default security actions
 #[derive(PartialEq)]
@@ -25,6 +26,7 @@ pub enum StaticSecurityAction {
     IsTutor,
     IsAdmin,
     IsStudent,
+    IsAdminOrTutor,
     CanViewTestStructure,
 }
 
@@ -37,9 +39,12 @@ impl StaticSecurity {
             StaticSecurityAction::IsAdmin => user.user_roles.contains(&UserRole::RoleAdmin),
             StaticSecurityAction::IsTutor => user.user_roles.contains(&UserRole::RoleTutor),
             StaticSecurityAction::IsStudent => user.user_roles.contains(&UserRole::RoleStudent),
-            StaticSecurityAction::CanViewTestStructure => {
+            StaticSecurityAction::IsAdminOrTutor => {
                 user.user_roles.contains(&UserRole::RoleTutor)
                     || user.user_roles.contains(&UserRole::RoleAdmin)
+            }
+            StaticSecurityAction::CanViewTestStructure => {
+                StaticSecurity::is_granted(StaticSecurityAction::IsAdminOrTutor, user)
             }
         }
     }

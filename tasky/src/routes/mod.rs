@@ -21,5 +21,10 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(assignment::update_assignment)
         .service(assignment::create_assignment_test)
         .service(assignment::view_assignment_test)
-        .service(solution::create_solution);
+        .service(solution::create_solution)
+        .service(solution::get_solution)
+        .service(solution::get_solutions_for_assignment)
+        .service(solution::get_solutions_for_user)
+        .service(solution::approve_solution)
+        .service(solution::reject_solution);
 }
