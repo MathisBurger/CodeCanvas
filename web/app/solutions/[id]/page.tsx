@@ -5,6 +5,7 @@ import useClientQuery from "@/hooks/useClientQuery";
 import {Solution} from "@/service/types/tasky";
 import CentralLoading from "@/components/CentralLoading";
 import FileStructureDisplay from "@/components/FileStructureDisplay";
+import JobResultDisplay from "@/components/JobResultDisplay";
 
 const getBadge = (status?: string): JSX.Element => {
     switch (status) {
@@ -49,7 +50,9 @@ const SolutionDetailsPage = ({params}: {params: {id: string}}) => {
                     <Tabs.Tab value="code">Code</Tabs.Tab>
                 </Tabs.List>
                 <Tabs.Panel value="log" mt={10}>
-                    Log data will be displayed here soon!
+                    {solution.job !== undefined && (
+                        <JobResultDisplay job={solution.job} />
+                    )}
                 </Tabs.Panel>
                 <Tabs.Panel value="code" mt={10}>
                     {solution.file_structure !== undefined && (

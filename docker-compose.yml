@@ -77,7 +77,7 @@ services:
       - MONGO_USERNAME=tasky
       - MONGO_PASSWORD=tasky
       - MONGO_DATABASE=executor_files
-      - EXECUTOR_HTTP=http://127.0.0.1:8000
+      - EXECUTOR_HTTP=http://executor:8000
     depends_on:
       - usernator
       - postgres

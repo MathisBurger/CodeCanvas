@@ -80,12 +80,24 @@ export interface MongoTaskFile {
     solution_id: string;
 }
 
+export interface Job {
+    id: string;
+    execution: Execution[];
+}
+
+export interface Execution {
+    state: string;
+    result: string|null;
+    error: string|null;
+}
+
 export interface Solution {
     id: number;
     submitter: TaskyUser;
     assignment: Assignment;
     approval_status?: string;
     file_structure?: FileStructureTree;
+    job?: Job;
 }
 
 export interface SolutionsResponse {
