@@ -1,4 +1,5 @@
 use super::file_structure::*;
+use crate::models::solution::ApprovalStatus;
 use crate::response::assignment::AssignmentFile;
 use crate::{models::DB, security::IsGranted};
 use actix_multipart::form::{tempfile::TempFile, MultipartForm};
@@ -33,6 +34,7 @@ pub async fn handle_create_multipart(
     let mut new_solution = NewSolution {
         submitter_id: user_data.user_id,
         assignment_id: assignment.id,
+        approval_status: Some(ApprovalStatus::Pending.string()),
     };
     if !new_solution.is_granted(crate::security::SecurityAction::Create, user_data) {
         return Err(ApiError::Forbidden {

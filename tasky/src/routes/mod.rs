@@ -26,5 +26,6 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(solution::get_solutions_for_assignment)
         .service(solution::get_solutions_for_user)
         .service(solution::approve_solution)
-        .service(solution::reject_solution);
+        .service(solution::reject_solution)
+        .service(solution::get_solution_files);
 }

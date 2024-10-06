@@ -33,11 +33,12 @@ interface FileStructureProps {
     editable: boolean;
     setSelected?: (objectId: string) => void;
     displayMode?: DisplayMode;
+    solutionMode?: boolean;
 }
 
 
 
-const FileStructure = ({structure, setStructure, editable, setSelected, displayMode = 'all'}: FileStructureProps) => {
+const FileStructure = ({structure, setStructure, editable, setSelected, displayMode = 'all', solutionMode}: FileStructureProps) => {
 
     const [fileNames, treeData] = useMemo(() => buildDataFromStructure(filterFileStructureForDisplayMode(structure, displayMode), '', editable), [structure, editable, displayMode]);
     const tree = useTree();
@@ -47,7 +48,15 @@ const FileStructure = ({structure, setStructure, editable, setSelected, displayM
             const selected = tree.selectedState[0];
             const object = findObjectIdInStructure(structure, selected);
             if (null !== object && object.object_id !== null) {
-                setSelected(object.object_id);
+                if (solutionMode) {
+                    if (object.is_test_file) {
+                        setSelected("test-" + object.object_id);
+                    } else {
+                        setSelected("task-" + object.object_id);
+                    }
+                } else {
+                    setSelected(object.object_id);
+                }
             }
         }
     }, [tree.selectedState])

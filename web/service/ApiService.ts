@@ -8,7 +8,8 @@ import {
     GroupJoinRequestResponse,
     GroupsResponse,
     MongoTestFile,
-    RunnerConfig
+    RunnerConfig, Solution, SolutionFilesResponse,
+    SolutionsResponse
 } from "@/service/types/tasky";
 import {FileStructureTree} from "@/components/FileStructure";
 
@@ -85,7 +86,19 @@ class ApiService {
     }
 
     public async getCodeTestsFiles(groupId: number, assignmentId: number, fileIds: string[]): Promise<MongoTestFile[]> {
-        return this.get<MongoTestFile[]>(`/tasky/groups/${groupId}/assignments/${assignmentId}/code_test_files?object_ids=${fileIds.join(',')}`);
+        return await this.get<MongoTestFile[]>(`/tasky/groups/${groupId}/assignments/${assignmentId}/code_test_files?object_ids=${fileIds.join(',')}`);
+    }
+
+    public async getPersonalSolutions(): Promise<SolutionsResponse> {
+        return await this.get<SolutionsResponse>('/tasky/personal_solutions');
+    }
+
+    public async getSolution(id: number): Promise<Solution> {
+        return await this.get<Solution>(`/tasky/solutions/${id}`);
+    }
+
+    public async getSolutionFiles(id: number, testFiles: string[], taskFiles: string[]): Promise<SolutionFilesResponse> {
+        return await this.get<SolutionFilesResponse>(`/tasky/solutions/${id}/files?task_files=${taskFiles.join(',')}&test_files=${testFiles.join(',')}`);
     }
 
     public async createCodeTests(groupId: number, assignmentId: number, fileStructure: FileStructureTree, files: File[], runnerConfig: RunnerConfig): Promise<Assignment> {
@@ -98,6 +111,36 @@ class ApiService {
             formData.set("runner_config", new Blob([JSON.stringify(runnerConfig)], {type: 'application/json'}));
 
             const resp = await fetch(`${this.apiUrl}/tasky/groups/${groupId}/assignments/${assignmentId}/code_test`, {
+                method: "POST",
+                mode: "cors",
+                body: formData,
+                credentials: 'include',
+                headers: {
+                    "Accept": "application/json",
+                }
+            });
+            const txt = await resp.text();
+            const obj = this.getObject(txt);
+            if (resp.status !== 200) {
+                throw new ApiError(resp.status, obj.message);
+            }
+            return obj;
+
+        } catch (e) {
+            if(e instanceof Error) {
+                throw new ApiError(-1, e.message);
+            }
+            throw new ApiError(-1, `${e}`);
+        }
+    }
+
+    public async createSolution(assignmentId: number, files: File[]): Promise<Solution> {
+        try {
+            const formData = new FormData();
+            for (const file of files) {
+                formData.append("files", file, file.name);
+            }
+            const resp = await fetch(`${this.apiUrl}/tasky/assignments/${assignmentId}/solutions`, {
                 method: "POST",
                 mode: "cors",
                 body: formData,

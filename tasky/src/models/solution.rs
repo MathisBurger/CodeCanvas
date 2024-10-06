@@ -5,6 +5,22 @@ use serde::Serialize;
 
 use super::DB;
 
+pub enum ApprovalStatus {
+    Pending,
+    Rejected,
+    Approved,
+}
+
+impl ApprovalStatus {
+    pub fn string(&self) -> String {
+        return match self {
+            Self::Pending => "PENDING".to_string(),
+            Self::Approved => "APPROVED".to_string(),
+            Self::Rejected => "REJECTED".to_string(),
+        };
+    }
+}
+
 #[derive(Queryable, Selectable, AsChangeset, Clone, Serialize)]
 #[diesel(table_name = crate::schema::solutions)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
@@ -22,6 +38,7 @@ pub struct Solution {
 pub struct NewSolution {
     pub submitter_id: i32,
     pub assignment_id: i32,
+    pub approval_status: Option<String>,
 }
 
 pub struct SolutionRepository;

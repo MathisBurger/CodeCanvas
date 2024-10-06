@@ -1,10 +1,10 @@
-import {MongoTestFile} from "@/service/types/tasky";
+import {MongoTaskFile, MongoTestFile} from "@/service/types/tasky";
 import {Card, Text} from "@mantine/core";
 import {CodeHighlight} from "@mantine/code-highlight";
 import { useMemo } from "react";
 
 interface CodeDisplayProps {
-    file: MongoTestFile|null;
+    file: MongoTestFile|MongoTaskFile|null;
 }
 
 

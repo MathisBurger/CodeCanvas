@@ -19,7 +19,7 @@ use super::{
 #[derive(Serialize)]
 pub struct SolutionResponse {
     pub id: i32,
-    pub sumbitter: User,
+    pub submitter: User,
     pub assignment: AssignmentResponse,
     pub approval_status: Option<String>,
     pub file_structure: Option<AssignmentFileStructure>,
@@ -68,7 +68,7 @@ impl Enrich<Solution> for SolutionResponse {
         .ok();
         return Ok(SolutionResponse {
             id: from.id,
-            sumbitter: submitter.into_inner().into(),
+            submitter: submitter.into_inner().into(),
             assignment: assigment_response,
             approval_status: from.approval_status.clone(),
             file_structure,

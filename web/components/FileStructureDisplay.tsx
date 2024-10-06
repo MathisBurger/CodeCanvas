@@ -1,17 +1,19 @@
 import FileStructure, {FileStructureFile, FileStructureTree} from "@/components/FileStructure";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
-import { MongoTestFile } from "@/service/types/tasky";
+import {MongoTaskFile, MongoTestFile, SolutionFilesResponse} from "@/service/types/tasky";
 import {Grid} from "@mantine/core";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import CentralLoading from "@/components/CentralLoading";
 import CodeDisplay from "@/components/CodeDisplay";
+import useCurrentUser from "@/hooks/useCurrentUser";
+import {isGranted} from "@/service/auth";
+import {UserRoles} from "@/service/types/usernator";
 
-// TODO: For later use with task files just set groupId to optional and add another optional solutionId
-// Then one of the values needs to be set in order to fetch objects.
 interface FileStructureDisplayProps {
     structure: FileStructureTree;
-    groupId: number;
+    groupId?: number;
     assignmentId: number;
+    solutionId?: number;
 }
 
 const flattenStructureToFiles = (structure: FileStructureTree): FileStructureFile[] => {
@@ -22,27 +24,36 @@ const flattenStructureToFiles = (structure: FileStructureTree): FileStructureFil
     return files;
 }
 
-const FileStructureDisplay = ({structure, groupId, assignmentId}: FileStructureDisplayProps) => {
+const FileStructureDisplay = ({structure, groupId, assignmentId, solutionId}: FileStructureDisplayProps) => {
 
+    if (solutionId === undefined && groupId === undefined) {
+        throw new Error("Invalid combination of props");
+    }
+    const {user} = useCurrentUser();
     const api = useApiServiceClient();
 
     const filesFlattened = useMemo<FileStructureFile[]>(() => flattenStructureToFiles(structure), [structure]);
-    const objectIds = useMemo<string[]>(() => filesFlattened.map((f) => f.object_id).filter((f) => f !== null), [filesFlattened]);
+    const testObjectIds = useMemo<string[]>(() => filesFlattened.filter((f) => f.object_id !== null && f.is_test_file).map((f) => f.object_id) as string[], [filesFlattened]);
+    const taskObjectIds = useMemo<string[]>(() => filesFlattened.filter((f) => f.object_id !== null && !f.is_test_file).map((f) => f.object_id) as string[], [filesFlattened]);
+    const objectIds = useMemo<string[]>(() => [...testObjectIds, ...taskObjectIds], [filesFlattened]);
     const cumulatedSize = useMemo<number>(() => filesFlattened.reduce((a, b) => ({...a, file_size: (a.file_size ?? 0) + (b.file_size ?? 0)})).file_size!, [filesFlattened]);
     const loadAll = useMemo<boolean>(() => cumulatedSize <= 5 * 1014 **2, [cumulatedSize]);
 
-    const [contents, setContents] = useState<Map<string, MongoTestFile>>(new Map());
+    const [contents, setContents] = useState<Map<string, MongoTestFile|MongoTaskFile>>(new Map());
     const [selected, setSelected] = useState<string|null>(null);
     const [loading, setLoading] = useState(false);
 
-    const getApiCall = useCallback(async (ids: string[]): Promise<MongoTestFile[]> => {
+    const getApiCall = useCallback(async (ids: string[], furtherIds?: string[]): Promise<MongoTestFile[]|SolutionFilesResponse> => {
         if (ids.length === 0) {
             return (async () => [])();
         }
-        return api.getCodeTestsFiles(groupId, assignmentId, ids);
-    }, [groupId, assignmentId]);
+        if (groupId) {
+            return api.getCodeTestsFiles(groupId, assignmentId, ids);
+        }
+        return api.getSolutionFiles(solutionId ?? -1, furtherIds ?? [], ids);
+    }, [groupId, assignmentId, solutionId]);
 
-    const getSelectedValue = useCallback((): MongoTestFile|null => {
+    const getSelectedValue = useCallback((): MongoTestFile|MongoTaskFile|null => {
 
         if (selected === null) return null;
 
@@ -50,11 +61,32 @@ const FileStructureDisplay = ({structure, groupId, assignmentId}: FileStructureD
             return contents.get(selected)!;
         }
 
-        getApiCall([selected]).then(result => {
-            if (result.length > 0) {
-                setContents(contents.set(result[0]._id.$oid, result[0]));
-                setLoading(false);
+        let selectedCopy = selected;
+        let isTestFile = false;
+        if (selected.startsWith("task-")) {
+            selectedCopy = selected.replaceAll("task-", "");
+        }
+        if (selected.startsWith("test-")) {
+            selectedCopy = selected.replaceAll("test-", "");
+            isTestFile = true;
+        }
+
+        getApiCall(solutionId === undefined ? [selected] : isTestFile ? [selectedCopy] : [], solutionId === undefined ? undefined : !isTestFile ? [selectedCopy] : undefined)
+            .then(result => {
+            if (Array.isArray(result)) {
+                if (result.length > 0) {
+                    setContents(contents.set(result[0]._id.$oid, result[0]));
+                    setLoading(false);
+                }
+            } else {
+                if (result.task_files.length > 0) {
+                    setContents(contents.set("task-" + result.task_files[0]._id.$oid, result.task_files[0]));
+                }
+                if (result.test_files.length > 0) {
+                    setContents(contents.set("test-" + result.test_files[0]._id.$oid, result.test_files[0]));
+                }
             }
+
         });
         setLoading(true);
         return null;
@@ -62,11 +94,20 @@ const FileStructureDisplay = ({structure, groupId, assignmentId}: FileStructureD
 
     useEffect(() => {
         if (loadAll) {
-            getApiCall(objectIds)
+            getApiCall(solutionId !== undefined ? taskObjectIds : objectIds, solutionId !== undefined ? testObjectIds : undefined)
                 .then((res) => {
-                   const map = new Map<string, MongoTestFile>();
-                   for (const file of res) {
-                       map.set(file._id.$oid, file);
+                   const map = new Map<string, MongoTestFile|MongoTaskFile>();
+                   if (Array.isArray(res)) {
+                       for (const file of res) {
+                           map.set(file._id.$oid, file);
+                       }
+                   } else {
+                       for (const testFile of res.test_files) {
+                           map.set("test-" + testFile._id.$oid, testFile);
+                       }
+                       for (const taskFile of res.task_files) {
+                           map.set("task-" + taskFile._id.$oid, taskFile);
+                       }
                    }
                    setContents(map);
                 });
@@ -80,7 +121,8 @@ const FileStructureDisplay = ({structure, groupId, assignmentId}: FileStructureD
                     structure={structure}
                     editable={false}
                     setSelected={setSelected}
-                    displayMode="test"
+                    displayMode={isGranted(user, [UserRoles.Admin, UserRoles.Tutor]) ? "all" : "task"}
+                    solutionMode
                 />
             </Grid.Col>
             <Grid.Col span={9}>

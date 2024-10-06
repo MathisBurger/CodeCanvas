@@ -42,18 +42,18 @@ export default function RootLayout({
     </head>
     <body>
     <CurrentUserContext.Provider value={{user, setUser}}>
-            <MantineProvider theme={{}}>
-                <DatesProvider settings={{timezone: null}}>
-                    <Notifications />
-                    {/* @ts-ignore */}
-                    <AppShell header={{height: 100}} navbar={showNavbar ? {width: 250} : undefined}>
-                        <AppShell.Header><Header /></AppShell.Header>
-                        {showNavbar && (<AppShell.Navbar><Navbar /></AppShell.Navbar>)}
-                        <AppShell.Main>{children}</AppShell.Main>
-                    </AppShell>
-                    <SpotlightWrapper />
-                </DatesProvider>
-            </MantineProvider>
+        <MantineProvider theme={{}}>
+            <DatesProvider settings={{timezone: null}}>
+                <Notifications />
+                {/* @ts-ignore */}
+                <AppShell header={{height: 100}} navbar={showNavbar ? {width: 250} : undefined}>
+                    <AppShell.Header><Header /></AppShell.Header>
+                    {showNavbar && (<AppShell.Navbar><Navbar /></AppShell.Navbar>)}
+                    <AppShell.Main>{children}</AppShell.Main>
+                </AppShell>
+                <SpotlightWrapper />
+            </DatesProvider>
+        </MantineProvider>
     </CurrentUserContext.Provider>
     </body>
     </html>

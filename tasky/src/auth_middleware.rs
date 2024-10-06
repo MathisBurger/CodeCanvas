@@ -1,15 +1,19 @@
 use actix_web::dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform};
 use actix_web::error::ErrorUnauthorized;
-use actix_web::{Error, HttpMessage};
+use actix_web::{web, Error, HttpMessage};
 use futures::future::LocalBoxFuture;
 use std::fmt::Display;
 use std::future::{ready, Ready};
+
+use crate::models::group::GroupRepository;
+use crate::AppState;
 
 /// User data retrieved from Headers
 #[derive(Clone)]
 pub struct UserData {
     pub user_id: i32,
     pub user_roles: Vec<UserRole>,
+    pub groups: Vec<i32>,
 }
 
 /// All roles a user can have
@@ -91,6 +95,9 @@ where
     fn call(&self, req: ServiceRequest) -> Self::Future {
         let mut uid = 0;
         let mut uroles: Vec<UserRole> = vec![];
+        let mut app_data = req.app_data::<web::Data<AppState>>();
+        let state = app_data.as_ref().unwrap();
+        let conn = &mut state.db.db.get().unwrap();
 
         let user_id = req.headers().get("X-CodeCanvas-UserId");
         if user_id.is_some() {
@@ -112,9 +119,15 @@ where
             return Box::pin(async { Err(ErrorUnauthorized("No user roles provided")) });
         }
 
+        let groups: Vec<i32> = GroupRepository::get_groups_for_member(uid, conn)
+            .into_iter()
+            .map(|g| g.id)
+            .collect();
+
         req.extensions_mut().insert(UserData {
             user_id: uid,
             user_roles: uroles,
+            groups,
         });
 
         let fut = self.service.call(req);

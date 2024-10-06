@@ -20,7 +20,7 @@ func BuildTask(er ExecRequest) (input.Task, error) {
 	switch er.Assignment.Language {
 	case LanguageGo:
 		image = "golang:1.19"
-		run = "go run main.go > $TORK_OUTPUT"
+		run = "go run main_test.go > $TORK_OUTPUT"
 	default:
 		return input.Task{}, errors.New("invalid language")
 	}

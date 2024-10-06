@@ -19,6 +19,7 @@ impl IsGranted for Group {
             }
             SecurityAction::Update => {
                 StaticSecurity::is_granted(StaticSecurityAction::IsTutor, user)
+                    && user.groups.contains(&self.id)
             }
             SecurityAction::Delete => false,
         }

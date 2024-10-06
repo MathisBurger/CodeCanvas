@@ -71,3 +71,28 @@ export interface MongoTestFile {
     content: string;
     assignment_id: string;
 }
+
+export interface MongoTaskFile {
+    _id: {$oid: string};
+    file_name: string;
+    content_size: string;
+    content: string;
+    solution_id: string;
+}
+
+export interface Solution {
+    id: number;
+    submitter: TaskyUser;
+    assignment: Assignment;
+    approval_status?: string;
+    file_structure?: FileStructureTree;
+}
+
+export interface SolutionsResponse {
+    solutions: Solution[];
+}
+
+export interface SolutionFilesResponse {
+    task_files: MongoTaskFile[];
+    test_files: MongoTestFile[];
+}

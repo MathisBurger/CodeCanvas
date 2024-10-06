@@ -75,7 +75,7 @@ pub async fn get_all_group_assignments(
         GroupRepository::get_by_id(path.into_inner().0, conn).ok_or(ApiError::BadRequest {
             message: "No access to group".to_string(),
         })?;
-    if !group.is_granted(SecurityAction::Update, &user_data) {
+    if !group.is_granted(SecurityAction::Read, &user_data) {
         return Err(ApiError::Forbidden {
             message: "No access to group".to_string(),
         });
@@ -232,7 +232,7 @@ fn get_group_and_assignment(
     let mut group = GroupRepository::get_by_id(path_data.0, conn).ok_or(ApiError::BadRequest {
         message: "No access to group".to_string(),
     })?;
-    if !group.is_granted(SecurityAction::Update, &user_data) {
+    if !group.is_granted(SecurityAction::Read, &user_data) {
         return Err(ApiError::Forbidden {
             message: "No access to group".to_string(),
         });

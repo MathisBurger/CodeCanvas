@@ -77,6 +77,7 @@ services:
       - MONGO_USERNAME=tasky
       - MONGO_PASSWORD=tasky
       - MONGO_DATABASE=executor_files
+      - EXECUTOR_HTTP=http://executor:8000
     depends_on:
       - usernator
       - postgres
@@ -93,10 +94,22 @@ services:
       - DATABASE_HOST=postgres
       - DATABASE_PORT=5432
       - DATABASE_NAME=executor
+      - MONGODB_USERNAME=executor
+      - MONGODB_PASSWORD=executor
+      - MONGODB_HOST=mongodb:27017
+      - MONGODB_DATABASE=executor_files
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - rabbitmq
       - postgres
+  executor_ui:
+    image: runabol/tork-web
+    ports:
+      - "3007:8100"
+    environment:
+      - BACKEND_URL=http://executor:8000
+    depends_on:
+      - executor
 volumes:
   db_data:

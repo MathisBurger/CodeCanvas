@@ -11,6 +11,7 @@ impl IsGranted for NewSolution {
         return match action {
             SecurityAction::Create => {
                 StaticSecurity::is_granted(super::StaticSecurityAction::IsStudent, user)
+                    && self.submitter_id == user.user_id
             }
             _ => false,
         };

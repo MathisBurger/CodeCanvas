@@ -184,3 +184,19 @@ export const filterFileStructureForDisplayMode = (structure: FileStructureTree, 
     }
     return structure;
 }
+
+/**
+ * Extracts all files from the file structure
+ *
+ * @param structure The file structure
+ */
+export const extractFilesFromFileStructure = (structure: FileStructureTree): string[] => {
+    const files = [];
+    for (const file of structure.files) {
+        files.push(file.filename);
+    }
+    for (const folder of structure.folders ?? []) {
+        files.push(...extractFilesFromFileStructure(folder));
+    }
+    return files;
+}
