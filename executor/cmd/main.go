@@ -25,6 +25,7 @@ func main() {
 	})
 
 	appConfig := internal.LoadConfig()
+	internal.InitMongoDB(appConfig)
 	rmqInit := make(chan bool)
 	go internal.InitRabbitMQ(appConfig, rmqInit)
 	go messaging.CreateCreateUserHandler(rmqInit)

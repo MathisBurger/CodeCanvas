@@ -5,8 +5,11 @@ import (
 	"encoding/json"
 	"executor/internal/config"
 	"executor/internal/global"
+	"fmt"
 	"github.com/rabbitmq/amqp091-go"
 	"github.com/sethvargo/go-envconfig"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"os"
 	"time"
@@ -43,4 +46,13 @@ func InitRabbitMQ(c *config.Configuration, rmqInit chan bool) {
 	}
 	global.RabbitMQ = ch
 	rmqInit <- true
+}
+
+func InitMongoDB(c *config.Configuration) {
+	uri := fmt.Sprintf("mongodb://%s:%s@%s/%s?retryWrites=true&w=majority", c.Mongo.Username, c.Mongo.Password, c.Mongo.Host, c.Mongo.Database)
+	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(uri))
+	if err != nil {
+		return
+	}
+	global.MongoDB = client.Database(c.Mongo.Database)
 }

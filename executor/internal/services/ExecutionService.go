@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"fmt"
 	"github.com/runabol/tork"
 	"github.com/runabol/tork/engine"
@@ -8,7 +9,7 @@ import (
 	"github.com/runabol/tork/middleware/web"
 )
 
-func ExecuteTask(c web.Context, task input.Task) (*tork.Job, error) {
+func ExecuteTask(c web.Context, task input.Task, username string) (*tork.Job, error) {
 
 	input := &input.Job{
 		Name:  task.Name,
@@ -29,7 +30,9 @@ func ExecuteTask(c web.Context, task input.Task) (*tork.Job, error) {
 	go handleExecution(result)
 
 	// pass the listener to the submit job call
-	job, err := engine.SubmitJob(c.Request().Context(), input, listener)
+	ctx := context.WithValue(c.Request().Context(), "username", username)
+	fmt.Println(ctx.Value("username"))
+	job, err := engine.SubmitJob(ctx, input, listener)
 	if err != nil {
 		return nil, err
 	}
