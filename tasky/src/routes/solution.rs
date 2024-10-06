@@ -1,3 +1,4 @@
+use crate::http::run_task;
 use crate::models::assignment::AssignmentLanguage;
 use crate::models::solution::{Solution, SolutionRepository};
 use crate::response::solution::SolutionsResponse;
@@ -34,8 +35,11 @@ pub async fn create_solution(
             message: "Cannot create solution on question based assignment".to_string(),
         });
     }
-    let solution =
+    let mut solution =
         handle_create_multipart(form, &user_data, &data.mongodb, conn, &assignment).await?;
+    let job_id = run_task(assignment, solution.clone(), &data.config).await?;
+    solution.job_id = Some(job_id);
+    SolutionRepository::update_solution(solution.clone(), conn);
     let enrichted = SolutionResponse::enrich(&solution, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(enrichted))
 }

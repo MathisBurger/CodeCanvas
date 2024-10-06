@@ -1,10 +1,11 @@
 use crate::schema::solutions::{dsl, submitter_id};
 use diesel::associations::HasTable;
 use diesel::prelude::*;
+use serde::Serialize;
 
 use super::DB;
 
-#[derive(Queryable, Selectable, AsChangeset, Clone)]
+#[derive(Queryable, Selectable, AsChangeset, Clone, Serialize)]
 #[diesel(table_name = crate::schema::solutions)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Solution {
@@ -13,6 +14,7 @@ pub struct Solution {
     pub assignment_id: i32,
     pub file_structure: Option<serde_json::Value>,
     pub approval_status: Option<String>,
+    pub job_id: Option<String>,
 }
 
 #[derive(Insertable)]

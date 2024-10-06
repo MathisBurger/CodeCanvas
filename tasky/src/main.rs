@@ -26,6 +26,7 @@ mod auth_middleware;
 mod error;
 mod grpc;
 mod handler;
+mod http;
 mod models;
 mod mongo;
 mod response;

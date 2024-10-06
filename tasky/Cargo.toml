@@ -28,6 +28,7 @@ chrono = { version = "0.4.38", features = ["serde"] }
 tokio = { version = "1", features = ["full"] }
 mongodb = "2.1"
 bson = { version = "2", features = ["chrono-0_4"] }
+awc = "3.5.1"
 
 [build-dependencies]
 tonic-build = "0.12.2"

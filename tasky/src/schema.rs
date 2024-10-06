@@ -54,6 +54,8 @@ diesel::table! {
         file_structure -> Nullable<Jsonb>,
         #[max_length = 20]
         approval_status -> Nullable<Varchar>,
+        #[max_length = 32]
+        job_id -> Nullable<Varchar>,
     }
 }
 

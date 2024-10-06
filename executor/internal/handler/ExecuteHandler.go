@@ -26,5 +26,7 @@ func ExecuteHandler(c web.Context) error {
 	if err != nil {
 		c.Error(http.StatusInternalServerError, err)
 	}
-	return c.JSON(http.StatusOK, job)
+	return c.JSON(http.StatusOK, jobResponse{
+		Id: job.ID,
+	})
 }

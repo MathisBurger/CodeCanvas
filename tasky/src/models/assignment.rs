@@ -23,7 +23,7 @@ pub enum AssignmentLanguage {
 }
 
 /// The assignment entity
-#[derive(Queryable, Selectable, AsChangeset, Clone)]
+#[derive(Queryable, Selectable, AsChangeset, Clone, Serialize)]
 #[diesel(table_name = crate::schema::assignments)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Assignment {
