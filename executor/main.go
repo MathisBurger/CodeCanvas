@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func main() {
-	fmt.Println("Hier wurde der Code ausgeführt")
+	for i := 1; i <= 10; i++ {
+		time.Sleep(1 * time.Second)
+		fmt.Println(i)
+	}
 }

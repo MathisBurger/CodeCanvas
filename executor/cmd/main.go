@@ -31,7 +31,6 @@ func main() {
 	go messaging.CreateCreateUserHandler(rmqInit)
 
 	engine.RegisterEndpoint("POST", "/execute", handler.ExecuteHandler)
-
 	// Start the Tork CLI
 	app := cli.New()
 
