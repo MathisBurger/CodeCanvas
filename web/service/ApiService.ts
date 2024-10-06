@@ -101,6 +101,10 @@ class ApiService {
         return await this.get<SolutionFilesResponse>(`/tasky/solutions/${id}/files?task_files=${taskFiles.join(',')}&test_files=${testFiles.join(',')}`);
     }
 
+    public async getSolutionsForAssignment(id: number): Promise<SolutionsResponse> {
+        return await this.get<SolutionsResponse>(`/tasky/assignments/${id}/solutions`);
+    }
+
     public async createCodeTests(groupId: number, assignmentId: number, fileStructure: FileStructureTree, files: File[], runnerConfig: RunnerConfig): Promise<Assignment> {
         try {
             const formData = new FormData();

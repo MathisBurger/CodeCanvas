@@ -50,8 +50,8 @@ const SolutionDetailsPage = ({params}: {params: {id: string}}) => {
                     <Tabs.Tab value="code">Code</Tabs.Tab>
                 </Tabs.List>
                 <Tabs.Panel value="log" mt={10}>
-                    {solution.job !== undefined && (
-                        <JobResultDisplay job={solution.job} />
+                    {solution.job !== null && (
+                        <JobResultDisplay job={solution.job!} />
                     )}
                 </Tabs.Panel>
                 <Tabs.Panel value="code" mt={10}>

@@ -121,8 +121,8 @@ const FileStructureDisplay = ({structure, groupId, assignmentId, solutionId}: Fi
                     structure={structure}
                     editable={false}
                     setSelected={setSelected}
-                    displayMode={isGranted(user, [UserRoles.Admin, UserRoles.Tutor]) ? "all" : "task"}
-                    solutionMode
+                    displayMode={solutionId !== undefined ? isGranted(user, [UserRoles.Admin, UserRoles.Tutor]) ? "all" : "task" : "test"}
+                    solutionMode={solutionId !== undefined}
                 />
             </Grid.Col>
             <Grid.Col span={9}>

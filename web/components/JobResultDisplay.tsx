@@ -1,5 +1,5 @@
 import { Job } from "@/service/types/tasky";
-import {Code, Highlight, Paper, TextInput} from "@mantine/core";
+import {Highlight, Paper, TextInput} from "@mantine/core";
 import { useState } from "react";
 
 interface JobResultDisplayProps {

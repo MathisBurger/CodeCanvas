@@ -15,6 +15,7 @@ import AssignmentCreateOrUpdateCodeTestModal from "@/components/assignments/Assi
 import {AssignmentLanguage} from "@/service/types/tasky";
 import FileStructureDisplay from "@/components/FileStructureDisplay";
 import AssignmentDetailsTaskTab from "@/components/assignments/AssignmentDetailsTaskTab";
+import AssignmentSolutionsTab from "@/components/assignments/AssignmentSolutionsTab";
 
 
 const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId: string}}) => {
@@ -59,6 +60,9 @@ const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId
                     {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && assignment.file_structure !== null && assignment.language !== AssignmentLanguage.QuestionBased && (
                         <Tabs.Tab value="codeTests">Code Tests</Tabs.Tab>
                     )}
+                    {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && (
+                        <Tabs.Tab value="solutions">Solutions</Tabs.Tab>
+                    )}
                 </Tabs.List>
                 <Tabs.Panel mt={20} value="task">
                     <AssignmentDetailsTaskTab assignment={Object.assign({}, assignment)} />
@@ -70,6 +74,11 @@ const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId
                             groupId={groupId}
                             assignmentId={assignmentId}
                         />
+                    </Tabs.Panel>
+                )}
+                {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && (
+                    <Tabs.Panel value="solutions">
+                        <AssignmentSolutionsTab assignmentId={assignmentId} />
                     </Tabs.Panel>
                 )}
             </Tabs>
