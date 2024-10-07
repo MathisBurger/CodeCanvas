@@ -51,7 +51,7 @@ pub async fn get_join_requests(
     user: web::ReqData<UserData>,
     path: web::Path<(i32,)>,
 ) -> Result<HttpResponse, ApiError> {
-    if !StaticSecurity::is_granted(StaticSecurityAction::IsTutor, &user) {
+    if !StaticSecurity::is_granted(StaticSecurityAction::IsAdminOrTutor, &user) {
         return Err(ApiError::Forbidden {
             message: "User is not a tutor".to_string(),
         });

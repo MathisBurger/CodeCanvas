@@ -27,9 +27,15 @@ impl IsGranted for Solution {
         return match action {
             SecurityAction::Read => {
                 self.submitter_id == user.user_id
-                    || StaticSecurity::is_granted(super::StaticSecurityAction::IsAdminOrTutor, user)
+                    || (StaticSecurity::is_granted(
+                        super::StaticSecurityAction::IsAdminOrTutor,
+                        user,
+                    ) && user.groups.contains(&self.group_id.unwrap_or(-1)))
             }
-            _ => StaticSecurity::is_granted(super::StaticSecurityAction::IsAdminOrTutor, user),
+            _ => {
+                StaticSecurity::is_granted(super::StaticSecurityAction::IsAdminOrTutor, user)
+                    && user.groups.contains(&self.group_id.unwrap_or(-1))
+            }
         };
     }
 }

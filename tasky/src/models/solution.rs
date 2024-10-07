@@ -31,6 +31,7 @@ pub struct Solution {
     pub file_structure: Option<serde_json::Value>,
     pub approval_status: Option<String>,
     pub job_id: Option<String>,
+    pub group_id: Option<i32>,
 }
 
 #[derive(Insertable)]
