@@ -1,5 +1,5 @@
 import {UserRoles} from "@/service/types/usernator";
-import {IconDashboard, IconSchool, IconUsersGroup} from "@tabler/icons-react";
+import {IconDashboard, IconFile, IconSchool, IconUsersGroup} from "@tabler/icons-react";
 
 export interface Route {
     path: string;
@@ -36,5 +36,12 @@ export const routes: Route[] = [
         description: 'All groups you are not a member of that you can join or access',
         icon: <IconUsersGroup />,
         authRoles: [UserRoles.Tutor, UserRoles.Student]
+    },
+    {
+        path: '/solutions',
+        name: 'Solutions',
+        description: 'All your personal solutions',
+        icon: <IconFile />,
+        authRoles: [UserRoles.Student]
     }
 ]
