@@ -1,6 +1,12 @@
-whitelist = [ "/usernator/reset_password", "/usernator/submit_password", "/usernator/register" ]
-blacklist = [ "/usernator/user" ]
+whitelist = [
+    "/usernator/reset_password",
+    "/usernator/submit_password",
+    "/usernator/register",
+    "/executor_ui/_next",
+]
+blacklist = ["/usernator/user"]
 login_uri = "/usernator/login"
 service_locations = { usernator = "http://127.0.0.1:3001" }
 jwt_secret = "secret lol"
 allowed_origin = "http://localhost:3000"
+admin_restricted_services = ["executor_ui"]

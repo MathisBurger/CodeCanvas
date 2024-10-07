@@ -58,7 +58,8 @@ services:
       - "3002:3000"
     environment:
       - JWT_SECRET=secret
-      - SERVICE_LOCATIONS={usernator="http://usernator:3000", tasky="http://tasky:3000"}
+      - WHITELIST=["/usernator/reset_password","/usernator/submit_password","/usernator/register","/executor_ui/_next"]
+      - SERVICE_LOCATIONS={usernator="http://usernator:3000", tasky="http://tasky:3000", executor_ui="http://executor_ui:8100"}
     depends_on:
       - usernator
       - tasky

@@ -56,7 +56,7 @@ impl ProxyClient {
     }
 
     /// Gets the ID of the service
-    fn get_service_key(&self, path: &String) -> Result<String, ApiError> {
+    pub fn get_service_key(&self, path: &String) -> Result<String, ApiError> {
         let spl: Vec<&str> = path.split("/").collect();
         let first = spl.get(1);
         if first.is_none() {

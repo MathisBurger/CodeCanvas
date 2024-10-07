@@ -24,18 +24,32 @@ pub async fn handle_proxy(
         return handle_login_request(resp, config.clone()).await;
     }
 
-    if auth::check_in_list(path.clone(), config.whitelist.clone()) {
+    if auth::check_in_list(path, config.whitelist.clone()) {
         let resp = proxy.proxy_request(&req, body, vec![]).await?;
         return Ok(resp);
     }
 
-    if auth::check_in_list(path.clone(), config.blacklist.clone()) {
+    if auth::check_in_list(path, config.blacklist.clone()) {
         return ApiError::Forbidden {
             message: "Endpoint is on blacklist".to_string(),
         }
         .into();
     }
+
     let claims = auth::get_user_claims(&req, config.jwt_secret.clone())?;
+    let service_key = proxy.get_service_key(&path.to_string())?;
+    if auth::check_in_list(
+        service_key.as_str(),
+        config.admin_restricted_services.clone(),
+    ) {
+        if claims.get(1).unwrap().1.contains("ROLE_ADMIN") {
+            let resp = proxy.proxy_request(&req, body, claims).await?;
+            return Ok(resp);
+        }
+        return Err(ApiError::Forbidden {
+            message: "You are not an admin".to_string(),
+        });
+    }
     let resp = proxy.proxy_request(&req, body, claims).await?;
     return Ok(resp);
 }
