@@ -1,4 +1,4 @@
-use crate::schema::solutions::{dsl, submitter_id};
+use crate::schema::solutions::dsl;
 use diesel::associations::HasTable;
 use diesel::prelude::*;
 use serde::Serialize;

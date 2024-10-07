@@ -1,5 +1,4 @@
 use actix_multipart::form::MultipartForm;
-use actix_multipart::Multipart;
 use actix_web::get;
 use actix_web::post;
 use actix_web::web;
@@ -14,7 +13,6 @@ use crate::models::assignment::Assignment;
 use crate::models::assignment::AssignmentLanguage;
 use crate::models::assignment::AssignmentRepository;
 use crate::models::assignment::CreateAssignment;
-use crate::models::database::DBPool;
 use crate::models::group::Group;
 use crate::models::group::GroupRepository;
 use crate::models::DB;
@@ -133,7 +131,7 @@ pub async fn get_assignment(
     let user_data = user.into_inner();
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
-    let (group, assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
+    let (_, assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
     let enrichted =
         AssignmentResponse::enrich(&assignment, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(enrichted))
@@ -150,7 +148,7 @@ pub async fn update_assignment(
     let user_data = user.into_inner();
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
-    let (group, mut assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
+    let (_, mut assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
     assignment.title = req.title.clone();
     assignment.due_date = req.due_date.clone();
     assignment.description = req.description.clone();
@@ -176,7 +174,7 @@ pub async fn create_assignment_test(
     let user_data = user.into_inner();
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
-    let (group, mut assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
+    let (_, mut assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
     if !assignment.is_granted(SecurityAction::Update, &user_data) {
         return Err(ApiError::Forbidden {
             message: "You are not allowed to create code tests".to_string(),
@@ -208,7 +206,7 @@ pub async fn view_assignment_test(
     let user_data = user.into_inner();
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
-    let (group, mut assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
+    let (_, assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
     if !StaticSecurity::is_granted(
         crate::security::StaticSecurityAction::CanViewTestStructure,
         &user_data,

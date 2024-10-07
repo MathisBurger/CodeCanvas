@@ -11,7 +11,6 @@ use api::usernator_api_client::UsernatorApiClient;
 use futures::future::join;
 use grpc::MyTaskyApi;
 use log::info;
-use mongodb::Client;
 use tonic::transport::{Channel, Server};
 
 pub mod api {

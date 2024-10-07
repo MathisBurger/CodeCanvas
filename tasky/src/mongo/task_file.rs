@@ -1,5 +1,5 @@
 use bson::doc;
-use bson::{oid::ObjectId, Bson};
+use bson::oid::ObjectId;
 use serde::{Deserialize, Serialize};
 
 use super::read_cursor;
@@ -29,25 +29,12 @@ impl TaskFileCollection {
             .collect()
     }
 
-    pub async fn create(file: &TaskFile, mongodb: &mongodb::Database) -> ObjectId {
-        let serialized = bson::to_bson(file).unwrap();
-        let document = serialized.as_document().unwrap();
-        mongodb
-            .collection("task_files")
-            .insert_one(document.to_owned(), None)
-            .await
-            .unwrap()
-            .inserted_id
-            .as_object_id()
-            .unwrap()
-    }
-
     pub async fn get_for_solution(
         solution_id: i32,
         object_ids: Vec<ObjectId>,
         mongodb: &mongodb::Database,
     ) -> Vec<TaskFile> {
-        let mut cursor = mongodb
+        let cursor = mongodb
             .collection("task_files")
             .find(
                 Some(doc! {"solution_id": solution_id, "_id": doc! {"$in": object_ids}}),

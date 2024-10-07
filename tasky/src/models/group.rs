@@ -28,13 +28,6 @@ pub struct CreateGroup {
 pub struct GroupRepository;
 
 impl GroupRepository {
-    /// Gets all groups
-    pub fn get_all(conn: &mut DB) -> Vec<Group> {
-        dsl::groups
-            .get_results::<Group>(conn)
-            .expect("Error loading groups")
-    }
-
     /// Gets a group by ID
     pub fn get_by_id(id: i32, conn: &mut DB) -> Option<Group> {
         dsl::groups

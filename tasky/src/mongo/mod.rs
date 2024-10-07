@@ -1,14 +1,10 @@
 use futures::StreamExt;
-use std::fmt::format;
 
 pub mod task_file;
 pub mod test_file;
 
 use bson::Bson;
-use mongodb::{
-    options::{ClientOptions, ResolverConfig},
-    Client, Cursor, Database,
-};
+use mongodb::{options::ClientOptions, Client, Cursor, Database};
 use serde::de::DeserializeOwned;
 
 use crate::util::config::AppConfig;

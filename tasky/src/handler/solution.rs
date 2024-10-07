@@ -3,7 +3,6 @@ use crate::models::solution::ApprovalStatus;
 use crate::response::assignment::AssignmentFile;
 use crate::{models::DB, security::IsGranted};
 use actix_multipart::form::{tempfile::TempFile, MultipartForm};
-use diesel::sql_types::Json;
 use mongodb::Database;
 use std::io::Read;
 
@@ -15,7 +14,6 @@ use crate::{
         solution::{NewSolution, Solution, SolutionRepository},
     },
     mongo::task_file::{TaskFile, TaskFileCollection},
-    response::assignment::AssignmentFileStructure,
 };
 
 #[derive(MultipartForm)]
@@ -95,7 +93,7 @@ pub async fn handle_create_multipart(
         file.object_id = Some(mongo_files.get(i).unwrap().to_hex());
     }
     let file_structure_value =
-        serde_json::to_value(file_structure).map_err(|e| ApiError::InternalServerError {
+        serde_json::to_value(file_structure).map_err(|_| ApiError::InternalServerError {
             message: "Cannot convert file structure to JSON".to_string(),
         })?;
     solution.file_structure = Some(file_structure_value);

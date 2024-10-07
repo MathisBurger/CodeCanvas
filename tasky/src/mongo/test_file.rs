@@ -1,5 +1,5 @@
 use bson::doc;
-use bson::{oid::ObjectId, Bson};
+use bson::oid::ObjectId;
 use serde::{Deserialize, Serialize};
 
 use super::read_cursor;
@@ -29,25 +29,12 @@ impl TestFileCollection {
             .collect()
     }
 
-    pub async fn create(file: &TestFile, mongodb: &mongodb::Database) -> ObjectId {
-        let serialized = bson::to_bson(file).unwrap();
-        let document = serialized.as_document().unwrap();
-        mongodb
-            .collection("test_files")
-            .insert_one(document.to_owned(), None)
-            .await
-            .unwrap()
-            .inserted_id
-            .as_object_id()
-            .unwrap()
-    }
-
     pub async fn get_for_assignment(
         assignment_id: i32,
         object_ids: Vec<ObjectId>,
         mongodb: &mongodb::Database,
     ) -> Vec<TestFile> {
-        let mut cursor = mongodb
+        let cursor = mongodb
             .collection("test_files")
             .find(
                 Some(doc! {"assignment_id": assignment_id, "_id": doc! {"$in": object_ids}}),

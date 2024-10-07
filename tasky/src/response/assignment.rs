@@ -1,6 +1,5 @@
 use crate::api::usernator_api_client::UsernatorApiClient;
 use crate::api::UsersRequest;
-use bson::oid::ObjectId;
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
@@ -63,8 +62,8 @@ pub struct AssignmentsResponse {
 impl Enrich<Assignment> for MinifiedAssignmentResponse {
     async fn enrich(
         from: &Assignment,
-        client: &mut UsernatorApiClient<tonic::transport::Channel>,
-        db_conn: &mut super::DB,
+        _client: &mut UsernatorApiClient<tonic::transport::Channel>,
+        _db_conn: &mut super::DB,
     ) -> Result<Self, ApiError> {
         Ok(MinifiedAssignmentResponse {
             id: from.id,

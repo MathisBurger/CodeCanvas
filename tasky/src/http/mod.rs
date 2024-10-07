@@ -2,7 +2,6 @@ use crate::error::ApiError;
 use crate::models::{assignment::Assignment, solution::Solution};
 use crate::util::config::AppConfig;
 use awc::Client;
-use log::info;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]

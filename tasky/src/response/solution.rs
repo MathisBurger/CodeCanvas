@@ -5,10 +5,7 @@ use serde::Serialize;
 
 use crate::{
     error::ApiError,
-    models::{
-        assignment::{Assignment, AssignmentRepository},
-        solution::Solution,
-    },
+    models::{assignment::AssignmentRepository, solution::Solution},
 };
 
 use super::{
@@ -43,7 +40,7 @@ impl Enrich<Solution> for ListSolutionResponse {
     async fn enrich(
         from: &Solution,
         client: &mut UsernatorApiClient<tonic::transport::Channel>,
-        db_conn: &mut super::DB,
+        _db_conn: &mut super::DB,
     ) -> Result<Self, ApiError> {
         let submitter = client
             .get_user(UserRequest {
