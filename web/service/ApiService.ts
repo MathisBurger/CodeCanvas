@@ -105,6 +105,14 @@ class ApiService {
         return await this.get<SolutionsResponse>(`/tasky/assignments/${id}/solutions`);
     }
 
+    public async approveSolution(id: number): Promise<Solution> {
+        return await this.post<Solution>(`/tasky/solutions/${id}/approve`, {});
+    }
+
+    public async rejectSolution(id: number): Promise<Solution> {
+        return await this.post<Solution>(`/tasky/solutions/${id}/reject`, {});
+    }
+
     public async createCodeTests(groupId: number, assignmentId: number, fileStructure: FileStructureTree, files: File[], runnerConfig: RunnerConfig): Promise<Assignment> {
         try {
             const formData = new FormData();

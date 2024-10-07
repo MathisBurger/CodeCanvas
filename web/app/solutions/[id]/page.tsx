@@ -29,7 +29,18 @@ const SolutionDetailsPage = ({params}: {params: {id: string}}) => {
     const api = useApiServiceClient();
     const {user} = useCurrentUser();
     const [executorModalOpen, setExecutorModalOpen] = useState(false);
-    const [solution] = useClientQuery<Solution>(() => api.getSolution(id));
+    const [solution, refetch] = useClientQuery<Solution>(() => api.getSolution(id));
+
+    const approve = async () => {
+        await api.approveSolution(id);
+        refetch();
+    }
+
+    const reject = async () => {
+        await api.rejectSolution(id);
+        refetch();
+    }
+
     if (isNaN(id)) {
         return (
             <Container fluid>
@@ -52,6 +63,12 @@ const SolutionDetailsPage = ({params}: {params: {id: string}}) => {
                 {getBadge(solution.approval_status)}
                 {isGranted(user, [UserRoles.Admin]) && (
                     <Button onClick={() => setExecutorModalOpen(true)}>Executor UI</Button>
+                )}
+                {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && (solution.approval_status === null || solution.approval_status === "PENDING") && (
+                    <>
+                        <Button color="lime" onClick={approve}>Approve</Button>
+                        <Button color="red" onClick={reject}>Reject</Button>
+                    </>
                 )}
             </Group>
             <Tabs mt={20} defaultValue="log">
