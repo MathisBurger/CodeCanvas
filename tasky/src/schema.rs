@@ -56,12 +56,14 @@ diesel::table! {
         approval_status -> Nullable<Varchar>,
         #[max_length = 32]
         job_id -> Nullable<Varchar>,
+        group_id -> Nullable<Int4>,
     }
 }
 
 diesel::joinable!(assignments -> groups (group_id));
 diesel::joinable!(group_join_requests -> groups (group_id));
 diesel::joinable!(solutions -> assignments (assignment_id));
+diesel::joinable!(solutions -> groups (group_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     assignments,

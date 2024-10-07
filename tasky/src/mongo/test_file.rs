@@ -1,9 +1,10 @@
 use bson::doc;
-use bson::{oid::ObjectId, Bson};
+use bson::oid::ObjectId;
 use serde::{Deserialize, Serialize};
 
 use super::read_cursor;
 
+/// The test file stored in mongodb
 #[derive(Serialize, Deserialize)]
 pub struct TestFile {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
@@ -17,6 +18,7 @@ pub struct TestFile {
 pub struct TestFileCollection;
 
 impl TestFileCollection {
+    /// Creates many test files
     pub async fn create_many(files: Vec<TestFile>, mongodb: &mongodb::Database) -> Vec<ObjectId> {
         mongodb
             .collection("test_files")
@@ -29,25 +31,13 @@ impl TestFileCollection {
             .collect()
     }
 
-    pub async fn create(file: &TestFile, mongodb: &mongodb::Database) -> ObjectId {
-        let serialized = bson::to_bson(file).unwrap();
-        let document = serialized.as_document().unwrap();
-        mongodb
-            .collection("test_files")
-            .insert_one(document.to_owned(), None)
-            .await
-            .unwrap()
-            .inserted_id
-            .as_object_id()
-            .unwrap()
-    }
-
+    /// gets all for an assignment
     pub async fn get_for_assignment(
         assignment_id: i32,
         object_ids: Vec<ObjectId>,
         mongodb: &mongodb::Database,
     ) -> Vec<TestFile> {
-        let mut cursor = mongodb
+        let cursor = mongodb
             .collection("test_files")
             .find(
                 Some(doc! {"assignment_id": assignment_id, "_id": doc! {"$in": object_ids}}),

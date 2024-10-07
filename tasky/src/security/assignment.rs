@@ -13,7 +13,7 @@ impl IsGranted for Assignment {
             SecurityAction::Create => false,
             SecurityAction::Read => user.groups.contains(&self.group_id),
             SecurityAction::Update => {
-                StaticSecurity::is_granted(StaticSecurityAction::IsTutor, user)
+                StaticSecurity::is_granted(StaticSecurityAction::IsAdminOrTutor, user)
                     && user.groups.contains(&self.group_id)
             }
             SecurityAction::Delete => false,
@@ -28,7 +28,7 @@ impl IsGranted for CreateAssignment {
         user: &crate::auth_middleware::UserData,
     ) -> bool {
         if action == SecurityAction::Create {
-            return StaticSecurity::is_granted(StaticSecurityAction::IsTutor, user)
+            return StaticSecurity::is_granted(StaticSecurityAction::IsAdminOrTutor, user)
                 && user.groups.contains(&self.group_id);
         }
         false

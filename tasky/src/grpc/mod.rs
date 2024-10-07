@@ -9,6 +9,7 @@ pub struct MyTaskyApi {
     pub app_state: AppState,
 }
 
+/// The tasky RPC api
 #[tonic::async_trait]
 impl TaskyApi for MyTaskyApi {
     async fn get_user_groups(

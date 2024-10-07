@@ -93,9 +93,9 @@ where
     forward_ready!(service);
 
     fn call(&self, req: ServiceRequest) -> Self::Future {
-        let mut uid = 0;
-        let mut uroles: Vec<UserRole> = vec![];
-        let mut app_data = req.app_data::<web::Data<AppState>>();
+        let uid: i32;
+        let uroles: Vec<UserRole>;
+        let app_data = req.app_data::<web::Data<AppState>>();
         let state = app_data.as_ref().unwrap();
         let conn = &mut state.db.db.get().unwrap();
 

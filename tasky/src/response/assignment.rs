@@ -1,5 +1,5 @@
+use crate::api::usernator_api_client::UsernatorApiClient;
 use crate::api::UsersRequest;
-use bson::oid::ObjectId;
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
@@ -13,6 +13,7 @@ use crate::{
 
 use super::{group::MinifiedGroupResponse, shared::User, Enrich};
 
+/// An file on an assignment
 #[derive(Serialize, Deserialize, Clone)]
 pub struct AssignmentFile {
     pub filename: String,
@@ -21,6 +22,7 @@ pub struct AssignmentFile {
     pub is_test_file: bool,
 }
 
+/// File structure of an assignment / solution
 #[derive(Serialize, Deserialize, Clone)]
 pub struct AssignmentFileStructure {
     pub files: Option<Vec<AssignmentFile>>,
@@ -44,10 +46,36 @@ pub struct AssignmentResponse {
     pub runner_timeout: String,
 }
 
+/// Minified response returned for list views
+#[derive(Serialize)]
+pub struct MinifiedAssignmentResponse {
+    pub id: i32,
+    pub title: String,
+    pub due_date: NaiveDateTime,
+    pub description: String,
+    pub language: AssignmentLanguage,
+}
+
 /// A vec of assignments
 #[derive(Serialize)]
 pub struct AssignmentsResponse {
-    assignments: Vec<AssignmentResponse>,
+    assignments: Vec<MinifiedAssignmentResponse>,
+}
+
+impl Enrich<Assignment> for MinifiedAssignmentResponse {
+    async fn enrich(
+        from: &Assignment,
+        _client: &mut UsernatorApiClient<tonic::transport::Channel>,
+        _db_conn: &mut super::DB,
+    ) -> Result<Self, ApiError> {
+        Ok(MinifiedAssignmentResponse {
+            id: from.id,
+            title: from.title.clone(),
+            due_date: from.due_date.clone(),
+            description: from.description.clone(),
+            language: from.language.clone(),
+        })
+    }
 }
 
 impl Enrich<Vec<Assignment>> for AssignmentsResponse {
@@ -58,9 +86,9 @@ impl Enrich<Vec<Assignment>> for AssignmentsResponse {
         >,
         db_conn: &mut super::DB,
     ) -> Result<Self, ApiError> {
-        let mut resp: Vec<AssignmentResponse> = vec![];
+        let mut resp: Vec<MinifiedAssignmentResponse> = vec![];
         for assignment in from {
-            resp.push(AssignmentResponse::enrich(assignment, client, db_conn).await?);
+            resp.push(MinifiedAssignmentResponse::enrich(assignment, client, db_conn).await?);
         }
         Ok(AssignmentsResponse { assignments: resp })
     }

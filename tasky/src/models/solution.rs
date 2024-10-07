@@ -1,10 +1,11 @@
-use crate::schema::solutions::{dsl, submitter_id};
+use crate::schema::solutions::dsl;
 use diesel::associations::HasTable;
 use diesel::prelude::*;
 use serde::Serialize;
 
 use super::DB;
 
+/// Approval status of a request
 pub enum ApprovalStatus {
     Pending,
     Rejected,
@@ -12,6 +13,7 @@ pub enum ApprovalStatus {
 }
 
 impl ApprovalStatus {
+    /// Converts enum to string (this is simpler than to_string())
     pub fn string(&self) -> String {
         return match self {
             Self::Pending => "PENDING".to_string(),
@@ -21,6 +23,7 @@ impl ApprovalStatus {
     }
 }
 
+/// The solution on an assignment
 #[derive(Queryable, Selectable, AsChangeset, Clone, Serialize)]
 #[diesel(table_name = crate::schema::solutions)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
@@ -31,8 +34,10 @@ pub struct Solution {
     pub file_structure: Option<serde_json::Value>,
     pub approval_status: Option<String>,
     pub job_id: Option<String>,
+    pub group_id: Option<i32>,
 }
 
+/// Struct to create a new solution
 #[derive(Insertable)]
 #[diesel(table_name = crate::schema::solutions)]
 pub struct NewSolution {
@@ -44,6 +49,7 @@ pub struct NewSolution {
 pub struct SolutionRepository;
 
 impl SolutionRepository {
+    /// Gets all solutions created on an assignment
     pub fn get_solutions_for_assignment(id: i32, conn: &mut DB) -> Vec<Solution> {
         dsl::solutions
             .filter(dsl::assignment_id.eq(id))
@@ -51,6 +57,7 @@ impl SolutionRepository {
             .expect("Cannot fetch solutions")
     }
 
+    /// Gets an solution by ID
     pub fn get_solution_by_id(id: i32, conn: &mut DB) -> Option<Solution> {
         dsl::solutions
             .filter(dsl::id.eq(id))
@@ -59,6 +66,7 @@ impl SolutionRepository {
             .expect("Cannot fetch solutions")
     }
 
+    /// Gets all solutions for an user (submitter)
     pub fn get_solutions_for_user(id: i32, conn: &mut DB) -> Vec<Solution> {
         dsl::solutions
             .filter(dsl::submitter_id.eq(id))
@@ -66,6 +74,7 @@ impl SolutionRepository {
             .expect("Cannot fetch solutions")
     }
 
+    /// Updates an solution
     pub fn update_solution(solution: Solution, conn: &mut DB) {
         diesel::update(dsl::solutions.filter(dsl::id.eq(solution.id)))
             .set::<Solution>(solution)
@@ -73,6 +82,7 @@ impl SolutionRepository {
             .expect("Cannot update solution");
     }
 
+    /// Creates an new solution
     pub fn create_solution(new: NewSolution, conn: &mut DB) -> Solution {
         diesel::insert_into(dsl::solutions::table())
             .values(new)

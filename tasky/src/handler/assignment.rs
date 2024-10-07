@@ -1,11 +1,7 @@
-use std::{collections::HashMap, io::Read, iter::Map};
+use std::io::Read;
 
 use super::file_structure::*;
-use actix_multipart::{
-    form::{json::Json, tempfile::TempFile, MultipartForm},
-    Multipart,
-};
-use actix_web::HttpResponse;
+use actix_multipart::form::{json::Json, tempfile::TempFile, MultipartForm};
 use mongodb::Database;
 use serde::Deserialize;
 
@@ -19,13 +15,16 @@ use crate::{
     response::assignment::{AssignmentFile, AssignmentFileStructure},
 };
 
+/// Runner data for the executor runner
+/// sent by Multipart request as JSON
 #[derive(Deserialize)]
-pub(self) struct RunnerData {
+pub struct RunnerData {
     pub runner_cpu: String,
     pub runner_memory: String,
     pub runner_timeout: String,
 }
 
+/// Multipart form to create code tests
 #[derive(MultipartForm)]
 pub struct CreateCodeTestMultipart {
     pub file_structure: Json<AssignmentFileStructure>,
@@ -34,6 +33,9 @@ pub struct CreateCodeTestMultipart {
     pub runner_config: Json<RunnerData>,
 }
 
+/// Handles to create code tests
+/// This means storing data in postgres, files in mongo
+/// and validating the input
 pub async fn handle_create_multipart(
     form: CreateCodeTestMultipart,
     mongodb: &Database,
@@ -89,7 +91,7 @@ pub async fn handle_create_multipart(
         file.object_id = Some(mongo_files.get(i).unwrap().to_hex());
     }
     let file_structure_value =
-        serde_json::to_value(file_structure).map_err(|e| ApiError::InternalServerError {
+        serde_json::to_value(file_structure).map_err(|_| ApiError::InternalServerError {
             message: "Cannot convert file structure to JSON".to_string(),
         })?;
     assignment.file_structure = Some(file_structure_value);

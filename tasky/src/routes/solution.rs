@@ -25,18 +25,21 @@ use crate::{
     security::{IsGranted, SecurityAction},
 };
 
+/// Query to query solution files
 #[derive(Deserialize)]
 struct SolutionFilesQuery {
     pub test_files: String,
     pub task_files: String,
 }
 
+/// Response of solution files query
 #[derive(Serialize)]
 struct SolutionsFilesResponse {
     pub test_files: Vec<TestFile>,
     pub task_files: Vec<TaskFile>,
 }
 
+/// Endpoint to create a solution
 #[post("/assignments/{assignment_id}/solutions")]
 pub async fn create_solution(
     data: web::Data<AppState>,
@@ -62,6 +65,7 @@ pub async fn create_solution(
     Ok(HttpResponse::Ok().json(enrichted))
 }
 
+/// Endpoint to fetch a specific solution
 #[get("/solutions/{id}")]
 pub async fn get_solution(
     data: web::Data<AppState>,
@@ -76,6 +80,7 @@ pub async fn get_solution(
     Ok(HttpResponse::Ok().json(response))
 }
 
+/// Endpoint to get all solutions submitted by current user
 #[get("/personal_solutions")]
 pub async fn get_solutions_for_user(
     data: web::Data<AppState>,
@@ -88,6 +93,7 @@ pub async fn get_solutions_for_user(
     Ok(HttpResponse::Ok().json(response))
 }
 
+/// Endpoint to get all solutions for an assignment
 #[get("/assignments/{assignment_id}/solutions")]
 pub async fn get_solutions_for_assignment(
     data: web::Data<AppState>,
@@ -108,6 +114,7 @@ pub async fn get_solutions_for_assignment(
     Ok(HttpResponse::Ok().json(response))
 }
 
+/// Endpoint to approve an solution
 #[post("/solutions/{id}/approve")]
 pub async fn approve_solution(
     data: web::Data<AppState>,
@@ -137,6 +144,7 @@ pub async fn approve_solution(
     return Ok(HttpResponse::Ok().json(response));
 }
 
+/// Endpoint to reject an solution
 #[post("/solutions/{id}/reject")]
 pub async fn reject_solution(
     data: web::Data<AppState>,
@@ -158,6 +166,7 @@ pub async fn reject_solution(
     return Ok(HttpResponse::Ok().json(response));
 }
 
+/// Endpoint to fetch solution files
 #[get("/solutions/{id}/files")]
 pub async fn get_solution_files(
     data: web::Data<AppState>,
@@ -191,6 +200,7 @@ pub async fn get_solution_files(
     }));
 }
 
+/// Gets solution and assignment and checks basic read permissions
 fn get_solution_and_assignment(
     solution_id: i32,
     user_data: &UserData,
@@ -209,6 +219,7 @@ fn get_solution_and_assignment(
     return Ok((assignment, solution));
 }
 
+/// Gets assignment and checks basic read permissions
 fn get_assignment(id: i32, user_data: &UserData, conn: &mut DB) -> Result<Assignment, ApiError> {
     let assignment = AssignmentRepository::get_assignment_by_id(id, conn);
     if assignment.is_none() {
