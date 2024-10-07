@@ -31,13 +31,31 @@ pub struct SolutionResponse {
 pub struct ListSolutionResponse {
     pub id: i32,
     pub submitter: User,
-    pub assignment: AssignmentResponse,
     pub approval_status: Option<String>,
 }
 
 #[derive(Serialize)]
 pub struct SolutionsResponse {
-    pub solutions: Vec<SolutionResponse>,
+    pub solutions: Vec<ListSolutionResponse>,
+}
+
+impl Enrich<Solution> for ListSolutionResponse {
+    async fn enrich(
+        from: &Solution,
+        client: &mut UsernatorApiClient<tonic::transport::Channel>,
+        db_conn: &mut super::DB,
+    ) -> Result<Self, ApiError> {
+        let submitter = client
+            .get_user(UserRequest {
+                user_id: u64::try_from(from.submitter_id)?,
+            })
+            .await?;
+        Ok(ListSolutionResponse {
+            id: from.id,
+            submitter: submitter.into_inner().into(),
+            approval_status: from.approval_status.clone(),
+        })
+    }
 }
 
 impl Enrich<Vec<Solution>> for SolutionsResponse {
@@ -46,9 +64,9 @@ impl Enrich<Vec<Solution>> for SolutionsResponse {
         client: &mut UsernatorApiClient<tonic::transport::Channel>,
         db_conn: &mut super::DB,
     ) -> Result<Self, ApiError> {
-        let mut responses: Vec<SolutionResponse> = vec![];
+        let mut responses: Vec<ListSolutionResponse> = vec![];
         for solution in from {
-            responses.push(SolutionResponse::enrich(solution, client, db_conn).await?);
+            responses.push(ListSolutionResponse::enrich(solution, client, db_conn).await?);
         }
         Ok(SolutionsResponse {
             solutions: responses,
