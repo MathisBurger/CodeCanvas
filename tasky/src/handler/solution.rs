@@ -16,12 +16,16 @@ use crate::{
     mongo::task_file::{TaskFile, TaskFileCollection},
 };
 
+/// Multipart form to create solution
 #[derive(MultipartForm)]
 pub struct CreateSolutionMultipart {
     #[multipart(limit = "10MB")]
     pub files: Vec<TempFile>,
 }
 
+/// Handles the creation of a solution
+/// This means persisting data in postgres, files in mongodb
+/// and validating the input data
 pub async fn handle_create_multipart(
     form: CreateSolutionMultipart,
     user_data: &UserData,

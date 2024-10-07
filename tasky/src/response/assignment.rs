@@ -13,6 +13,7 @@ use crate::{
 
 use super::{group::MinifiedGroupResponse, shared::User, Enrich};
 
+/// An file on an assignment
 #[derive(Serialize, Deserialize, Clone)]
 pub struct AssignmentFile {
     pub filename: String,
@@ -21,6 +22,7 @@ pub struct AssignmentFile {
     pub is_test_file: bool,
 }
 
+/// File structure of an assignment / solution
 #[derive(Serialize, Deserialize, Clone)]
 pub struct AssignmentFileStructure {
     pub files: Option<Vec<AssignmentFile>>,
@@ -44,6 +46,7 @@ pub struct AssignmentResponse {
     pub runner_timeout: String,
 }
 
+/// Minified response returned for list views
 #[derive(Serialize)]
 pub struct MinifiedAssignmentResponse {
     pub id: i32,

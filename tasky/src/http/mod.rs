@@ -4,23 +4,27 @@ use crate::util::config::AppConfig;
 use awc::Client;
 use serde::{Deserialize, Serialize};
 
+/// Request to run a task in executor
 #[derive(Serialize)]
 struct RunTaskRequest {
     pub assignment: Assignment,
     pub solution: Solution,
 }
 
+/// Response of RunTaskRequest
 #[derive(Deserialize)]
 struct RunTaskResponse {
     pub id: String,
 }
 
+/// A job run by the executor
 #[derive(Deserialize, Serialize)]
 pub struct Job {
     pub id: String,
     pub execution: Vec<Execution>,
 }
 
+/// Execution cycle of a executor job
 #[derive(Deserialize, Serialize)]
 pub struct Execution {
     pub state: String,
@@ -28,6 +32,7 @@ pub struct Execution {
     pub error: Option<String>,
 }
 
+/// Sends a http request to the executor to run a task (job)
 pub async fn run_task(
     assignment: Assignment,
     solution: Solution,
@@ -54,6 +59,7 @@ pub async fn run_task(
     Ok(json.id)
 }
 
+/// Gets a job from executor
 pub async fn get_job(id: &String) -> Result<Job, ApiError> {
     let client = Client::default();
     // TODO: Include config here

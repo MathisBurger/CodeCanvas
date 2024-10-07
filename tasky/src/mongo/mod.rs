@@ -9,6 +9,7 @@ use serde::de::DeserializeOwned;
 
 use crate::util::config::AppConfig;
 
+/// Connects to mongo DB database
 pub async fn connect(config: AppConfig) -> Database {
     let client_uri = format!(
         "mongodb://{}:{}@{}/{}?retryWrites=true&w=majority",
@@ -22,6 +23,7 @@ pub async fn connect(config: AppConfig) -> Database {
         .database(&config.mongo_database)
 }
 
+/// Reads a mongo cursor to a Vec
 async fn read_cursor<T: DeserializeOwned>(mut cursor: Cursor<Bson>) -> Vec<T> {
     let mut results: Vec<T> = vec![];
     while let Some(result) = cursor.next().await {

@@ -14,6 +14,7 @@ use super::{
     Enrich,
 };
 
+/// Solution response with enriched data
 #[derive(Serialize)]
 pub struct SolutionResponse {
     pub id: i32,
@@ -24,6 +25,7 @@ pub struct SolutionResponse {
     pub job: Option<Job>,
 }
 
+/// Solution response for list views
 #[derive(Serialize)]
 pub struct ListSolutionResponse {
     pub id: i32,
@@ -31,6 +33,7 @@ pub struct ListSolutionResponse {
     pub approval_status: Option<String>,
 }
 
+/// Vec of solutions
 #[derive(Serialize)]
 pub struct SolutionsResponse {
     pub solutions: Vec<ListSolutionResponse>,

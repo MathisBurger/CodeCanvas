@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use super::read_cursor;
 
+/// The test file stored in mongodb
 #[derive(Serialize, Deserialize)]
 pub struct TestFile {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
@@ -17,6 +18,7 @@ pub struct TestFile {
 pub struct TestFileCollection;
 
 impl TestFileCollection {
+    /// Creates many test files
     pub async fn create_many(files: Vec<TestFile>, mongodb: &mongodb::Database) -> Vec<ObjectId> {
         mongodb
             .collection("test_files")
@@ -29,6 +31,7 @@ impl TestFileCollection {
             .collect()
     }
 
+    /// gets all for an assignment
     pub async fn get_for_assignment(
         assignment_id: i32,
         object_ids: Vec<ObjectId>,

@@ -15,6 +15,8 @@ use crate::{
     response::assignment::{AssignmentFile, AssignmentFileStructure},
 };
 
+/// Runner data for the executor runner
+/// sent by Multipart request as JSON
 #[derive(Deserialize)]
 pub struct RunnerData {
     pub runner_cpu: String,
@@ -22,6 +24,7 @@ pub struct RunnerData {
     pub runner_timeout: String,
 }
 
+/// Multipart form to create code tests
 #[derive(MultipartForm)]
 pub struct CreateCodeTestMultipart {
     pub file_structure: Json<AssignmentFileStructure>,
@@ -30,6 +33,9 @@ pub struct CreateCodeTestMultipart {
     pub runner_config: Json<RunnerData>,
 }
 
+/// Handles to create code tests
+/// This means storing data in postgres, files in mongo
+/// and validating the input
 pub async fn handle_create_multipart(
     form: CreateCodeTestMultipart,
     mongodb: &Database,

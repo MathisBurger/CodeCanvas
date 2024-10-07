@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use super::read_cursor;
 
+/// task file stored in mongodb
 #[derive(Serialize, Deserialize)]
 pub struct TaskFile {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
@@ -17,6 +18,7 @@ pub struct TaskFile {
 pub struct TaskFileCollection;
 
 impl TaskFileCollection {
+    /// Creates many task files
     pub async fn create_many(files: Vec<TaskFile>, mongodb: &mongodb::Database) -> Vec<ObjectId> {
         mongodb
             .collection("task_files")
@@ -29,6 +31,7 @@ impl TaskFileCollection {
             .collect()
     }
 
+    /// Gets all task files for a solution by solution_id and object_ids
     pub async fn get_for_solution(
         solution_id: i32,
         object_ids: Vec<ObjectId>,
