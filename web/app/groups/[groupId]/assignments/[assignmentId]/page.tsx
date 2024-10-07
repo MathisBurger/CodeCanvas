@@ -16,6 +16,7 @@ import {AssignmentLanguage} from "@/service/types/tasky";
 import FileStructureDisplay from "@/components/FileStructureDisplay";
 import AssignmentDetailsTaskTab from "@/components/assignments/AssignmentDetailsTaskTab";
 import AssignmentSolutionsTab from "@/components/assignments/AssignmentSolutionsTab";
+import AssignmentCompletedByTab from "@/components/assignments/AssignmentCompletedByTab";
 
 
 const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId: string}}) => {
@@ -61,7 +62,10 @@ const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId
                         <Tabs.Tab value="codeTests">Code Tests</Tabs.Tab>
                     )}
                     {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && (
-                        <Tabs.Tab value="solutions">Solutions</Tabs.Tab>
+                        <>
+                            <Tabs.Tab value="solutions">Solutions</Tabs.Tab>
+                            <Tabs.Tab value="completedBy">Completed by</Tabs.Tab>
+                        </>
                     )}
                 </Tabs.List>
                 <Tabs.Panel mt={20} value="task">
@@ -77,9 +81,14 @@ const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId
                     </Tabs.Panel>
                 )}
                 {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && (
-                    <Tabs.Panel value="solutions">
-                        <AssignmentSolutionsTab assignmentId={assignmentId} />
-                    </Tabs.Panel>
+                    <>
+                        <Tabs.Panel value="solutions">
+                            <AssignmentSolutionsTab assignmentId={assignmentId} />
+                        </Tabs.Panel>
+                        <Tabs.Panel value="completedBy">
+                            <AssignmentCompletedByTab completedBy={assignment.completed_by} />
+                        </Tabs.Panel>
+                    </>
                 )}
             </Tabs>
 

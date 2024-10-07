@@ -117,7 +117,8 @@ pub async fn approve_solution(
     let user_data = user.into_inner();
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
-    let (_, mut solution) = get_solution_and_assignment(path_data.0, &user_data, conn)?;
+    let (mut assignment, mut solution) =
+        get_solution_and_assignment(path_data.0, &user_data, conn)?;
     if !solution.is_granted(SecurityAction::Update, &user_data) {
         return Err(ApiError::Forbidden {
             message: "You are not allowed to approve solution".to_string(),
@@ -125,6 +126,13 @@ pub async fn approve_solution(
     }
     solution.approval_status = Some(ApprovalStatus::Approved.string());
     SolutionRepository::update_solution(solution.clone(), conn);
+    if !assignment
+        .completed_by
+        .contains(&Some(solution.submitter_id))
+    {
+        assignment.completed_by.push(Some(solution.submitter_id));
+    }
+    AssignmentRepository::update_assignment(assignment.clone(), conn);
     let response = SolutionResponse::enrich(&solution, &mut data.user_api.clone(), conn).await?;
     return Ok(HttpResponse::Ok().json(response));
 }
