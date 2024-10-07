@@ -4,6 +4,7 @@ import useClientQuery from "@/hooks/useClientQuery";
 import {SolutionsResponse} from "@/service/types/tasky";
 import {useRouter} from "next/navigation";
 import {UserRoles} from "@/service/types/usernator";
+import SolutionBadge from "@/components/solution/SolutionBadge";
 
 interface AssignmentSolutionsTabProps {
     assignmentId: number;
@@ -24,6 +25,11 @@ const AssignmentSolutionsTab = ({assignmentId}: AssignmentSolutionsTabProps) => 
             field: 'submitter',
             label: 'Submitter',
             getter: (row) => row.submitter.username
+        },
+        {
+            field: 'approval_status',
+            label: 'Approval Status',
+            render: (value, row) => <SolutionBadge status={value as string} job={row.job} />
         }
     ];
 

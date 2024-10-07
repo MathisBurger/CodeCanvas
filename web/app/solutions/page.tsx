@@ -2,10 +2,11 @@
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import useClientQuery from "@/hooks/useClientQuery";
 import { SolutionsResponse } from "@/service/types/tasky";
-import {Container, Title} from "@mantine/core";
+import {Badge, Container, Title} from "@mantine/core";
 import EntityList, {EntityListCol, EntityListRowAction} from "@/components/EntityList";
 import {UserRoles} from "@/service/types/usernator";
 import {router} from "next/client";
+import SolutionBadge from "@/components/solution/SolutionBadge";
 
 
 const PersonalSolutionsPage = () => {
@@ -22,6 +23,11 @@ const PersonalSolutionsPage = () => {
             field: 'assignment',
             label: 'Assignment',
             getter: (row) => row.assignment.title
+        },
+        {
+            field: 'approval_status',
+            label: 'Approval Status',
+            render: (value, row) => <SolutionBadge status={value as string} job={row.job} />
         }
     ];
 

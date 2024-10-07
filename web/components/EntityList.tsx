@@ -1,7 +1,7 @@
 'use client';
 import {Button, ButtonProps, Group, Table} from "@mantine/core";
 import {UserRoles} from "@/service/types/usernator";
-import {useMemo} from "react";
+import {useCallback, useMemo} from "react";
 import {isGranted} from "@/service/auth";
 import useCurrentUser from "@/hooks/useCurrentUser";
 
@@ -10,6 +10,7 @@ export interface EntityListCol {
     label: string;
     field: string;
     getter?: (row: any) => string|number;
+    render?: (value: string|number, row: any) => JSX.Element;
 }
 
 export interface EntityListRowAction {
@@ -35,7 +36,12 @@ const EntityList: React.FC<EntityListProps> = ({cols, rows, rowActions}) => {
                 .filter((a) => a.auth ? isGranted(user, a.auth) : true)
         }
         return undefined;
-    }, [rowActions])
+    }, [rowActions]);
+
+    const getCellValue = (row: any, col: EntityListCol) => {
+        const value = col.getter ? col.getter(row) : row[col.field];
+        return col.render ? col.render(value, row) : value;
+    };
 
 
     return (
@@ -52,7 +58,7 @@ const EntityList: React.FC<EntityListProps> = ({cols, rows, rowActions}) => {
                 {rows.map(row => (
                     <Table.Tr key={`${row}`}>
                         {cols.map(col => (
-                            <Table.Td key={`${row}_${col}`}>{col.getter ? col.getter(row) : row[col.field]}</Table.Td>
+                            <Table.Td key={`${row}_${col}`}>{getCellValue(row, col)}</Table.Td>
                         ))}
                         {filteredRowActions && (
                             <Table.Td>

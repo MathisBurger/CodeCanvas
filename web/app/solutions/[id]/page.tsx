@@ -11,17 +11,8 @@ import {useState} from "react";
 import {isGranted} from "@/service/auth";
 import {UserRoles} from "@/service/types/usernator";
 import ExecutorUIDisplay from "@/components/solution/ExecutorUIDisplay";
-
-const getBadge = (status?: string): JSX.Element => {
-    switch (status) {
-        case "APPROVED":
-            return <Badge color="green">{status}</Badge>;
-        case "REJECTED":
-            return <Badge color="red">{status}</Badge>;
-        default:
-            return <Badge color="yellow">{status ?? "PENDING"}</Badge>;
-    }
-}
+import SolutionBadge from "@/components/solution/SolutionBadge";
+import NavigateBack from "@/components/NavigateBack";
 
 const SolutionDetailsPage = ({params}: {params: {id: string}}) => {
 
@@ -57,10 +48,11 @@ const SolutionDetailsPage = ({params}: {params: {id: string}}) => {
 
     return (
         <Container fluid>
+            <NavigateBack />
             <Group>
                 <Title>{solution.assignment.title} - {solution.id}</Title>
                 <Badge color="indigo">{solution.submitter.username}</Badge>
-                {getBadge(solution.approval_status)}
+                <SolutionBadge status={solution.approval_status} />
                 {isGranted(user, [UserRoles.Admin]) && (
                     <Button onClick={() => setExecutorModalOpen(true)}>Executor UI</Button>
                 )}
