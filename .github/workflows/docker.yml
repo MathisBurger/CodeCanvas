@@ -26,7 +26,7 @@ jobs:
           context: ./authy
           push: true
           build-args:
-            ARCH: amd64
+            - ARCH=amd64
           tags: ghcr.io/mathisburger/codecanvas-authy:${{ github.ref_name }}
       - name: Build executor
         uses: docker/build-push-action@v2
@@ -40,7 +40,7 @@ jobs:
           context: ./tasky
           push: true
           build-args:
-            ARCH: amd64
+            - ARCH=amd64
           tags: ghcr.io/mathisburger/codecanvas-tasky:${{ github.ref_name }}
       - name: Build usernator
         uses: docker/build-push-action@v2
