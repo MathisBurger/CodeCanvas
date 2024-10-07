@@ -43,4 +43,4 @@ COPY --from=build /tasky/config.toml /app/config.toml
 
 EXPOSE 3000
 EXPOSE 3001
-CMD ["./tasky"]
+CMD ./set_db_uri.sh && ./tasky
