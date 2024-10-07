@@ -53,7 +53,10 @@ services:
       - postgres
       - maildev
   authy:
-    build: ./authy
+    build:
+      context: ./authy
+      args:
+        - ARCH=aarch64
     ports: 
       - "3002:3000"
     environment:
@@ -64,7 +67,10 @@ services:
       - usernator
       - tasky
   tasky:
-    build: ./tasky
+    build:
+      context: ./tasky
+      args:
+        - ARCH=aarch64
     ports: 
       - "3005:3000"
       - "3006:3001"
