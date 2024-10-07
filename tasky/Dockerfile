@@ -14,7 +14,7 @@ ENV IS_DOCKER="true"
 RUN cargo build --release
 
 FROM gcr.io/distroless/cc-debian12
-ARG ARCH=arm64
+ARG ARCH=x86_64
 
 COPY --from=build /usr/lib/${ARCH}-linux-gnu/libpq.so* /usr/lib/${ARCH}-linux-gnu/
 COPY --from=build /usr/lib/${ARCH}-linux-gnu/libgssapi_krb5.so* /usr/lib/${ARCH}-linux-gnu/

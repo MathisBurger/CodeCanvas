@@ -12,7 +12,7 @@ RUN rm ./target/release/deps/authy*
 RUN cargo build --release
 
 FROM gcr.io/distroless/cc-debian12
-ARG ARCH=amd64
+ARG ARCH=x86_64
 
 COPY --from=build /usr/lib/${ARCH}-linux-gnu/libpq.so* /usr/lib/${ARCH}-linux-gnu/
 COPY --from=build /usr/lib/${ARCH}-linux-gnu/libgssapi_krb5.so* /usr/lib/${ARCH}-linux-gnu/
