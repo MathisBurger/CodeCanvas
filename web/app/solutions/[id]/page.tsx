@@ -21,7 +21,7 @@ const SolutionDetailsPage = ({params}: {params: {id: string}}) => {
     const {user} = useCurrentUser();
     const [executorModalOpen, setExecutorModalOpen] = useState(false);
     const [solution, refetch] = useClientQuery<Solution>(() => api.getSolution(id));
-
+    console.log(solution)
     const approve = async () => {
         await api.approveSolution(id);
         refetch();

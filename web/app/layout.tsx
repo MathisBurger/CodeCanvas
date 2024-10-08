@@ -45,8 +45,7 @@ export default function RootLayout({
         <MantineProvider theme={{}}>
             <DatesProvider settings={{timezone: null}}>
                 <Notifications />
-                {/* @ts-ignore */}
-                <AppShell header={{height: 100}} navbar={showNavbar ? {width: 250} : undefined}>
+                <AppShell header={{height: 100}} navbar={showNavbar ? {width: 250, breakpoint: ""} : undefined}>
                     <AppShell.Header><Header /></AppShell.Header>
                     {showNavbar && (<AppShell.Navbar><Navbar /></AppShell.Navbar>)}
                     <AppShell.Main>{children}</AppShell.Main>

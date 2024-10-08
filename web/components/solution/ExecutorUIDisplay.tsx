@@ -1,5 +1,4 @@
 import {Modal} from "@mantine/core";
-import {useEffect, useMemo, useState} from "react";
 
 export interface ExecutorUIDisplayProps {
     jobId: string;

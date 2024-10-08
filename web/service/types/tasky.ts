@@ -97,7 +97,7 @@ export interface Solution {
     submitter: TaskyUser;
     assignment: Assignment;
     approval_status?: string;
-    file_structure?: FileStructureTree;
+    file_structure: FileStructureTree;
     job?: Job;
 }
 

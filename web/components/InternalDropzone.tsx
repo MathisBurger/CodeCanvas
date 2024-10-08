@@ -57,7 +57,7 @@ const InternalDropzone = ({files, setFiles}: InternalDropzoneProps) => {
             </Dropzone>
             <SimpleGrid cols={{base: 1, sm: 4}} mt={10}>
                 {files.map((file) => (
-                    <Paper radius="md" p="sm" withBorder><Text style={{overflow: 'hidden'}}>{file.name}</Text></Paper>
+                    <Paper key={file.name} radius="md" p="sm" withBorder><Text style={{overflow: 'hidden'}}>{file.name}</Text></Paper>
                 ))}
             </SimpleGrid>
         </>
