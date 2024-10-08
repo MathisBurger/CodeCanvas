@@ -4,7 +4,6 @@ import useClientQuery from "@/hooks/useClientQuery";
 import {Badge, Button, Container, Group, Tabs, Title} from "@mantine/core";
 import AssignmentDateDisplay from "@/components/assignments/AssignmentDateDisplay";
 import NavigateBack from "@/components/NavigateBack";
-import RichTextDisplay from "@/components/display/RichTextDisplay";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import {isGranted} from "@/service/auth";
 import {UserRoles} from "@/service/types/usernator";

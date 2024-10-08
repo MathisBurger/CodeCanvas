@@ -62,6 +62,7 @@ export interface RunnerConfig {
     runner_cpu: string;
     runner_memory: string;
     runner_timeout: string;
+    runner_cmd: string;
 }
 
 export interface MongoTestFile {
@@ -96,7 +97,7 @@ export interface Solution {
     submitter: TaskyUser;
     assignment: Assignment;
     approval_status?: string;
-    file_structure?: FileStructureTree;
+    file_structure: FileStructureTree;
     job?: Job;
 }
 

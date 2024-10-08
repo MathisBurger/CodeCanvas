@@ -2,16 +2,17 @@
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import useClientQuery from "@/hooks/useClientQuery";
 import { SolutionsResponse } from "@/service/types/tasky";
-import {Badge, Container, Title} from "@mantine/core";
+import {Container, Title} from "@mantine/core";
 import EntityList, {EntityListCol, EntityListRowAction} from "@/components/EntityList";
 import {UserRoles} from "@/service/types/usernator";
-import {router} from "next/client";
 import SolutionBadge from "@/components/solution/SolutionBadge";
+import {useRouter} from "next/navigation";
 
 
 const PersonalSolutionsPage = () => {
 
     const api = useApiServiceClient();
+    const router = useRouter();
     const [solutions] = useClientQuery<SolutionsResponse>(() => api.getPersonalSolutions());
 
     const cols: EntityListCol[] = [

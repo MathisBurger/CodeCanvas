@@ -11,6 +11,7 @@ interface SsrHeaderProps {
 }
 
 const SsrHeader: React.FC<SsrHeaderProps> = ({user}) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [s, _, removeSession] = useCookies(['session']);
     const {setUser} = useCurrentUser();
     const router = useRouter();

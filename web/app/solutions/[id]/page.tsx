@@ -21,7 +21,7 @@ const SolutionDetailsPage = ({params}: {params: {id: string}}) => {
     const {user} = useCurrentUser();
     const [executorModalOpen, setExecutorModalOpen] = useState(false);
     const [solution, refetch] = useClientQuery<Solution>(() => api.getSolution(id));
-
+    console.log(solution)
     const approve = async () => {
         await api.approveSolution(id);
         refetch();
@@ -52,7 +52,7 @@ const SolutionDetailsPage = ({params}: {params: {id: string}}) => {
             <Group>
                 <Title>{solution.assignment.title} - {solution.id}</Title>
                 <Badge color="indigo">{solution.submitter.username}</Badge>
-                <SolutionBadge status={solution.approval_status} />
+                <SolutionBadge status={solution.approval_status} job={solution.job ?? undefined} />
                 {isGranted(user, [UserRoles.Admin]) && (
                     <Button onClick={() => setExecutorModalOpen(true)}>Executor UI</Button>
                 )}

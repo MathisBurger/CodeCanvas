@@ -4,7 +4,7 @@ import {Group, Paper, rem, SimpleGrid, Text} from "@mantine/core";
 import {IconFile, IconUpload, IconX} from "@tabler/icons-react";
 import { notifications } from '@mantine/notifications';
 
-const ALLOWED_TEXT_EXTENSIONS = ['.java', '.go', '.kt', '.xml', '.md', '.gradle', '.properties', 'json', '.pem', '.yml', '.sql'];
+const ALLOWED_TEXT_EXTENSIONS = ['.java', '.go', '.kt', '.xml', '.md', '.gradle', '.properties', 'json', '.pem', '.yml', '.sql', '.mod'];
 
 interface InternalDropzoneProps {
     files: FileWithPath[];
@@ -16,11 +16,11 @@ const InternalDropzone = ({files, setFiles}: InternalDropzoneProps) => {
     return (
         <>
             <Dropzone
-                onDrop={setFiles}
+                onDrop={(f) => setFiles([...files, ...f])}
                 onReject={(f) => notifications.show({
                     title: 'Rejected files',
                     color: 'red',
-                    message: `Rejected files: ${f.join(', ')}`
+                    message: `Rejected files: ${f.map((file) => file.file.name).join(', ')}`
                 })}
                 maxSize={10 * 1024 ** 2}
                 accept={{'text/*': ALLOWED_TEXT_EXTENSIONS}}
@@ -57,7 +57,7 @@ const InternalDropzone = ({files, setFiles}: InternalDropzoneProps) => {
             </Dropzone>
             <SimpleGrid cols={{base: 1, sm: 4}} mt={10}>
                 {files.map((file) => (
-                    <Paper radius="md" p="sm" withBorder><Text style={{overflow: 'hidden'}}>{file.name}</Text></Paper>
+                    <Paper key={file.name} radius="md" p="sm" withBorder><Text style={{overflow: 'hidden'}}>{file.name}</Text></Paper>
                 ))}
             </SimpleGrid>
         </>

@@ -1,9 +1,8 @@
 'use client';
 import {useEffect, useMemo} from "react";
-import {Button, Group, Paper, Tree, TreeNodeData, useTree} from "@mantine/core";
+import {Button, Group, Paper, Tree, useTree} from "@mantine/core";
 import classes from "./FileStructure.module.scss";
 import {FileStructureElement, FileStructureNewInput} from "@/components/FileStructureComponents";
-import path from "node:path";
 import {
     buildDataFromStructure,
     createFile,

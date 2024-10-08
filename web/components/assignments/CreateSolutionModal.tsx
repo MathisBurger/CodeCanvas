@@ -1,4 +1,4 @@
-import {Button, Group, List, Modal, Paper, Select, TextInput} from "@mantine/core";
+import {Button, Group, List, Modal, Paper} from "@mantine/core";
 import {Assignment} from "@/service/types/tasky";
 import {FormEvent, useMemo, useState} from "react";
 import {FileWithPath} from "@mantine/dropzone";

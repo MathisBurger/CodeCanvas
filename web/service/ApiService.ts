@@ -224,7 +224,7 @@ class ApiService {
             if (resp.status !== 200) {
                 throw new ApiError(resp.status, obj.message);
             }
-            return obj;
+            return obj as T;
 
         } catch (e) {
             if(e instanceof Error) {

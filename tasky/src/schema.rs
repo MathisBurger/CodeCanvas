@@ -26,6 +26,7 @@ diesel::table! {
         runner_memory -> Varchar,
         #[max_length = 5]
         runner_timeout -> Varchar,
+        runner_cmd -> Text,
     }
 }
 

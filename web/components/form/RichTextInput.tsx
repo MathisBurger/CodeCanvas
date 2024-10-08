@@ -1,5 +1,5 @@
 import { RichTextEditor, Link, getTaskListExtension } from '@mantine/tiptap';
-import {BubbleMenu, useEditor } from '@tiptap/react';
+import { useEditor } from '@tiptap/react';
 import Highlight from '@tiptap/extension-highlight';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';

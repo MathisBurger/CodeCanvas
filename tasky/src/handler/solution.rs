@@ -37,6 +37,7 @@ pub async fn handle_create_multipart(
         submitter_id: user_data.user_id,
         assignment_id: assignment.id,
         approval_status: Some(ApprovalStatus::Pending.string()),
+        group_id: assignment.group_id,
     };
     if !new_solution.is_granted(crate::security::SecurityAction::Create, user_data) {
         return Err(ApiError::Forbidden {

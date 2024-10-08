@@ -31,6 +31,7 @@ type Assignment struct {
 	RunnerCpu     string `json:"runner_cpu"`
 	RunnerMemory  string `json:"runner_memory"`
 	RunnerTimeout string `json:"runner_timeout"`
+	RunnerCmd     string `json:"runner_cmd"`
 }
 
 type ExecRequest struct {

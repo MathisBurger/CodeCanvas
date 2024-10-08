@@ -1,7 +1,7 @@
 'use client';
 import { useState } from "react";
 import FileStructure, {FileStructureTree} from "@/components/FileStructure";
-import {Button, Group, Modal, Select, Title} from "@mantine/core";
+import {Button, Group, Modal, Select, Title, TextInput} from "@mantine/core";
 import {useSetState} from "@mantine/hooks";
 import InternalDropzone from "@/components/InternalDropzone";
 import {FileWithPath} from "@mantine/dropzone";
@@ -31,11 +31,13 @@ const AssignmentCreateOrUpdateCodeTestModal = ({onClose, groupId, assignmentId, 
             runner_cpu: cpuOptions[0],
             runner_memory: memoryOptions[0],
             runner_timeout: timeoutOptions[0],
+            runner_cmd: 'echo "Hello World!"'
         },
         validate: {
             runner_cpu: (v) => cpuOptions.indexOf(v) === -1 ? 'Invalid CPU option' : null,
             runner_memory: (v) => memoryOptions.indexOf(v) === -1 ? 'Invalid memory option' : null,
-            runner_timeout: (v) => timeoutOptions.indexOf(v) === -1 ? 'Invalid timeout option' : null
+            runner_timeout: (v) => timeoutOptions.indexOf(v) === -1 ? 'Invalid timeout option' : null,
+            runner_cmd: (v) => v.trim() === '' ? 'Please enter a execution cmd' : null
         }
     });
 
@@ -63,6 +65,7 @@ const AssignmentCreateOrUpdateCodeTestModal = ({onClose, groupId, assignmentId, 
                 <Select key={form.key('runner_cpu')} label="CPU" {...form.getInputProps('runner_cpu')} data={cpuOptions}/>
                 <Select key={form.key('runner_memory')} label="Memory" {...form.getInputProps('runner_memory')} data={memoryOptions} />
                 <Select key={form.key('runner_timeout')} label="Timeout" {...form.getInputProps('runner_timeout')} data={timeoutOptions} />
+                <TextInput key={form.key('runner_cmd')} label="CMD" {...form.getInputProps('runner_cmd')} />
                 <Group mt={10}>
                     <Button type="submit">Create tests</Button>
                     <Button onClick={onClose} color="gray">Cancel</Button>

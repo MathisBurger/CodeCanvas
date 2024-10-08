@@ -1,7 +1,7 @@
 'use client';
 import {Button, ButtonProps, Group, Table} from "@mantine/core";
 import {UserRoles} from "@/service/types/usernator";
-import {useCallback, useMemo} from "react";
+import {useMemo} from "react";
 import {isGranted} from "@/service/auth";
 import useCurrentUser from "@/hooks/useCurrentUser";
 

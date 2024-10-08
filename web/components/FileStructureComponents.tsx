@@ -12,6 +12,7 @@ interface FileStructureNewInputProps {
 
 export const FileStructureNewInput = (props: FileStructureNewInputProps & GroupProps) => {
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {addFunc: _, label: _1, fileNames: _2, ...groupProps} = props;
     const [isNew, setIsNew] = useState(false);
     const form = useForm({

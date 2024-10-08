@@ -17,7 +17,7 @@ interface FileStructureDisplayProps {
 }
 
 const flattenStructureToFiles = (structure: FileStructureTree): FileStructureFile[] => {
-    const files = structure.files;
+    const files = [...structure.files];
     for (const folder of structure.folders ?? []) {
         files.push(...flattenStructureToFiles(folder))
     }
@@ -113,6 +113,8 @@ const FileStructureDisplay = ({structure, groupId, assignmentId, solutionId}: Fi
                 });
         }
     }, [loadAll, objectIds]);
+
+    //console.log(structure)
 
     return (
         <Grid>

@@ -44,6 +44,7 @@ pub struct NewSolution {
     pub submitter_id: i32,
     pub assignment_id: i32,
     pub approval_status: Option<String>,
+    pub group_id: i32,
 }
 
 pub struct SolutionRepository;
