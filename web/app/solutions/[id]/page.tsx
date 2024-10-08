@@ -52,7 +52,7 @@ const SolutionDetailsPage = ({params}: {params: {id: string}}) => {
             <Group>
                 <Title>{solution.assignment.title} - {solution.id}</Title>
                 <Badge color="indigo">{solution.submitter.username}</Badge>
-                <SolutionBadge status={solution.approval_status} />
+                <SolutionBadge status={solution.approval_status} job={solution.job ?? undefined} />
                 {isGranted(user, [UserRoles.Admin]) && (
                     <Button onClick={() => setExecutorModalOpen(true)}>Executor UI</Button>
                 )}

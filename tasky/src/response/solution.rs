@@ -8,6 +8,7 @@ use crate::{
     models::{assignment::AssignmentRepository, solution::Solution},
 };
 
+use super::assignment::MinifiedAssignmentResponse;
 use super::{
     assignment::{AssignmentFileStructure, AssignmentResponse},
     shared::User,
@@ -31,6 +32,8 @@ pub struct ListSolutionResponse {
     pub id: i32,
     pub submitter: User,
     pub approval_status: Option<String>,
+    pub assignment: MinifiedAssignmentResponse,
+    pub job: Option<Job>,
 }
 
 /// Vec of solutions
@@ -43,17 +46,26 @@ impl Enrich<Solution> for ListSolutionResponse {
     async fn enrich(
         from: &Solution,
         client: &mut UsernatorApiClient<tonic::transport::Channel>,
-        _db_conn: &mut super::DB,
+        db_conn: &mut super::DB,
     ) -> Result<Self, ApiError> {
         let submitter = client
             .get_user(UserRequest {
                 user_id: u64::try_from(from.submitter_id)?,
             })
             .await?;
+        let assignment = AssignmentRepository::get_assignment_by_id(from.assignment_id, db_conn);
+        let assignment_response =
+            MinifiedAssignmentResponse::enrich(&assignment, client, db_conn).await?;
+        let job = match from.job_id.as_ref() {
+            Some(id) => Some(get_job(id).await?),
+            None => None,
+        };
         Ok(ListSolutionResponse {
             id: from.id,
             submitter: submitter.into_inner().into(),
             approval_status: from.approval_status.clone(),
+            assignment: assignment_response,
+            job,
         })
     }
 }

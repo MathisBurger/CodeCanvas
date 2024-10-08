@@ -13,8 +13,12 @@ RUN rm ./target/release/deps/tasky*
 ENV IS_DOCKER="true"
 RUN cargo build --release
 
+FROM busybox:1.35.0-uclibc as busybox
+
 FROM gcr.io/distroless/cc-debian12
 ARG ARCH=x86_64
+
+COPY --from=busybox:1.35.0-uclibc /bin/sh /bin/sh
 
 COPY --from=build /usr/lib/${ARCH}-linux-gnu/libpq.so* /usr/lib/${ARCH}-linux-gnu/
 COPY --from=build /usr/lib/${ARCH}-linux-gnu/libgssapi_krb5.so* /usr/lib/${ARCH}-linux-gnu/
@@ -40,6 +44,7 @@ COPY --from=build /lib/${ARCH}-linux-gnu/libkeyutils.so* /lib/${ARCH}-linux-gnu/
 WORKDIR /app
 COPY --from=build /tasky/target/release/tasky /app/tasky
 COPY --from=build /tasky/config.toml /app/config.toml
+COPY --from=build --chmod=777 /tasky/set_db_uri.sh /app/set_db_uri.sh
 
 EXPOSE 3000
 EXPOSE 3001
