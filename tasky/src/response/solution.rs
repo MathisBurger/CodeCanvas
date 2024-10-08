@@ -53,7 +53,8 @@ impl Enrich<Solution> for ListSolutionResponse {
                 user_id: u64::try_from(from.submitter_id)?,
             })
             .await?;
-        let assignment = AssignmentRepository::get_assignment_by_id(from.assignment_id, db_conn);
+        let assignment =
+            AssignmentRepository::get_assignment_by_id(from.assignment_id, db_conn).unwrap();
         let assignment_response =
             MinifiedAssignmentResponse::enrich(&assignment, client, db_conn).await?;
         let job = match from.job_id.as_ref() {
