@@ -22,6 +22,7 @@ pub struct RunnerData {
     pub runner_cpu: String,
     pub runner_memory: String,
     pub runner_timeout: String,
+    pub runner_cmd: String,
 }
 
 /// Multipart form to create code tests
@@ -98,6 +99,7 @@ pub async fn handle_create_multipart(
     assignment.runner_cpu = form.runner_config.runner_cpu.clone();
     assignment.runner_memory = form.runner_config.runner_memory.clone();
     assignment.runner_timeout = form.runner_config.runner_timeout.clone();
+    assignment.runner_cmd = form.runner_config.runner_cmd.clone();
     AssignmentRepository::update_assignment(assignment.clone(), db);
     Ok(assignment)
 }

@@ -38,6 +38,7 @@ pub struct Assignment {
     pub runner_cpu: String,
     pub runner_memory: String,
     pub runner_timeout: String,
+    pub runner_cmd: String,
 }
 
 /// Used to create a new assignment

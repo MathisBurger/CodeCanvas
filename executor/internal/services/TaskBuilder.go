@@ -15,12 +15,10 @@ import (
 
 func BuildTask(er ExecRequest) (input.Task, error) {
 	var image string
-	var run string
 
 	switch er.Assignment.Language {
 	case LanguageGo:
 		image = "golang:1.19"
-		run = "go run main.go > $TORK_OUTPUT"
 	default:
 		return input.Task{}, errors.New("invalid language")
 	}
@@ -31,7 +29,7 @@ func BuildTask(er ExecRequest) (input.Task, error) {
 	return input.Task{
 		Name:  er.Assignment.Title + " - " + strconv.Itoa(er.Solution.Id),
 		Image: image,
-		Run:   run,
+		Run:   er.Assignment.RunnerCmd + " > $TORK_OUTPUT",
 		Limits: &input.Limits{
 			CPUs:   er.Assignment.RunnerCpu,
 			Memory: er.Assignment.RunnerMemory,
