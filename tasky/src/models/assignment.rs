@@ -24,7 +24,7 @@ pub enum AssignmentLanguage {
 }
 
 /// The type of a question answer
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, Hash)]
 pub enum AnswerType {
     String,
     Number,
@@ -35,14 +35,13 @@ pub enum AnswerType {
 /// The catalogue of all questions
 #[derive(Serialize, Deserialize)]
 pub struct QuestionCatalogue {
-    pub catalogue: HashMap<String, QuestionCatalogueElement>,
+    pub catalogue: HashMap<u64, QuestionCatalogueElement>,
 }
 
 /// An element of the question catalogue
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, Hash)]
 pub struct QuestionCatalogueElement {
     pub question: String,
-    #[serde(skip_serializing)]
     pub answer: serde_json::Value,
     pub answer_type: AnswerType,
 }

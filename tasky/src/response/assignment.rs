@@ -1,6 +1,10 @@
-use crate::api::usernator_api_client::UsernatorApiClient;
+use std::collections::HashMap;
+
 use crate::api::UsersRequest;
 use crate::models::assignment::QuestionCatalogue;
+use crate::models::assignment::QuestionCatalogueElement;
+use crate::security::{StaticSecurity, StaticSecurityAction};
+use crate::{api::usernator_api_client::UsernatorApiClient, auth_middleware::UserData};
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
@@ -149,5 +153,20 @@ impl Enrich<Assignment> for AssignmentResponse {
             runner_memory: from.runner_memory.clone(),
             runner_timeout: from.runner_timeout.clone(),
         })
+    }
+}
+
+impl AssignmentResponse {
+    /// Authorizes the contained data
+    pub fn authorize(&mut self, user: &UserData) {
+        if !StaticSecurity::is_granted(StaticSecurityAction::IsAdminOrTutor, user) {
+            let catalogue_option = &mut self.question_catalogue;
+            if catalogue_option.is_some() {
+                let catalogue = &mut catalogue_option.as_mut().unwrap();
+                for value in catalogue.catalogue.values_mut() {
+                    value.answer = serde_json::Value::Null;
+                }
+            }
+        }
     }
 }

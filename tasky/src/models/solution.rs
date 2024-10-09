@@ -27,7 +27,7 @@ impl ApprovalStatus {
 /// All solutions to the questions
 #[derive(Deserialize)]
 pub struct QuestionSolutions {
-    pub solutions: HashMap<String, QuestionSolution>,
+    pub solutions: HashMap<u64, QuestionSolution>,
 }
 
 /// A solution to a question

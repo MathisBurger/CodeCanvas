@@ -1,4 +1,5 @@
 use crate::models::assignment::QuestionCatalogue;
+use crate::models::assignment::QuestionCatalogueElement;
 use crate::AppState;
 use actix_multipart::form::MultipartForm;
 use actix_web::get;
@@ -134,8 +135,9 @@ pub async fn get_assignment(
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
     let (_, assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
-    let enrichted =
+    let mut enrichted =
         AssignmentResponse::enrich(&assignment, &mut data.user_api.clone(), conn).await?;
+    enrichted.authorize(&user_data);
     Ok(HttpResponse::Ok().json(enrichted))
 }
 
@@ -160,8 +162,9 @@ pub async fn update_assignment(
         });
     }
     AssignmentRepository::update_assignment(assignment.clone(), conn);
-    let enrichted =
+    let mut enrichted =
         AssignmentResponse::enrich(&assignment, &mut data.user_api.clone(), conn).await?;
+    enrichted.authorize(&user_data);
     Ok(HttpResponse::Ok().json(enrichted))
 }
 
@@ -188,7 +191,9 @@ pub async fn create_assignment_test(
         });
     }
     let updated = handle_create_multipart(form, &data.mongodb, conn, assignment).await?;
-    let enriched = AssignmentResponse::enrich(&updated, &mut data.user_api.clone(), conn).await?;
+    let mut enriched =
+        AssignmentResponse::enrich(&updated, &mut data.user_api.clone(), conn).await?;
+    enriched.authorize(&user_data);
     Ok(HttpResponse::Ok().json(enriched))
 }
 
@@ -222,12 +227,17 @@ pub async fn view_assignment_test(
     Ok(HttpResponse::Ok().json(files))
 }
 
+#[derive(Deserialize)]
+struct CreateQuestionsRequest {
+    pub questions: Vec<QuestionCatalogueElement>,
+}
+
 #[post("/groups/{group_id}/assignments/{id}/question_catalogue")]
 pub async fn create_question_catalogue(
     data: web::Data<AppState>,
     user: web::ReqData<UserData>,
     path: web::Path<(i32, i32)>,
-    req: web::Json<QuestionCatalogue>,
+    req: web::Json<CreateQuestionsRequest>,
 ) -> Result<HttpResponse, ApiError> {
     let user_data = user.into_inner();
     let path_data = path.into_inner();
@@ -245,9 +255,10 @@ pub async fn create_question_catalogue(
             message: "The assigment is not question based".to_string(),
         });
     }
-    handle_catalogue_creation(req.into_inner(), &mut assignment, conn);
-    let response =
+    handle_catalogue_creation(req.into_inner().questions, &mut assignment, conn);
+    let mut response =
         AssignmentResponse::enrich(&assignment, &mut data.user_api.clone(), conn).await?;
+    response.authorize(&user_data);
     Ok(HttpResponse::Ok().json(response))
 }
 
