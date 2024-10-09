@@ -1,5 +1,6 @@
 use std::net::SocketAddr;
 
+use crate::api::usernator_api_client::UsernatorApiClient;
 use crate::auth_middleware::Auth;
 use crate::models::database::Database;
 use crate::routes::init_services;
@@ -7,7 +8,6 @@ use crate::tasky_grpc::tasky_api_server::TaskyApiServer;
 use crate::util::config::AppConfig;
 use actix_web::web::Data;
 use actix_web::{middleware, App, HttpServer};
-use api::usernator_api_client::UsernatorApiClient;
 use futures::future::join;
 use grpc::MyTaskyApi;
 use log::info;
@@ -19,6 +19,14 @@ pub mod api {
 
 pub mod tasky_grpc {
     tonic::include_proto!("tasky_grpc");
+}
+
+#[derive(Clone)]
+pub struct AppState {
+    pub config: AppConfig,
+    pub db: Database,
+    pub mongodb: mongodb::Database,
+    pub user_api: UsernatorApiClient<Channel>,
 }
 
 mod auth_middleware;
@@ -33,14 +41,6 @@ mod routes;
 mod schema;
 mod security;
 mod util;
-
-#[derive(Clone)]
-pub struct AppState {
-    pub config: AppConfig,
-    pub db: Database,
-    pub mongodb: mongodb::Database,
-    pub user_api: UsernatorApiClient<Channel>,
-}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

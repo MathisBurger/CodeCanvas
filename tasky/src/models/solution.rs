@@ -1,7 +1,8 @@
 use crate::schema::solutions::dsl;
 use diesel::associations::HasTable;
 use diesel::prelude::*;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 use super::DB;
 
@@ -21,6 +22,18 @@ impl ApprovalStatus {
             Self::Rejected => "REJECTED".to_string(),
         };
     }
+}
+
+/// All solutions to the questions
+#[derive(Deserialize)]
+pub struct QuestionSolutions {
+    pub solutions: HashMap<String, QuestionSolution>,
+}
+
+/// A solution to a question
+#[derive(Deserialize)]
+pub struct QuestionSolution {
+    pub answer: serde_json::Value,
 }
 
 /// The solution on an assignment

@@ -1,5 +1,6 @@
 use crate::api::usernator_api_client::UsernatorApiClient;
 use crate::api::UsersRequest;
+use crate::models::assignment::QuestionCatalogue;
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
@@ -40,6 +41,7 @@ pub struct AssignmentResponse {
     pub description: String,
     pub language: AssignmentLanguage,
     pub completed_by: Vec<User>,
+    pub question_catalogue: Option<QuestionCatalogue>,
     pub file_structure: Option<AssignmentFileStructure>,
     pub runner_cpu: String,
     pub runner_memory: String,
@@ -121,6 +123,12 @@ impl Enrich<Assignment> for AssignmentResponse {
                 .unwrap_or(serde_json::Value::Null),
         )
         .ok();
+        let question_catalogue = serde_json::from_value(
+            from.question_catalogue
+                .clone()
+                .unwrap_or(serde_json::Value::Null),
+        )
+        .ok();
 
         Ok(AssignmentResponse {
             id: from.id,
@@ -136,6 +144,7 @@ impl Enrich<Assignment> for AssignmentResponse {
                 .map(|x| x.into())
                 .collect(),
             file_structure,
+            question_catalogue,
             runner_cpu: from.runner_cpu.clone(),
             runner_memory: from.runner_memory.clone(),
             runner_timeout: from.runner_timeout.clone(),

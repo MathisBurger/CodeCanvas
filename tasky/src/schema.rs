@@ -27,6 +27,7 @@ diesel::table! {
         #[max_length = 5]
         runner_timeout -> Varchar,
         runner_cmd -> Text,
+        question_catalogue -> Nullable<Jsonb>,
     }
 }
 

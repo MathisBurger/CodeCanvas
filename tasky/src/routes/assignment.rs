@@ -1,3 +1,5 @@
+use crate::models::assignment::QuestionCatalogue;
+use crate::AppState;
 use actix_multipart::form::MultipartForm;
 use actix_web::get;
 use actix_web::post;
@@ -9,6 +11,7 @@ use crate::auth_middleware::UserData;
 use crate::error::ApiError;
 use crate::handler::assignment::handle_create_multipart;
 use crate::handler::assignment::CreateCodeTestMultipart;
+use crate::handler::questions::handle_catalogue_creation;
 use crate::models::assignment::Assignment;
 use crate::models::assignment::AssignmentLanguage;
 use crate::models::assignment::AssignmentRepository;
@@ -24,7 +27,6 @@ use crate::security::IsGranted;
 use crate::security::SecurityAction;
 use crate::security::StaticSecurity;
 use crate::util::mongo::parse_object_ids;
-use crate::AppState;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Deserializer};
 
@@ -218,6 +220,35 @@ pub async fn view_assignment_test(
     let ids = parse_object_ids(query.object_ids.clone())?;
     let files = TestFileCollection::get_for_assignment(assignment.id, ids, &data.mongodb).await;
     Ok(HttpResponse::Ok().json(files))
+}
+
+#[post("/groups/{group_id}/assignments/{id}/question_catalogue")]
+pub async fn create_question_catalogue(
+    data: web::Data<AppState>,
+    user: web::ReqData<UserData>,
+    path: web::Path<(i32, i32)>,
+    req: web::Json<QuestionCatalogue>,
+) -> Result<HttpResponse, ApiError> {
+    let user_data = user.into_inner();
+    let path_data = path.into_inner();
+    let conn = &mut data.db.db.get().unwrap();
+    let (_, mut assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
+    if !assignment.is_granted(SecurityAction::Update, &user_data) {
+        return Err(ApiError::Forbidden {
+            message: "You are not allowed to create a question catalogue".to_string(),
+        });
+    }
+    if assignment.file_structure.is_some()
+        || assignment.language != AssignmentLanguage::QuestionBased
+    {
+        return Err(ApiError::BadRequest {
+            message: "The assigment is not question based".to_string(),
+        });
+    }
+    handle_catalogue_creation(req.into_inner(), &mut assignment, conn);
+    let response =
+        AssignmentResponse::enrich(&assignment, &mut data.user_api.clone(), conn).await?;
+    Ok(HttpResponse::Ok().json(response))
 }
 
 /// Gets group and assignment from request params and connection.
