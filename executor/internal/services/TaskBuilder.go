@@ -19,6 +19,8 @@ func BuildTask(er ExecRequest) (input.Task, error) {
 	switch er.Assignment.Language {
 	case LanguageGo:
 		image = "golang:1.19"
+	case LanguageJava:
+		image = "maven:3.9.9-amazoncorretto-21"
 	default:
 		return input.Task{}, errors.New("invalid language")
 	}
