@@ -74,7 +74,7 @@ const FileStructure = ({
         }
       }
     }
-  }, [tree.selectedState]);
+  }, [tree.selectedState, solutionMode, structure]);
 
   return (
     <Paper withBorder>

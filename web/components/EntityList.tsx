@@ -35,7 +35,7 @@ const EntityList: React.FC<EntityListProps> = ({ cols, rows, rowActions }) => {
       );
     }
     return undefined;
-  }, [rowActions]);
+  }, [rowActions, user]);
 
   const getCellValue = (row: any, col: EntityListCol) => {
     const value = col.getter ? col.getter(row) : row[col.field];

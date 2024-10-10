@@ -69,7 +69,7 @@ interface FileStructureElementProps {
 export const FileStructureElement = (
   props: FileStructureElementProps & GroupProps,
 ) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const {
     label: _,
     isFolder: _1,
@@ -79,7 +79,7 @@ export const FileStructureElement = (
     editable: _5,
     ...elementProps
   } = props;
-
+  /* eslint-enable @typescript-eslint/no-unused-vars */
   return (
     <Group gap={5} {...elementProps}>
       <FileIcon

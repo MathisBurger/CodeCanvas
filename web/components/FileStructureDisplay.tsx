@@ -65,7 +65,7 @@ const FileStructureDisplay = ({
   );
   const objectIds = useMemo<string[]>(
     () => [...testObjectIds, ...taskObjectIds],
-    [filesFlattened],
+    [testObjectIds, taskObjectIds],
   );
   const cumulatedSize = useMemo<number>(
     () =>
@@ -156,7 +156,7 @@ const FileStructureDisplay = ({
     });
     setLoading(true);
     return null;
-  }, [selected, contents, getApiCall]);
+  }, [selected, contents, getApiCall, solutionId]);
 
   useEffect(() => {
     if (loadAll) {
@@ -180,9 +180,8 @@ const FileStructureDisplay = ({
         setContents(map);
       });
     }
-  }, [loadAll, objectIds]);
+  }, [loadAll, objectIds, solutionId, taskObjectIds, testObjectIds]);
 
-  //console.log(structure)
 
   return (
     <Grid>
