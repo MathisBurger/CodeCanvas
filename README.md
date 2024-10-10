@@ -4,6 +4,11 @@
 
 CodeCanvas is an online platform to practise programming in an collaborative environment. 
 Some tutors can create assignments for you to to and complete. As a registered student you can complete these tasks and get your result graded. 
+The application has built in code execution which makes it easy for tutors and students to validate the code handed in for the assignments. Furthermore, question based assignments are supported too. This makes it easy for tutors to not only create coding assignments, but also assignments where students have to answer predefined questions.
+
+## Getting started
+
+Using it.
 
 
 ## Setup 
@@ -26,3 +31,10 @@ Some tutors can create assignments for you to to and complete. As a registered s
 5. Now you can initialize the web container with env `API_URI` and `EXECUTOR_UI_URL`.
 6. Ensure that the executor UI is protected by a password proxy or something else.
 7. Enjoy using your application.
+
+## Contribution
+
+## Roadmap
+
+## Further development / Updates
+
