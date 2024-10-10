@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/fatih/color"
+	"initializer/internal/setup"
 	"os"
 )
 
@@ -23,7 +24,7 @@ func main() {
 		fmt.Println("Upgrading application...")
 		break
 	case "setup":
-		fmt.Println("Setting up application...")
+		setup.SetupCommand()
 		break
 	default:
 		color.Red("Invalid command: " + argsWithoutProg[0])
