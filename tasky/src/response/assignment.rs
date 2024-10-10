@@ -1,8 +1,5 @@
-use std::collections::HashMap;
-
 use crate::api::UsersRequest;
 use crate::models::assignment::QuestionCatalogue;
-use crate::models::assignment::QuestionCatalogueElement;
 use crate::security::{StaticSecurity, StaticSecurityAction};
 use crate::{api::usernator_api_client::UsernatorApiClient, auth_middleware::UserData};
 use chrono::NaiveDateTime;

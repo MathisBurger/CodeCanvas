@@ -3,9 +3,10 @@ use std::{
     hash::{DefaultHasher, Hash, Hasher},
 };
 
+use crate::models::assignment::AnswerType;
 use crate::models::assignment::QuestionCatalogue;
 use crate::models::assignment::QuestionCatalogueElement;
-use serde::{Deserialize, Serialize};
+use serde_json::Value;
 
 use crate::{
     error::ApiError,
@@ -20,12 +21,17 @@ pub fn handle_catalogue_creation(
     items: Vec<QuestionCatalogueElement>,
     assignment: &mut Assignment,
     conn: &mut DB,
-) {
-    let mut question_catalogue: HashMap<u64, QuestionCatalogueElement> = HashMap::new();
+) -> Result<(), ApiError> {
+    let mut question_catalogue: HashMap<String, QuestionCatalogueElement> = HashMap::new();
     let mut hasher = DefaultHasher::new();
     for item in items {
-        item.hash(&mut hasher);
-        question_catalogue.insert(hasher.finish(), item);
+        if !match_question_type(item.answer_type.clone(), item.answer.clone()) {
+            return Err(ApiError::BadRequest {
+                message: "Data types does not match".to_string(),
+            });
+        }
+        item.clone().hash(&mut hasher);
+        question_catalogue.insert(format!("{}", hasher.finish()), item.clone());
     }
     assignment.question_catalogue = Some(
         serde_json::to_value(QuestionCatalogue {
@@ -34,4 +40,14 @@ pub fn handle_catalogue_creation(
         .unwrap(),
     );
     AssignmentRepository::update_assignment(assignment.clone(), conn);
+    Ok(())
+}
+
+/// Matches the answer type of a question
+pub fn match_question_type(answer_type: AnswerType, value: Value) -> bool {
+    return match answer_type {
+        AnswerType::String | AnswerType::StrContains => value.is_string(),
+        AnswerType::Number => value.is_number(),
+        AnswerType::Boolean => value.is_boolean(),
+    };
 }

@@ -1,4 +1,3 @@
-use crate::models::assignment::QuestionCatalogue;
 use crate::models::assignment::QuestionCatalogueElement;
 use crate::AppState;
 use actix_multipart::form::MultipartForm;
@@ -255,7 +254,7 @@ pub async fn create_question_catalogue(
             message: "The assigment is not question based".to_string(),
         });
     }
-    handle_catalogue_creation(req.into_inner().questions, &mut assignment, conn);
+    handle_catalogue_creation(req.into_inner().questions, &mut assignment, conn)?;
     let mut response =
         AssignmentResponse::enrich(&assignment, &mut data.user_api.clone(), conn).await?;
     response.authorize(&user_data);

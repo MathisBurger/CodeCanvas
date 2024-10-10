@@ -35,7 +35,7 @@ pub enum AnswerType {
 /// The catalogue of all questions
 #[derive(Serialize, Deserialize)]
 pub struct QuestionCatalogue {
-    pub catalogue: HashMap<u64, QuestionCatalogueElement>,
+    pub catalogue: HashMap<String, QuestionCatalogueElement>,
 }
 
 /// An element of the question catalogue

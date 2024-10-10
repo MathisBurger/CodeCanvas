@@ -59,6 +59,7 @@ diesel::table! {
         #[max_length = 32]
         job_id -> Nullable<Varchar>,
         group_id -> Nullable<Int4>,
+        question_result -> Nullable<Jsonb>,
     }
 }
 
