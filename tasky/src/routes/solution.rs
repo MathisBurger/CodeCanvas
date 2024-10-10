@@ -51,16 +51,13 @@ pub async fn create_solution(
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
     let assignment = get_assignment(path_data.0, &user_data, conn)?;
-    if assignment.language == AssignmentLanguage::QuestionBased {
-        return Err(ApiError::BadRequest {
-            message: "Cannot create solution on question based assignment".to_string(),
-        });
-    }
     let mut solution =
         handle_create_multipart(form, &user_data, &data.mongodb, conn, &assignment).await?;
-    let job_id = run_task(assignment, solution.clone(), &data.config).await?;
-    solution.job_id = Some(job_id);
-    SolutionRepository::update_solution(solution.clone(), conn);
+    if assignment.language != AssignmentLanguage::QuestionBased {
+        let job_id = run_task(assignment, solution.clone(), &data.config).await?;
+        solution.job_id = Some(job_id);
+        SolutionRepository::update_solution(solution.clone(), conn);
+    }
     let enrichted = SolutionResponse::enrich(&solution, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(enrichted))
 }

@@ -1,4 +1,4 @@
-import {Assignment} from "@/service/types/tasky"
+import {Assignment, AssignmentLanguage} from "@/service/types/tasky"
 import {Button, Title} from "@mantine/core";
 import RichTextDisplay from "@/components/display/RichTextDisplay";
 import FileStructure from "@/components/FileStructure";
@@ -7,6 +7,7 @@ import {isGranted} from "@/service/auth";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import {UserRoles} from "@/service/types/usernator";
 import CreateTaskCodeModal from "@/components/assignments/CreateSolutionModal";
+import AnswerQuestionsModal from "@/components/assignments/questions/AnswerQuestionsModal";
 
 
 interface AssignmentDetailsTaskProps {
@@ -26,9 +27,12 @@ const AssignmentDetailsTaskTab = ({assignment}: AssignmentDetailsTaskProps) => {
         <>
             <Title order={3}>Task</Title>
             <RichTextDisplay content={assignment?.description ?? ""} fullSize={true} />
-            <Title order={3} mb={10}>Required files</Title>
+
             {assignment !== null && assignment.file_structure !== null && (
-                <FileStructure structure={assignment.file_structure} editable={false} displayMode="task" />
+                <>
+                    <Title order={3} mb={10}>Required files</Title>
+                    <FileStructure structure={assignment.file_structure} editable={false} displayMode="task" />
+                </>
             )}
             {!assignmentCompleted && isGranted(user, [UserRoles.Student]) && (
                 <Button
@@ -39,10 +43,17 @@ const AssignmentDetailsTaskTab = ({assignment}: AssignmentDetailsTaskProps) => {
                     Create Solution
                 </Button>
             )}
-            {createSolutionModalOpen && assignment !== null && (
+            {createSolutionModalOpen && assignment !== null && assignment.language !== AssignmentLanguage.QuestionBased && (
                 <CreateTaskCodeModal
                     onClose={() => setCreateSolutionModalOpen(false)}
                     assignment={assignment}
+                />
+            )}
+            {createSolutionModalOpen && assignment !== null && assignment.language === AssignmentLanguage.QuestionBased && assignment.question_catalogue !== null && (
+                <AnswerQuestionsModal
+                    assignmentId={assignment.id}
+                    onClose={() => setCreateSolutionModalOpen(false)}
+                    catalogue={assignment.question_catalogue}
                 />
             )}
         </>

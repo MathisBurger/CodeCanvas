@@ -48,6 +48,7 @@ export interface Assignment {
     description: string;
     language: AssignmentLanguage;
     file_structure: FileStructureTree|null;
+    question_catalogue: QuestionCatalogue|null;
     completed_by: TaskyUser[];
     runner_cpu: string;
     runner_memory: string;
@@ -96,9 +97,10 @@ export interface Solution {
     id: number;
     submitter: TaskyUser;
     assignment: Assignment;
-    approval_status?: string;
-    file_structure: FileStructureTree;
-    job?: Job;
+    approval_status: string|null;
+    file_structure: FileStructureTree|null;
+    question_results: ValidatedQuestionSolution[]|null;
+    job: Job|null;
 }
 
 export interface SolutionsResponse {
@@ -108,4 +110,31 @@ export interface SolutionsResponse {
 export interface SolutionFilesResponse {
     task_files: MongoTaskFile[];
     test_files: MongoTestFile[];
+}
+
+export enum AnswerType {
+    String='String',
+    Number='Number',
+    Boolean='Boolean',
+    StrContains='StrContains',
+}
+
+export interface QuestionCatalogueElement {
+    question: string;
+    answer: any;
+    answer_type: AnswerType|null;
+}
+
+export interface QuestionCatalogue {
+    catalogue: Record<string, QuestionCatalogueElement>;
+}
+
+export interface QuestionSolution {
+    answer: any;
+}
+
+export interface ValidatedQuestionSolution {
+    question: string;
+    answer: any;
+    correct: boolean;
 }

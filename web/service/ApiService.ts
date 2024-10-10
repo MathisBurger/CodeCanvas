@@ -7,7 +7,8 @@ import {
     GroupJoinRequest,
     GroupJoinRequestResponse,
     GroupsResponse,
-    MongoTestFile,
+    MongoTestFile, QuestionCatalogueElement,
+    QuestionSolution,
     RunnerConfig, Solution, SolutionFilesResponse,
     SolutionsResponse
 } from "@/service/types/tasky";
@@ -113,6 +114,10 @@ class ApiService {
         return await this.post<Solution>(`/tasky/solutions/${id}/reject`, {});
     }
 
+    public async createQuestionCatalogue(groupId: number, assignmentId: number, questions: QuestionCatalogueElement[]): Promise<Assignment> {
+        return await this.post<Assignment>(`/tasky/groups/${groupId}/assignments/${assignmentId}/question_catalogue`, {questions});
+    }
+
     public async createCodeTests(groupId: number, assignmentId: number, fileStructure: FileStructureTree, files: File[], runnerConfig: RunnerConfig): Promise<Assignment> {
         try {
             const formData = new FormData();
@@ -146,11 +151,14 @@ class ApiService {
         }
     }
 
-    public async createSolution(assignmentId: number, files: File[]): Promise<Solution> {
+    public async createSolution(assignmentId: number, files: File[], answers: Map<string, QuestionSolution>|undefined = undefined): Promise<Solution> {
         try {
             const formData = new FormData();
             for (const file of files) {
                 formData.append("files", file, file.name);
+            }
+            if (answers !== undefined) {
+                formData.set("answers", new Blob([JSON.stringify(Object.fromEntries(answers.entries()))], {type: 'application/json'}));
             }
             const resp = await fetch(`${this.apiUrl}/tasky/assignments/${assignmentId}/solutions`, {
                 method: "POST",

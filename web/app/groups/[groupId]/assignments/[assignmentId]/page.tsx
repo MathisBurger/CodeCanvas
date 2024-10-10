@@ -16,6 +16,7 @@ import FileStructureDisplay from "@/components/FileStructureDisplay";
 import AssignmentDetailsTaskTab from "@/components/assignments/AssignmentDetailsTaskTab";
 import AssignmentSolutionsTab from "@/components/assignments/AssignmentSolutionsTab";
 import AssignmentCompletedByTab from "@/components/assignments/AssignmentCompletedByTab";
+import CreateQuestionsModal from "@/components/assignments/CreateQuestionsModal";
 
 
 const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId: string}}) => {
@@ -26,6 +27,7 @@ const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId
     const {user} = useCurrentUser();
     const [updateModalOpen, setUpdateModalOpen] = useState(false);
     const [fileStructureModalOpen, setFileStructureModalOpen] = useState(false);
+    const [questionsModalOpen, setQuestionsModalOpen] = useState(false);
     const [assignment, refetch] = useClientQuery(() => api.getAssignmentForGroup(groupId, assignmentId), [assignmentId, groupId]);
 
     if (isNaN(groupId) || isNaN(assignmentId)) {
@@ -52,6 +54,9 @@ const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId
                 )}
                 {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && assignment.file_structure === null && assignment.language !== AssignmentLanguage.QuestionBased && (
                     <Button onClick={() => setFileStructureModalOpen(true)}>Create code tests</Button>
+                )}
+                {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && assignment.question_catalogue === null && assignment.language === AssignmentLanguage.QuestionBased && (
+                    <Button onClick={() => setQuestionsModalOpen(true)}>Create questions</Button>
                 )}
             </Group>
             <Tabs defaultValue="task">
@@ -106,6 +111,14 @@ const AssignmentDetailsPage = ({params}: {params: {groupId: string, assignmentId
                     groupId={groupId}
                     assignmentId={assignmentId}
                     refetch={refetch}
+                />
+            )}
+            {questionsModalOpen && (
+                <CreateQuestionsModal
+                    groupId={groupId}
+                    assignmentId={assignmentId}
+                    refetch={refetch}
+                    onClose={() => setQuestionsModalOpen(false)}
                 />
             )}
         </Container>
