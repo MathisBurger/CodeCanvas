@@ -1,110 +1,134 @@
-'use client';
+"use client";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
-import {Badge, Button, Container, Group, Tabs, Title} from "@mantine/core";
+import { Badge, Button, Container, Group, Tabs, Title } from "@mantine/core";
 import useClientQuery from "@/hooks/useClientQuery";
-import {AssignmentLanguage, Solution} from "@/service/types/tasky";
+import { AssignmentLanguage, Solution } from "@/service/types/tasky";
 import CentralLoading from "@/components/CentralLoading";
 import JobResultDisplay from "@/components/JobResultDisplay";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import {useState} from "react";
-import {isGranted} from "@/service/auth";
-import {UserRoles} from "@/service/types/usernator";
+import { useState } from "react";
+import { isGranted } from "@/service/auth";
+import { UserRoles } from "@/service/types/usernator";
 import ExecutorUIDisplay from "@/components/solution/ExecutorUIDisplay";
 import SolutionBadge from "@/components/solution/SolutionBadge";
 import NavigateBack from "@/components/NavigateBack";
 import FileStructureDisplay from "@/components/FileStructureDisplay";
 import QuestionAnswersDisplay from "@/components/solution/questions/QuestionAnswersDisplay";
 
-const SolutionDetailsPage = ({params}: {params: {id: string}}) => {
+const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
+  const id = parseInt(`${params.id}`, 10);
+  const api = useApiServiceClient();
+  const { user } = useCurrentUser();
+  const [executorModalOpen, setExecutorModalOpen] = useState(false);
+  const [solution, refetch] = useClientQuery<Solution>(() =>
+    api.getSolution(id),
+  );
+  console.log(solution);
+  const approve = async () => {
+    await api.approveSolution(id);
+    refetch();
+  };
 
-    const id = parseInt(`${params.id}`, 10);
-    const api = useApiServiceClient();
-    const {user} = useCurrentUser();
-    const [executorModalOpen, setExecutorModalOpen] = useState(false);
-    const [solution, refetch] = useClientQuery<Solution>(() => api.getSolution(id));
-    console.log(solution)
-    const approve = async () => {
-        await api.approveSolution(id);
-        refetch();
-    }
+  const reject = async () => {
+    await api.rejectSolution(id);
+    refetch();
+  };
 
-    const reject = async () => {
-        await api.rejectSolution(id);
-        refetch();
-    }
-
-    if (isNaN(id)) {
-        return (
-            <Container fluid>
-                <Title>Invalid Solution ID</Title>
-            </Container>
-        )
-    }
-
-    if (solution === null) {
-        return (
-            <CentralLoading />
-        );
-    }
-
+  if (isNaN(id)) {
     return (
-        <Container fluid>
-            <NavigateBack />
-            <Group>
-                <Title>{solution.assignment.title} - {solution.id}</Title>
-                <Badge color="indigo">{solution.submitter.username}</Badge>
-                <SolutionBadge status={solution.approval_status} job={solution.job ?? undefined} />
-                {isGranted(user, [UserRoles.Admin]) && (
-                    <Button onClick={() => setExecutorModalOpen(true)}>Executor UI</Button>
-                )}
-                {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && ([null, "SUCCESSFUL", "FAILED", "PENDING"].indexOf(solution.approval_status) > -1) && (
-                    <>
-                        <Button color="lime" onClick={approve}>Approve</Button>
-                        <Button color="red" onClick={reject}>Reject</Button>
-                    </>
-                )}
-            </Group>
-            <Tabs mt={20} defaultValue={solution.assignment.language === AssignmentLanguage.QuestionBased ? "answers" : "log"}>
-                <Tabs.List>
+      <Container fluid>
+        <Title>Invalid Solution ID</Title>
+      </Container>
+    );
+  }
 
-                    {solution.assignment.language === AssignmentLanguage.QuestionBased ? (
-                        <Tabs.Tab value="answers">Answers</Tabs.Tab>
-                        ) : (
-                        <>
-                            <Tabs.Tab value="log">Log</Tabs.Tab>
-                            <Tabs.Tab value="code">Code</Tabs.Tab>
-                        </>
-                    )}
-                </Tabs.List>
+  if (solution === null) {
+    return <CentralLoading />;
+  }
 
-                {solution.assignment.language === AssignmentLanguage.QuestionBased ? (
-                    <Tabs.Panel value="answers" mt={10}>
-                        <QuestionAnswersDisplay answers={solution.question_results} />
-                    </Tabs.Panel>
-                    ) : (
-                    <>
-                        <Tabs.Panel value="log" mt={10}>
-                            {solution.job !== null && (
-                                <JobResultDisplay job={solution.job!} />
-                            )}
-                        </Tabs.Panel>
-                        <Tabs.Panel value="code" mt={10}>
-                            {solution.file_structure !== null && (
-                                <FileStructureDisplay
-                                    structure={solution.file_structure}
-                                    assignmentId={solution.assignment.id}
-                                    solutionId={solution.id}
-                                />
-                            )}
-                        </Tabs.Panel>
-                    </>
-                )}
-            </Tabs>
-            {executorModalOpen && solution.job !== undefined && solution.job !== null && (
-                <ExecutorUIDisplay jobId={solution.job?.id} onClose={() => setExecutorModalOpen(false)} />
-            )}
-        </Container>
-    )
-}
+  return (
+    <Container fluid>
+      <NavigateBack />
+      <Group>
+        <Title>
+          {solution.assignment.title} - {solution.id}
+        </Title>
+        <Badge color="indigo">{solution.submitter.username}</Badge>
+        <SolutionBadge
+          status={solution.approval_status}
+          job={solution.job ?? undefined}
+        />
+        {isGranted(user, [UserRoles.Admin]) && (
+          <Button onClick={() => setExecutorModalOpen(true)}>
+            Executor UI
+          </Button>
+        )}
+        {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) &&
+          [null, "SUCCESSFUL", "FAILED", "PENDING"].indexOf(
+            solution.approval_status,
+          ) > -1 && (
+            <>
+              <Button color="lime" onClick={approve}>
+                Approve
+              </Button>
+              <Button color="red" onClick={reject}>
+                Reject
+              </Button>
+            </>
+          )}
+      </Group>
+      <Tabs
+        mt={20}
+        defaultValue={
+          solution.assignment.language === AssignmentLanguage.QuestionBased
+            ? "answers"
+            : "log"
+        }
+      >
+        <Tabs.List>
+          {solution.assignment.language === AssignmentLanguage.QuestionBased ? (
+            <Tabs.Tab value="answers">Answers</Tabs.Tab>
+          ) : (
+            <>
+              <Tabs.Tab value="log">Log</Tabs.Tab>
+              <Tabs.Tab value="code">Code</Tabs.Tab>
+            </>
+          )}
+        </Tabs.List>
+
+        {solution.assignment.language === AssignmentLanguage.QuestionBased ? (
+          <Tabs.Panel value="answers" mt={10}>
+            <QuestionAnswersDisplay answers={solution.question_results} />
+          </Tabs.Panel>
+        ) : (
+          <>
+            <Tabs.Panel value="log" mt={10}>
+              {solution.job !== null && (
+                <JobResultDisplay job={solution.job!} />
+              )}
+            </Tabs.Panel>
+            <Tabs.Panel value="code" mt={10}>
+              {solution.file_structure !== null && (
+                <FileStructureDisplay
+                  structure={solution.file_structure}
+                  assignmentId={solution.assignment.id}
+                  solutionId={solution.id}
+                />
+              )}
+            </Tabs.Panel>
+          </>
+        )}
+      </Tabs>
+      {executorModalOpen &&
+        solution.job !== undefined &&
+        solution.job !== null && (
+          <ExecutorUIDisplay
+            jobId={solution.job?.id}
+            onClose={() => setExecutorModalOpen(false)}
+          />
+        )}
+    </Container>
+  );
+};
 
 export default SolutionDetailsPage;
