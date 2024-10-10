@@ -8,6 +8,7 @@ use diesel::{
     Selectable, SelectableHelper,
 };
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 /// The language of an assignment
 /// This language is the language the assignment should be completed with
@@ -20,6 +21,29 @@ pub enum AssignmentLanguage {
     Golang,
     #[serde(rename = "QuestionBased")]
     QuestionBased,
+}
+
+/// The type of a question answer
+#[derive(Serialize, Deserialize, Clone, Hash)]
+pub enum AnswerType {
+    String,
+    Number,
+    StrContains,
+    Boolean,
+}
+
+/// The catalogue of all questions
+#[derive(Serialize, Deserialize)]
+pub struct QuestionCatalogue {
+    pub catalogue: HashMap<String, QuestionCatalogueElement>,
+}
+
+/// An element of the question catalogue
+#[derive(Serialize, Deserialize, Clone, Hash)]
+pub struct QuestionCatalogueElement {
+    pub question: String,
+    pub answer: serde_json::Value,
+    pub answer_type: AnswerType,
 }
 
 /// The assignment entity
@@ -39,6 +63,7 @@ pub struct Assignment {
     pub runner_memory: String,
     pub runner_timeout: String,
     pub runner_cmd: String,
+    pub question_catalogue: Option<serde_json::Value>,
 }
 
 /// Used to create a new assignment

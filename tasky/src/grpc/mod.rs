@@ -1,9 +1,10 @@
 use tonic::Response;
 
 use crate::models::group::GroupRepository;
+use crate::tasky_grpc::tasky_api_server::TaskyApi;
 use crate::tasky_grpc::GroupsRequest;
 use crate::tasky_grpc::GroupsResponse;
-use crate::{tasky_grpc::tasky_api_server::TaskyApi, AppState};
+use crate::AppState;
 
 pub struct MyTaskyApi {
     pub app_state: AppState,

@@ -1,7 +1,5 @@
-use crate::{
-    auth_middleware::UserData,
-    models::group::{CreateGroup, Group},
-};
+use crate::auth_middleware::UserData;
+use crate::models::group::{CreateGroup, Group};
 
 use super::{IsGranted, SecurityAction, StaticSecurity, StaticSecurityAction};
 

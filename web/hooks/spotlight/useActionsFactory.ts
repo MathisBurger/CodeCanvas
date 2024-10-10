@@ -1,25 +1,28 @@
-import {SpotlightActionData, SpotlightActionGroupData} from "@mantine/spotlight";
-import {useMemo, useState} from "react";
-import {useStaticGeneralActions, useStaticRoutesActions} from "@/hooks/spotlight/staticProvider";
+import {
+  SpotlightActionData,
+  SpotlightActionGroupData,
+} from "@mantine/spotlight";
+import { useMemo, useState } from "react";
+import {
+  useStaticGeneralActions,
+  useStaticRoutesActions,
+} from "@/hooks/spotlight/staticProvider";
 
+const useActionsFactory = (): (
+  | SpotlightActionGroupData
+  | SpotlightActionData
+)[] => {
+  const staticRoutes = useStaticRoutesActions();
+  const staticGeneral = useStaticGeneralActions();
 
-const useActionsFactory = (): (SpotlightActionGroupData | SpotlightActionData)[] => {
+  const staticActions = useMemo<
+    (SpotlightActionGroupData | SpotlightActionData)[]
+  >(() => [...staticRoutes, ...staticGeneral], [staticRoutes, staticGeneral]);
 
-    const staticRoutes = useStaticRoutesActions();
-    const staticGeneral = useStaticGeneralActions();
+  const [actions, setActions] =
+    useState<(SpotlightActionGroupData | SpotlightActionData)[]>(staticActions);
 
-    const staticActions = useMemo<(SpotlightActionGroupData | SpotlightActionData)[]>(
-        () => [
-            ...staticRoutes,
-            ...staticGeneral,
-        ], [
-            staticRoutes,
-            staticGeneral
-        ]);
-
-    const [actions, setActions] = useState<(SpotlightActionGroupData | SpotlightActionData)[]>(staticActions);
-
-    return actions;
-}
+  return actions;
+};
 
 export default useActionsFactory;
