@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  web:
+    image: ghcr.io/mathisburger/codecanvas-web:v0.1.0
+    ports:
+      - "3001:3000"
+    environment:
+      - API_URL=https://api.code-canvas.app
+      - EXECUTOR_UI_URL=https://executor.code-canvas.app
