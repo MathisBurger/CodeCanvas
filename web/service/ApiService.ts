@@ -266,6 +266,13 @@ class ApiService {
             type: "application/json",
           }),
         );
+      } else {
+        formData.set(
+            "answers",
+            new Blob(["{}"], {
+              type: "application/json",
+            }),
+        );
       }
       const resp = await fetch(
         `${this.apiUrl}/tasky/assignments/${assignmentId}/solutions`,
