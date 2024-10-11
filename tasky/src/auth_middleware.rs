@@ -2,6 +2,7 @@ use actix_web::dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Tr
 use actix_web::error::ErrorUnauthorized;
 use actix_web::{web, Error, HttpMessage};
 use futures::future::LocalBoxFuture;
+use log::info;
 use std::fmt::Display;
 use std::future::{ready, Ready};
 
@@ -17,7 +18,7 @@ pub struct UserData {
 }
 
 /// All roles a user can have
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 pub enum UserRole {
     RoleAdmin,
     RoleTutor,
@@ -123,6 +124,8 @@ where
             .into_iter()
             .map(|g| g.id)
             .collect();
+
+        info!(target: "auth", "{}", format!("ID: {}, Roles: {:?}", uid, uroles));
 
         req.extensions_mut().insert(UserData {
             user_id: uid,
