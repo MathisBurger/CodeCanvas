@@ -8,7 +8,8 @@ The application has built in code execution which makes it easy for tutors and s
 
 ## Getting started
 
-Using it.
+We do not recommend to host the application yourself, altough you can do it. If you want to start using this app for your small group, fell free to create an account on [our Service](https://code-canvas.app).
+
 
 
 ## Setup 
@@ -34,7 +35,10 @@ Using it.
 
 ## Contribution
 
+This project is completely community driven. Therefore, everyone can contribute to this project and help to improve the project.
+If you want to give some monetary compensation for the work we are doing, feel free to do so. There is currently no option to do that.
+
 ## Roadmap
 
-## Further development / Updates
-
+We plan on improving the application over time. Most of the upcoming changes will be bug fixes, but also some new cool features. 
+This project depends on your ideas. So if you have an idea about how to improve the application, feel free to open up an issue.
