@@ -18,6 +18,7 @@ import "@mantine/dropzone/styles.css";
 import { DatesProvider } from "@mantine/dates";
 import SpotlightWrapper from "@/components/spotlight/SpotlightWrapper";
 import Footer from "@/components/Footer";
+import { publicRoutes } from "@/static/routes";
 
 export default function RootLayout({
   children,
@@ -27,7 +28,7 @@ export default function RootLayout({
   const [user, setUser] = useState<User | null>(null);
   const pathname = usePathname();
   const showNavbar = useMemo(
-    () => pathname !== "/login" && pathname !== "/register" && pathname !== "/",
+    () => publicRoutes.indexOf(pathname) === -1,
     [pathname],
   );
 
