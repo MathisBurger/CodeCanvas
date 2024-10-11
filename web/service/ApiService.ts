@@ -26,7 +26,7 @@ class ApiService {
   private apiUrl: string;
 
   constructor() {
-    this.apiUrl = process.env.API_URL ?? "http://localhost:3002";
+    this.apiUrl = process.env.NODE_ENV === "production" ? "https://api.code-canvas.app" : "http://localhost:3002";
   }
 
   public async self(): Promise<User | string> {
