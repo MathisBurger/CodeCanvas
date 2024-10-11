@@ -3,10 +3,12 @@ import classes from './home.module.css';
 import { Image, Container, Title, Button, Group, Text, List, ThemeIcon, rem } from '@mantine/core';
 import { IconCheck } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
+import useCurrentUser from "@/hooks/useCurrentUser";
 
 export default function Home() {
 
     const router = useRouter();
+    const currentUser = useCurrentUser();
 
   return (
       <Container size="md">
@@ -42,8 +44,8 @@ export default function Home() {
                   </List>
 
                   <Group mt={30}>
-                      <Button radius="xl" size="md" className={classes.control} onClick={() => router.push('/register')}>
-                          Get started
+                      <Button radius="xl" size="md" className={classes.control} onClick={() => router.push(currentUser === null ? '/register' : '/dashboard')}>
+                          {currentUser === null ? "Get started" : "Dashboard"}
                       </Button>
                       <Button variant="default" radius="xl" size="md" className={classes.control} onClick={() => router.push('https://github.com/MathisBurger/CodeCanvas')}>
                           Source code
