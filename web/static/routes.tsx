@@ -51,3 +51,5 @@ export const routes: Route[] = [
     authRoles: [UserRoles.Student],
   },
 ];
+
+export const publicRoutes = ["/login", "/register", "/", "/impress", "/privacy"];
