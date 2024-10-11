@@ -51,6 +51,10 @@ class ApiService {
     return await this.get<GetStudentsResponse>("/usernator/all-students");
   }
 
+  public async createGroup(title: string): Promise<Group> {
+    return await this.post<Group>(`/tasky/create_group`, {title});
+  }
+
   public async getGroups(): Promise<GroupsResponse> {
     return await this.get<GroupsResponse>("/tasky/groups");
   }
