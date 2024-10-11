@@ -17,6 +17,7 @@ import "@mantine/code-highlight/styles.css";
 import "@mantine/dropzone/styles.css";
 import { DatesProvider } from "@mantine/dates";
 import SpotlightWrapper from "@/components/spotlight/SpotlightWrapper";
+import Footer from "@/components/Footer";
 
 export default function RootLayout({
   children,
@@ -57,6 +58,7 @@ export default function RootLayout({
                   </AppShell.Navbar>
                 )}
                 <AppShell.Main>{children}</AppShell.Main>
+                <AppShell.Footer><Footer /></AppShell.Footer>
               </AppShell>
               <SpotlightWrapper />
             </DatesProvider>
