@@ -1,43 +1,52 @@
-'use client';
-import {Box, Group, Image} from "@mantine/core"
+"use client";
+import { Box, Group, Image } from "@mantine/core";
 import SsrHeader from "@/components/SsrHeader";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import {usePathname, useRouter} from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import { User } from "@/service/types/usernator";
-import {useEffect} from "react";
-
+import { useEffect } from "react";
 
 const Header = () => {
-    const api = useApiServiceClient();
-    const {user, setUser} = useCurrentUser();
-    const pathname = usePathname();
-    const router = useRouter();
+  const api = useApiServiceClient();
+  const { user, setUser } = useCurrentUser();
+  const pathname = usePathname();
+  const router = useRouter();
 
-    useEffect(() => {
-        api.self()
-            .then((res) => {
-                setUser(res as User);
-            })
-            .catch(() => {
-                setUser(null);
-                if (pathname !== "/login" && pathname !== "/register" && pathname !== "/") {
-                    router.push("/login");
-                }
-            })
-    }, [pathname])
+  useEffect(() => {
+    api
+      .self()
+      .then((res) => {
+        setUser(res as User);
+      })
+      .catch(() => {
+        setUser(null);
+        if (
+          pathname !== "/login" &&
+          pathname !== "/register" &&
+          pathname !== "/"
+        ) {
+          router.push("/login");
+        }
+      });
+  }, [pathname]);
 
-    return (
-        <Box pr={20}>
-            <header>
-                <Group justify="space-between" h="100%">
-                    <Image lightHidden src="/CodeCanvas-dark.png" h={100} alt="CompanyLogo" />
-                    <Image darkHidden src="/CodeCanvas.png" h={100} alt="CompanyLogo" />
-                    <SsrHeader user={user} />
-                </Group>
-            </header>
-        </Box>
-    );
-}
+  return (
+    <Box pr={20}>
+      <header>
+        <Group justify="space-between" h="100%">
+          <Image
+            lightHidden
+            src="/CodeCanvas-dark.png"
+            h={100}
+            alt="CompanyLogo"
+          />
+          <Image darkHidden src="/CodeCanvas.png" h={100} alt="CompanyLogo" />
+          <SsrHeader user={user} />
+        </Group>
+      </header>
+    </Box>
+  );
+};
 
 export default Header;

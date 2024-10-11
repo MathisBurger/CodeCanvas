@@ -27,6 +27,7 @@ diesel::table! {
         #[max_length = 5]
         runner_timeout -> Varchar,
         runner_cmd -> Text,
+        question_catalogue -> Nullable<Jsonb>,
     }
 }
 
@@ -58,6 +59,7 @@ diesel::table! {
         #[max_length = 32]
         job_id -> Nullable<Varchar>,
         group_id -> Nullable<Int4>,
+        question_result -> Nullable<Jsonb>,
     }
 }
 

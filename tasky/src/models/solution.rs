@@ -1,7 +1,7 @@
 use crate::schema::solutions::dsl;
 use diesel::associations::HasTable;
 use diesel::prelude::*;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use super::DB;
 
@@ -10,6 +10,8 @@ pub enum ApprovalStatus {
     Pending,
     Rejected,
     Approved,
+    Successful,
+    Failed,
 }
 
 impl ApprovalStatus {
@@ -19,8 +21,23 @@ impl ApprovalStatus {
             Self::Pending => "PENDING".to_string(),
             Self::Approved => "APPROVED".to_string(),
             Self::Rejected => "REJECTED".to_string(),
+            Self::Successful => "SUCCESSFUL".to_string(),
+            Self::Failed => "FAILED".to_string(),
         };
     }
+}
+
+/// A solution to a question
+#[derive(Deserialize)]
+pub struct QuestionSolution {
+    pub answer: serde_json::Value,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct QuestionResult {
+    pub question: String,
+    pub answer: serde_json::Value,
+    pub correct: bool,
 }
 
 /// The solution on an assignment
@@ -35,6 +52,7 @@ pub struct Solution {
     pub approval_status: Option<String>,
     pub job_id: Option<String>,
     pub group_id: Option<i32>,
+    pub question_result: Option<serde_json::Value>,
 }
 
 /// Struct to create a new solution

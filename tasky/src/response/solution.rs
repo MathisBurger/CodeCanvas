@@ -1,5 +1,7 @@
 use crate::api::UserRequest;
 use crate::http::get_job;
+use crate::models::assignment::AssignmentLanguage;
+use crate::models::solution::QuestionResult;
 use crate::{api::usernator_api_client::UsernatorApiClient, http::Job};
 use serde::Serialize;
 
@@ -24,6 +26,7 @@ pub struct SolutionResponse {
     pub approval_status: Option<String>,
     pub file_structure: Option<AssignmentFileStructure>,
     pub job: Option<Job>,
+    pub question_results: Option<Vec<QuestionResult>>,
 }
 
 /// Solution response for list views
@@ -53,14 +56,21 @@ impl Enrich<Solution> for ListSolutionResponse {
                 user_id: u64::try_from(from.submitter_id)?,
             })
             .await?;
+
         let assignment =
             AssignmentRepository::get_assignment_by_id(from.assignment_id, db_conn).unwrap();
         let assignment_response =
             MinifiedAssignmentResponse::enrich(&assignment, client, db_conn).await?;
-        let job = match from.job_id.as_ref() {
-            Some(id) => Some(get_job(id).await?),
-            None => None,
-        };
+
+        let mut job = None;
+
+        if assignment.language != AssignmentLanguage::QuestionBased {
+            job = match from.job_id.as_ref() {
+                Some(id) => Some(get_job(id).await?),
+                None => None,
+            };
+        }
+
         Ok(ListSolutionResponse {
             id: from.id,
             submitter: submitter.into_inner().into(),
@@ -107,10 +117,19 @@ impl Enrich<Solution> for SolutionResponse {
                 .unwrap_or(serde_json::Value::Null),
         )
         .ok();
-        let job = match from.job_id.as_ref() {
-            Some(id) => Some(get_job(id).await?),
-            None => None,
-        };
+
+        let mut job = None;
+        let mut question_results: Option<Vec<QuestionResult>> = None;
+
+        if assignment.language == AssignmentLanguage::QuestionBased {
+            question_results = serde_json::from_value(from.question_result.clone().unwrap()).ok();
+        } else {
+            job = match from.job_id.as_ref() {
+                Some(id) => Some(get_job(id).await?),
+                None => None,
+            };
+        }
+
         return Ok(SolutionResponse {
             id: from.id,
             submitter: submitter.into_inner().into(),
@@ -118,6 +137,7 @@ impl Enrich<Solution> for SolutionResponse {
             approval_status: from.approval_status.clone(),
             file_structure,
             job,
+            question_results,
         });
     }
 }

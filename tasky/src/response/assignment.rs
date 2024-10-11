@@ -1,5 +1,7 @@
-use crate::api::usernator_api_client::UsernatorApiClient;
 use crate::api::UsersRequest;
+use crate::models::assignment::QuestionCatalogue;
+use crate::security::{StaticSecurity, StaticSecurityAction};
+use crate::{api::usernator_api_client::UsernatorApiClient, auth_middleware::UserData};
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
@@ -40,6 +42,7 @@ pub struct AssignmentResponse {
     pub description: String,
     pub language: AssignmentLanguage,
     pub completed_by: Vec<User>,
+    pub question_catalogue: Option<QuestionCatalogue>,
     pub file_structure: Option<AssignmentFileStructure>,
     pub runner_cpu: String,
     pub runner_memory: String,
@@ -121,6 +124,12 @@ impl Enrich<Assignment> for AssignmentResponse {
                 .unwrap_or(serde_json::Value::Null),
         )
         .ok();
+        let question_catalogue = serde_json::from_value(
+            from.question_catalogue
+                .clone()
+                .unwrap_or(serde_json::Value::Null),
+        )
+        .ok();
 
         Ok(AssignmentResponse {
             id: from.id,
@@ -136,9 +145,25 @@ impl Enrich<Assignment> for AssignmentResponse {
                 .map(|x| x.into())
                 .collect(),
             file_structure,
+            question_catalogue,
             runner_cpu: from.runner_cpu.clone(),
             runner_memory: from.runner_memory.clone(),
             runner_timeout: from.runner_timeout.clone(),
         })
+    }
+}
+
+impl AssignmentResponse {
+    /// Authorizes the contained data
+    pub fn authorize(&mut self, user: &UserData) {
+        if !StaticSecurity::is_granted(StaticSecurityAction::IsAdminOrTutor, user) {
+            let catalogue_option = &mut self.question_catalogue;
+            if catalogue_option.is_some() {
+                let catalogue = &mut catalogue_option.as_mut().unwrap();
+                for value in catalogue.catalogue.values_mut() {
+                    value.answer = serde_json::Value::Null;
+                }
+            }
+        }
     }
 }
