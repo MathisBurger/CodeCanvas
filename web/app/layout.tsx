@@ -58,7 +58,7 @@ export default function RootLayout({
                     <Navbar />
                   </AppShell.Navbar>
                 )}
-                <AppShell.Main>{children}</AppShell.Main>
+                <AppShell.Main mb={100}>{children}</AppShell.Main>
                 <AppShell.Footer><Footer /></AppShell.Footer>
               </AppShell>
               <SpotlightWrapper />

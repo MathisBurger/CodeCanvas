@@ -6,7 +6,7 @@ import { AssignmentLanguage, Solution } from "@/service/types/tasky";
 import CentralLoading from "@/components/CentralLoading";
 import JobResultDisplay from "@/components/JobResultDisplay";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { isGranted } from "@/service/auth";
 import { UserRoles } from "@/service/types/usernator";
 import ExecutorUIDisplay from "@/components/solution/ExecutorUIDisplay";
@@ -14,6 +14,9 @@ import SolutionBadge from "@/components/solution/SolutionBadge";
 import NavigateBack from "@/components/NavigateBack";
 import FileStructureDisplay from "@/components/FileStructureDisplay";
 import QuestionAnswersDisplay from "@/components/solution/questions/QuestionAnswersDisplay";
+
+// Every 30s
+const REFETCH_INTERVAL = 1000 * 30;
 
 const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
   const id = parseInt(`${params.id}`, 10);
@@ -23,6 +26,22 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
   const [solution, refetch] = useClientQuery<Solution>(() =>
     api.getSolution(id),
   );
+
+  useEffect(() => {
+    const fetcher = async () => {
+      if (solution?.job && solution.job.execution.length > 0) {
+        const exec = solution.job.execution[0];
+        if (exec.error === null && exec.result === null && exec.state === "RUNNING") {
+          setTimeout(() => {
+            refetch();
+            fetcher();
+          }, REFETCH_INTERVAL);
+        }
+      }
+    };
+    fetcher();
+  }, [solution]);
+
   console.log(solution);
   const approve = async () => {
     await api.approveSolution(id);
