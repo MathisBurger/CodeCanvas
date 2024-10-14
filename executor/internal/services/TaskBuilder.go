@@ -20,7 +20,7 @@ func BuildTask(er ExecRequest) (input.Task, error) {
 	case LanguageGo:
 		image = "golang:1.19"
 	case LanguageJava:
-		image = "ghcr.io/MathisBurger/cc-images-java:latest"
+		image = "ghcr.io/mathisburger/cc-images-java:latest"
 	default:
 		return input.Task{}, errors.New("invalid language")
 	}
