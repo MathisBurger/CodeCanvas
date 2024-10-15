@@ -6,7 +6,7 @@ import (
 )
 
 func InitPostgres() {
-	db, err := sql.Open("postgres", "postgres://admin:admin@127.0.0.1:5432/postgres?sslmode=disable")
+	db, err := sql.Open("postgres", "postgres://admin:admin@127.0.0.1:5434/postgres?sslmode=disable")
 	if err != nil {
 		panic(err)
 	}
