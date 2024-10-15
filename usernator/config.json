@@ -1,12 +1,12 @@
 {
   "database": {
-    "username": "usernator",
-    "password": "usernator",
+    "username": "admin",
+    "password": "admin",
     "host": "localhost:5434",
     "database": "usernator"
   },
   "smtp": {
-    "host": "127.0.0.1",
+    "host": "localhost",
     "port": "1025",
     "username": "app@codecanvas.com",
     "password": ""
@@ -15,9 +15,9 @@
     "base_url": "http://127.0.0.1:3000/submit_password"
   },
   "messaging": {
-    "username": "usernator",
-    "password": "usernator",
+    "username": "guest",
+    "password": "guest",
     "host": "localhost:5672",
-    "tasky_addr": "http://localhost:3008"
+    "tasky_addr": "http://localhost:3005"
   }
 }

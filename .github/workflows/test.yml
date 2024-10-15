@@ -1,0 +1,57 @@
+name: Test
+
+on: 
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-tools:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Go 1.21
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+      - name: Build tools
+        run: |
+          cd pipeline-tools
+          go build cmd/tools.go
+      - uses: actions/upload-artifact@master
+        with:
+          name: build-tools
+          path: ./pipeline-tools/tools
+  unit-tests:
+    needs: build-tools
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout sources
+        uses: actions/checkout@v4
+      - uses: actions/download-artifact@master
+        with:
+          name: build-tools
+          path: ./build-tools
+      - name: Create proto symlinks
+        run: |
+          ln ./usernator/api.proto ./tasky/api.proto
+          ln ./tasky/tasky.proto ./usernator/tasky.proto
+      - name: Initialize compose cluster
+        run: docker-compose -f "ci-compose.yml" up -d --build
+      - name: Wait for startup
+        run: sleep 20
+      - name: Init services
+        run: ./build-tools
+      - name: Restart containers
+        run: |
+          docker-compose -f "ci-compose.yml" stop
+          docker-compose -f "ci-compose.yml" up -d
+      - name: Wait for startup
+        run: sleep 20
+      # Tests start here
+      - name: Test usernator
+        run: |
+          cd usernator
+          go test ./...
+    
