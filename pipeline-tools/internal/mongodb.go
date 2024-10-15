@@ -7,7 +7,7 @@ import (
 )
 
 func InitMongoDb() {
-	uri := "mongodb://admin:admin@mongodb/admin?retryWrites=true&w=majority"
+	uri := "mongodb://admin:admin@127.0.0.1:27017/admin?retryWrites=true&w=majority"
 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(uri))
 	if err != nil {
 		panic(err)
