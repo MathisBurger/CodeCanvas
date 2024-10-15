@@ -1,6 +1,9 @@
 package internal
 
-import "database/sql"
+import (
+	"database/sql"
+	_ "github.com/lib/pq"
+)
 
 func InitPostgres() {
 	db, err := sql.Open("postgres", "postgres://admin:admin@127.0.0.1:5432/postgres?sslmode=disable")
