@@ -85,5 +85,6 @@ jobs:
         run: |
           cd usernator
           go mod tidy
+          go run fixtures/fixtures.go
           go test ./...
     
