@@ -71,6 +71,7 @@ pub async fn get_all_group_assignments(
 ) -> Result<HttpResponse, ApiError> {
     let user_data = user.into_inner();
     let conn = &mut data.db.db.get().unwrap();
+
     let mut group =
         GroupRepository::get_by_id(path.into_inner().0, conn).ok_or(ApiError::BadRequest {
             message: "No access to group".to_string(),
@@ -80,6 +81,7 @@ pub async fn get_all_group_assignments(
             message: "No access to group".to_string(),
         });
     }
+
     let assignments = AssignmentRepository::get_all_group_assignments(group.id, conn);
     let enriched =
         AssignmentsResponse::enrich(&assignments, &mut data.user_api.clone(), conn).await?;
@@ -96,6 +98,7 @@ pub async fn create_assignment(
 ) -> Result<HttpResponse, ApiError> {
     let user_data = user.into_inner();
     let conn = &mut data.db.db.get().unwrap();
+
     let mut group =
         GroupRepository::get_by_id(path.into_inner().0, conn).ok_or(ApiError::BadRequest {
             message: "No access to group".to_string(),
@@ -105,6 +108,7 @@ pub async fn create_assignment(
             message: "No access to group".to_string(),
         });
     }
+
     let mut create_assignment = CreateAssignment {
         title: req.title.clone(),
         due_date: req.due_date.clone(),
@@ -117,6 +121,7 @@ pub async fn create_assignment(
             message: "Not allowed to create an assignment".to_string(),
         });
     }
+
     let assignment = AssignmentRepository::create_assignment(&create_assignment, conn);
     let enriched =
         AssignmentResponse::enrich(&assignment, &mut data.user_api.clone(), conn).await?;
@@ -133,10 +138,12 @@ pub async fn get_assignment(
     let user_data = user.into_inner();
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
+
     let (_, assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
     let mut enrichted =
         AssignmentResponse::enrich(&assignment, &mut data.user_api.clone(), conn).await?;
     enrichted.authorize(&user_data);
+
     Ok(HttpResponse::Ok().json(enrichted))
 }
 
@@ -151,15 +158,18 @@ pub async fn update_assignment(
     let user_data = user.into_inner();
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
+
     let (_, mut assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
     assignment.title = req.title.clone();
     assignment.due_date = req.due_date.clone();
     assignment.description = req.description.clone();
+
     if !assignment.is_granted(SecurityAction::Update, &user_data) {
         return Err(ApiError::Forbidden {
             message: "You are not allowed to update assignment".to_string(),
         });
     }
+
     AssignmentRepository::update_assignment(assignment.clone(), conn);
     let mut enrichted =
         AssignmentResponse::enrich(&assignment, &mut data.user_api.clone(), conn).await?;
@@ -178,12 +188,14 @@ pub async fn create_assignment_test(
     let user_data = user.into_inner();
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
+
     let (_, mut assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
     if !assignment.is_granted(SecurityAction::Update, &user_data) {
         return Err(ApiError::Forbidden {
             message: "You are not allowed to create code tests".to_string(),
         });
     }
+
     if assignment.language == AssignmentLanguage::QuestionBased {
         return Err(ApiError::BadRequest {
             message: "Cannot create code tests on question based assignment".to_string(),
@@ -212,6 +224,7 @@ pub async fn view_assignment_test(
     let user_data = user.into_inner();
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
+
     let (_, assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
     if !StaticSecurity::is_granted(
         crate::security::StaticSecurityAction::CanViewTestStructure,
@@ -221,6 +234,7 @@ pub async fn view_assignment_test(
             message: "You cannot view test structure".to_string(),
         });
     }
+
     let ids = parse_object_ids(query.object_ids.clone())?;
     let files = TestFileCollection::get_for_assignment(assignment.id, ids, &data.mongodb).await;
     Ok(HttpResponse::Ok().json(files))
@@ -241,12 +255,14 @@ pub async fn create_question_catalogue(
     let user_data = user.into_inner();
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
+
     let (_, mut assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
     if !assignment.is_granted(SecurityAction::Update, &user_data) {
         return Err(ApiError::Forbidden {
             message: "You are not allowed to create a question catalogue".to_string(),
         });
     }
+
     if assignment.file_structure.is_some()
         || assignment.language != AssignmentLanguage::QuestionBased
     {
@@ -254,6 +270,7 @@ pub async fn create_question_catalogue(
             message: "The assigment is not question based".to_string(),
         });
     }
+
     handle_catalogue_creation(req.into_inner().questions, &mut assignment, conn)?;
     let mut response =
         AssignmentResponse::enrich(&assignment, &mut data.user_api.clone(), conn).await?;
@@ -276,6 +293,7 @@ fn get_group_and_assignment(
             message: "No access to group".to_string(),
         });
     }
+
     let mut assignment =
         AssignmentRepository::get_assignment_by_id_and_group(path_data.1, path_data.0, conn)
             .ok_or(ApiError::BadRequest {
@@ -286,5 +304,6 @@ fn get_group_and_assignment(
             message: "No access to assignment".to_string(),
         });
     }
+
     Ok((group, assignment))
 }

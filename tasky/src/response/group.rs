@@ -43,6 +43,7 @@ impl Enrich<Group> for MinifiedGroupResponse {
                 user_id: u64::try_from(from.tutor)?,
             })
             .await?;
+
         Ok(MinifiedGroupResponse {
             id: from.id,
             title: from.title.clone(),
@@ -77,6 +78,7 @@ impl Enrich<Group> for GroupResponse {
                 user_id: u64::try_from(from.tutor)?,
             })
             .await?;
+
         let members = client
             .get_users(UsersRequest {
                 user_ids: from
@@ -88,6 +90,7 @@ impl Enrich<Group> for GroupResponse {
                     .collect(),
             })
             .await?;
+
         let request_count = GroupJoinRequestRepository::get_group_request_count(from.id, conn);
         Ok(GroupResponse {
             id: from.id,

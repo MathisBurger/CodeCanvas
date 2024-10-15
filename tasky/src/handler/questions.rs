@@ -24,6 +24,7 @@ pub fn handle_catalogue_creation(
 ) -> Result<(), ApiError> {
     let mut question_catalogue: HashMap<String, QuestionCatalogueElement> = HashMap::new();
     let mut hasher = DefaultHasher::new();
+
     for item in items {
         if !match_question_type(item.answer_type.clone(), item.answer.clone()) {
             return Err(ApiError::BadRequest {
@@ -33,6 +34,7 @@ pub fn handle_catalogue_creation(
         item.clone().hash(&mut hasher);
         question_catalogue.insert(format!("{}", hasher.finish()), item.clone());
     }
+
     assignment.question_catalogue = Some(
         serde_json::to_value(QuestionCatalogue {
             catalogue: question_catalogue,

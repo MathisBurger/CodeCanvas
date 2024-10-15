@@ -48,11 +48,13 @@ pub async fn handle_create_multipart(
         approval_status: Some(ApprovalStatus::Pending.string()),
         group_id: assignment.group_id,
     };
+
     if !new_solution.is_granted(crate::security::SecurityAction::Create, user_data) {
         return Err(ApiError::Forbidden {
             message: "You cannot create a new solution".to_string(),
         });
     }
+
     if form.answers.is_empty() && form.files.is_empty() {
         return Err(ApiError::BadRequest {
             message: "No data provided".to_string(),
@@ -94,6 +96,7 @@ async fn handle_file_structure(
         .map_err(|_| ApiError::InternalServerError {
             message: "Cannot parse file structure".to_string(),
         })?;
+
     let mut filename_map = build_filename_map(&form.files)?;
     let mut actual_files: Vec<&mut AssignmentFile> = vec![];
     validate_test_file_structure(
@@ -132,13 +135,16 @@ async fn handle_file_structure(
         mongodb,
     )
     .await;
+
     for (i, file) in actual_files.into_iter().enumerate() {
         file.object_id = Some(mongo_files.get(i).unwrap().to_hex());
     }
+
     let file_structure_value =
         serde_json::to_value(file_structure).map_err(|_| ApiError::InternalServerError {
             message: "Cannot convert file structure to JSON".to_string(),
         })?;
+
     solution.file_structure = Some(file_structure_value);
     Ok(())
 }

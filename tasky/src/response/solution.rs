@@ -108,9 +108,11 @@ impl Enrich<Solution> for SolutionResponse {
                 user_id: u64::try_from(from.submitter_id)?,
             })
             .await?;
+
         let assignment =
             AssignmentRepository::get_assignment_by_id(from.assignment_id, db_conn).unwrap();
         let assigment_response = AssignmentResponse::enrich(&assignment, client, db_conn).await?;
+
         let file_structure = serde_json::from_value(
             from.file_structure
                 .clone()

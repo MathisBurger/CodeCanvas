@@ -50,6 +50,7 @@ pub async fn run_task(
         .map_err(|e| ApiError::InternalServerError {
             message: e.to_string(),
         })?;
+
     let json = res
         .json::<RunTaskResponse>()
         .await

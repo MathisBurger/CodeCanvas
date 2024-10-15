@@ -34,10 +34,12 @@ pub fn validate_test_file_structure<'a>(
                         ),
                     });
                 }
+
                 let file_unwrapped = file_option.unwrap();
                 if file_unwrapped.0 {
                     return Err(ApiError::BadRequest { message: format!("File {} exists twice in file structure. Even if the files are in different folders, they need to be named differently", file.filename) });
                 }
+
                 files.insert(file.filename.clone(), (true, file_unwrapped.1));
                 actual_files.push(file);
             }
@@ -53,6 +55,7 @@ pub fn file_structure_contains_files(structure: &AssignmentFileStructure) -> boo
         return true;
     }
     let folders = structure.folders.clone().unwrap_or_default();
+
     if folders.len() > 0 {
         for folder in folders {
             if file_structure_contains_files(&folder) {
