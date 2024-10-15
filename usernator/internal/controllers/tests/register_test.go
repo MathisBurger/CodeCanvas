@@ -15,6 +15,7 @@ func TestRegister(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	req.Header.Set("Content-Type", "application/json")
 	resp, _ := app.Test(req, 1000)
 	if resp.StatusCode != http.StatusOK {
 		t.Errorf("status code is %v", resp.StatusCode)
@@ -29,6 +30,7 @@ func TestRegisterExisting(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	req.Header.Set("Content-Type", "application/json")
 	resp, _ := app.Test(req, 1000)
 	if resp.StatusCode != http.StatusFound {
 		t.Errorf("status code is %v", resp.StatusCode)

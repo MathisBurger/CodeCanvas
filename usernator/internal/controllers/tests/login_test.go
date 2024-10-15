@@ -12,6 +12,7 @@ func TestLogin(t *testing.T) {
 	jsonBody := []byte(`{"username":"admin","password":"123"}`)
 	bodyReader := bytes.NewReader(jsonBody)
 	req, _ := http.NewRequest("POST", "/login", bodyReader)
+	req.Header.Set("Content-Type", "application/json")
 	resp, _ := app.Test(req, 1000)
 	if resp.StatusCode != http.StatusOK {
 		body := make([]byte, resp.ContentLength)
@@ -25,6 +26,7 @@ func TestLoginWithBadPassword(t *testing.T) {
 	jsonBody := []byte(`{"username":"admin","password":"123456"}`)
 	bodyReader := bytes.NewReader(jsonBody)
 	req, _ := http.NewRequest("POST", "/login", bodyReader)
+	req.Header.Set("Content-Type", "application/json")
 	resp, _ := app.Test(req, 1000)
 	if resp.StatusCode != http.StatusBadRequest {
 		t.Errorf("handler returned wrong status code: got %v want %v", resp.StatusCode, http.StatusBadRequest)
@@ -36,6 +38,7 @@ func TestLoginAsNonExistingUser(t *testing.T) {
 	jsonBody := []byte(`{"username":"admin13","password":"123456"}`)
 	bodyReader := bytes.NewReader(jsonBody)
 	req, _ := http.NewRequest("POST", "/login", bodyReader)
+	req.Header.Set("Content-Type", "application/json")
 	resp, _ := app.Test(req, 1000)
 	if resp.StatusCode != http.StatusNotFound {
 		t.Errorf("handler returned wrong status code: got %v want %v", resp.StatusCode, http.StatusNotFound)
