@@ -37,7 +37,9 @@ jobs:
           components: clippy
       - name: Run clippy
         run: |
+          ln ./usernator/api.proto ./tasky/api.proto
           cd tasky
+          export IS_DOCKER=false
           cargo clippy
   lint-authy:
     runs-on: ubuntu-latest
