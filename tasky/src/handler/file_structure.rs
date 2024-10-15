@@ -51,19 +51,19 @@ pub fn validate_test_file_structure<'a>(
 
 /// Checks if a file structure contains files
 pub fn file_structure_contains_files(structure: &AssignmentFileStructure) -> bool {
-    if structure.files.clone().unwrap_or_default().len() > 0 {
+    if !structure.files.clone().unwrap_or_default().is_empty() {
         return true;
     }
     let folders = structure.folders.clone().unwrap_or_default();
 
-    if folders.len() > 0 {
+    if !folders.is_empty() {
         for folder in folders {
             if file_structure_contains_files(&folder) {
                 return true;
             }
         }
     }
-    return false;
+    false
 }
 
 /// Builds a map with the filename as key and a tuple of bool and the file reference as value

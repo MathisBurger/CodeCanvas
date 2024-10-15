@@ -132,7 +132,7 @@ impl Enrich<Solution> for SolutionResponse {
             };
         }
 
-        return Ok(SolutionResponse {
+        Ok(SolutionResponse {
             id: from.id,
             submitter: submitter.into_inner().into(),
             assignment: assigment_response,
@@ -140,6 +140,6 @@ impl Enrich<Solution> for SolutionResponse {
             file_structure,
             job,
             question_results,
-        });
+        })
     }
 }

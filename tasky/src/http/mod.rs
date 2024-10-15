@@ -61,10 +61,10 @@ pub async fn run_task(
 }
 
 /// Gets a job from executor
-pub async fn get_job(id: &String) -> Result<Job, ApiError> {
+pub async fn get_job(id: &str) -> Result<Job, ApiError> {
     let client = Client::default();
     // TODO: Include config here
-    let uri = format!("http://executor:8000/jobs/{}", id.clone());
+    let uri = format!("http://executor:8000/jobs/{}", id.to_owned());
     let mut res = client
         .get(uri)
         .send()

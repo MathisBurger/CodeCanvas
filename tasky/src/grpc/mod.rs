@@ -27,8 +27,7 @@ impl TaskyApi for MyTaskyApi {
             groups: groups
                 .into_iter()
                 .map(|x| x.into())
-                .collect::<Vec<crate::tasky_grpc::Group>>()
-                .into(),
+                .collect::<Vec<crate::tasky_grpc::Group>>(),
         };
 
         Ok(Response::new(reply))

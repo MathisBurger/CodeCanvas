@@ -47,9 +47,9 @@ pub fn handle_catalogue_creation(
 
 /// Matches the answer type of a question
 pub fn match_question_type(answer_type: AnswerType, value: Value) -> bool {
-    return match answer_type {
+    match answer_type {
         AnswerType::String | AnswerType::StrContains => value.is_string(),
         AnswerType::Number => value.is_number(),
         AnswerType::Boolean => value.is_boolean(),
-    };
+    }
 }

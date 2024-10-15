@@ -74,7 +74,7 @@ impl Enrich<Assignment> for MinifiedAssignmentResponse {
         Ok(MinifiedAssignmentResponse {
             id: from.id,
             title: from.title.clone(),
-            due_date: from.due_date.clone(),
+            due_date: from.due_date,
             description: from.description.clone(),
             language: from.language.clone(),
         })
@@ -139,7 +139,7 @@ impl Enrich<Assignment> for AssignmentResponse {
         Ok(AssignmentResponse {
             id: from.id,
             title: from.title.clone(),
-            due_date: from.due_date.clone(),
+            due_date: from.due_date,
             group: group_response,
             description: from.description.clone(),
             language: from.language.clone(),

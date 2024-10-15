@@ -8,13 +8,13 @@ impl IsGranted for GroupJoinRequest {
         action: super::SecurityAction,
         user: &crate::auth_middleware::UserData,
     ) -> bool {
-        return match action {
+        match action {
             // Is handled in controller
             SecurityAction::Create => false,
             SecurityAction::Update | SecurityAction::Delete | SecurityAction::Read => {
                 StaticSecurity::is_granted(StaticSecurityAction::IsTutor, user)
                     && user.groups.contains(&self.group_id)
             }
-        };
+        }
     }
 }

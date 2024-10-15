@@ -10,12 +10,12 @@ pub struct User {
 }
 
 /// Converts from user into user response
-impl Into<User> for UserResponse {
-    fn into(self) -> User {
+impl From<UserResponse> for User {
+    fn from(val: UserResponse) -> Self {
         User {
-            id: self.id,
-            username: self.username,
-            email: self.email,
+            id: val.id,
+            username: val.username,
+            email: val.email,
         }
     }
 }

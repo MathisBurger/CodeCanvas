@@ -111,7 +111,7 @@ pub async fn create_assignment(
 
     let mut create_assignment = CreateAssignment {
         title: req.title.clone(),
-        due_date: req.due_date.clone(),
+        due_date: req.due_date,
         group_id: group.id,
         description: req.description.clone(),
         language: req.language.clone(),
@@ -161,7 +161,7 @@ pub async fn update_assignment(
 
     let (_, mut assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
     assignment.title = req.title.clone();
-    assignment.due_date = req.due_date.clone();
+    assignment.due_date = req.due_date;
     assignment.description = req.description.clone();
 
     if !assignment.is_granted(SecurityAction::Update, &user_data) {
@@ -288,7 +288,7 @@ fn get_group_and_assignment(
     let mut group = GroupRepository::get_by_id(path_data.0, conn).ok_or(ApiError::BadRequest {
         message: "No access to group".to_string(),
     })?;
-    if !group.is_granted(SecurityAction::Read, &user_data) {
+    if !group.is_granted(SecurityAction::Read, user_data) {
         return Err(ApiError::Forbidden {
             message: "No access to group".to_string(),
         });
@@ -299,7 +299,7 @@ fn get_group_and_assignment(
             .ok_or(ApiError::BadRequest {
                 message: "No access to assignment".to_string(),
             })?;
-    if !assignment.is_granted(SecurityAction::Read, &user_data) {
+    if !assignment.is_granted(SecurityAction::Read, user_data) {
         return Err(ApiError::Forbidden {
             message: "No access to assignment".to_string(),
         });

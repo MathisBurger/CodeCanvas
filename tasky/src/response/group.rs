@@ -61,7 +61,7 @@ impl Enrich<Vec<Group>> for GroupsResponse {
     ) -> Result<Self, ApiError> {
         let mut groups: Vec<MinifiedGroupResponse> = vec![];
         for group in from {
-            groups.push(MinifiedGroupResponse::enrich(&group, client, db_conn).await?);
+            groups.push(MinifiedGroupResponse::enrich(group, client, db_conn).await?);
         }
         Ok(GroupsResponse { groups })
     }

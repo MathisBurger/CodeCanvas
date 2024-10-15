@@ -86,6 +86,7 @@ async fn main() -> std::io::Result<()> {
                 .add_service(TaskyApiServer::new(tasky_api))
                 .serve(grpc_sock_addr),
         )
+        .await
     };
 
     let actix = HttpServer::new(move || {

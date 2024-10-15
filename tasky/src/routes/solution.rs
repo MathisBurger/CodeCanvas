@@ -149,7 +149,7 @@ pub async fn approve_solution(
 
     AssignmentRepository::update_assignment(assignment.clone(), conn);
     let response = SolutionResponse::enrich(&solution, &mut data.user_api.clone(), conn).await?;
-    return Ok(HttpResponse::Ok().json(response));
+    Ok(HttpResponse::Ok().json(response))
 }
 
 /// Endpoint to reject an solution
@@ -174,7 +174,7 @@ pub async fn reject_solution(
     SolutionRepository::update_solution(solution.clone(), conn);
 
     let response = SolutionResponse::enrich(&solution, &mut data.user_api.clone(), conn).await?;
-    return Ok(HttpResponse::Ok().json(response));
+    Ok(HttpResponse::Ok().json(response))
 }
 
 /// Endpoint to fetch solution files
@@ -209,10 +209,10 @@ pub async fn get_solution_files(
     )
     .await;
 
-    return Ok(HttpResponse::Ok().json(SolutionsFilesResponse {
+    Ok(HttpResponse::Ok().json(SolutionsFilesResponse {
         task_files,
         test_files,
-    }));
+    }))
 }
 
 /// Gets solution and assignment and checks basic read permissions
@@ -232,7 +232,7 @@ fn get_solution_and_assignment(
     }
 
     let assignment = get_assignment(solution.assignment_id, user_data, conn)?;
-    return Ok((assignment, solution));
+    Ok((assignment, solution))
 }
 
 /// Gets assignment and checks basic read permissions
@@ -251,5 +251,5 @@ fn get_assignment(id: i32, user_data: &UserData, conn: &mut DB) -> Result<Assign
         });
     }
 
-    return Ok(unwrapped);
+    Ok(unwrapped)
 }

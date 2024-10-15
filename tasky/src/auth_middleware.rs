@@ -19,6 +19,7 @@ pub struct UserData {
 
 /// All roles a user can have
 #[derive(Clone, PartialEq, Debug)]
+#[warn(clippy::enum_variant_names)]
 pub enum UserRole {
     RoleAdmin,
     RoleTutor,
@@ -94,31 +95,32 @@ where
     forward_ready!(service);
 
     fn call(&self, req: ServiceRequest) -> Self::Future {
-        let uid: i32;
-        let uroles: Vec<UserRole>;
         let app_data = req.app_data::<web::Data<AppState>>();
         let state = app_data.as_ref().unwrap();
         let conn = &mut state.db.db.get().unwrap();
 
         let user_id = req.headers().get("X-CodeCanvas-UserId");
-        if user_id.is_some() {
+
+        let uid: i32 = if user_id.is_some() {
             let user_id_string = user_id.unwrap().to_str().unwrap();
             let id = user_id_string.parse::<i32>();
+
             if id.is_err() {
                 return Box::pin(async { Err(ErrorUnauthorized("No user id provided")) });
             }
-            uid = id.unwrap();
+
+            id.unwrap()
         } else {
             return Box::pin(async { Err(ErrorUnauthorized("No user id provided")) });
-        }
+        };
 
         let user_roles = req.headers().get("X-CodeCanvas-UserRoles");
-        if user_roles.is_some() {
+        let uroles: Vec<UserRole> = if user_roles.is_some() {
             let user_roles_string = user_roles.unwrap().to_str().unwrap();
-            uroles = user_roles_string.split(";").map(parse_user_role).collect();
+            user_roles_string.split(";").map(parse_user_role).collect()
         } else {
             return Box::pin(async { Err(ErrorUnauthorized("No user roles provided")) });
-        }
+        };
 
         let groups: Vec<i32> = GroupRepository::get_groups_for_member(uid, conn)
             .into_iter()

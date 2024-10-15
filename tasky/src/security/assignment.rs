@@ -8,7 +8,7 @@ impl IsGranted for Assignment {
         action: SecurityAction,
         user: &crate::auth_middleware::UserData,
     ) -> bool {
-        return match action {
+        match action {
             // Use CreateAssignment for creation instead
             SecurityAction::Create => false,
             SecurityAction::Read => user.groups.contains(&self.group_id),
@@ -17,7 +17,7 @@ impl IsGranted for Assignment {
                     && user.groups.contains(&self.group_id)
             }
             SecurityAction::Delete => false,
-        };
+        }
     }
 }
 
