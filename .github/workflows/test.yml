@@ -18,6 +18,7 @@ jobs:
       - name: Build tools
         run: |
           cd pipeline-tools
+          go mod tidy
           go build cmd/tools.go
       - uses: actions/upload-artifact@master
         with:
