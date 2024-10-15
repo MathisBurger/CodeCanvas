@@ -57,7 +57,9 @@ jobs:
       - name: Wait for startup
         run: sleep 20
       - name: Init services
-        run: ./build-tools/tools
+        run: |
+          chmod +x ./build-tools/tools
+          ./build-tools/tools
       - name: Restart containers
         run: |
           docker-compose -f "ci-compose.yml" stop
@@ -65,8 +67,13 @@ jobs:
       - name: Wait for startup
         run: sleep 20
       # Tests start here
+      - name: Setup golang
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
       - name: Test usernator
         run: |
           cd usernator
+          go mod tidy
           go test ./...
     
