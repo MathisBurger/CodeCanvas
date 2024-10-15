@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"executor/internal/global"
-	"fmt"
 	"github.com/runabol/tork"
 	"strconv"
 	"time"
@@ -29,13 +28,11 @@ func CreateCreateUserHandler(rmqChan chan bool) {
 	}
 	for {
 		msg := <-msgs
-		fmt.Println("new Message received:", string(msg.Body))
 		content := &createUser{}
 		err = json.Unmarshal(msg.Body, content)
 		if err != nil {
 			continue
 		}
-		fmt.Printf("Create User with ID: %s \n", content.Id)
 		now := time.Now()
 		user := tork.User{
 			ID:           strconv.FormatUint(content.Id, 10),
