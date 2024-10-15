@@ -26,6 +26,32 @@ jobs:
         with:
           version: v1.60
           working-directory: executor
+  lint-tasky:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: clippy
+      - name: Run clippy
+        run: |
+          cd tasky
+          cargo clippy
+  lint-authy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: clippy
+      - name: Run clippy
+        run: |
+          cd authy
+          cargo clippy
   build-tools:
     runs-on: ubuntu-latest
     steps:
