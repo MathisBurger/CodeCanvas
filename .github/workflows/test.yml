@@ -36,7 +36,7 @@ jobs:
         with:
           components: clippy
       - name: Install protoc
-        run: apt-get update -y && apt-get install --no-install-recommends --assume-yes protobuf-compiler
+        uses: arduino/setup-protoc@v3
       - name: Run clippy
         run: |
           ln ./usernator/api.proto ./tasky/api.proto
