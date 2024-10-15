@@ -15,6 +15,6 @@ func InitTaskyGrpcClient() {
 	if err != nil {
 		panic(err.Error())
 	}
-	client := tasky_grpc.NewTaskyApiClient(&*conn)
+	client := tasky_grpc.NewTaskyApiClient(conn)
 	shared.Tasky = &client
 }

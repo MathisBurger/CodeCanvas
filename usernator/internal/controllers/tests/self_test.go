@@ -35,6 +35,9 @@ func BenchmarkSelfAsUser(b *testing.B) {
 	req.Header.Set("X-CodeCanvas-UserId", "1")
 	req.Header.Set("X-CodeCanvas-UserRoles", "ROLE_ADMIN")
 	for i := 0; i < b.N; i++ {
-		app.Test(req, 1000)
+		_, err := app.Test(req, 1000)
+		if err != nil {
+			panic(err)
+		}
 	}
 }

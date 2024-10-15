@@ -14,6 +14,9 @@ func TestConfigNotNil(t *testing.T) {
 
 func BenchmarkLoadConfiguration(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		LoadConfiguration("../../config.json")
+		_, err := LoadConfiguration("../../config.json")
+		if err != nil {
+			panic(err)
+		}
 	}
 }

@@ -14,7 +14,7 @@ func TestLogin(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/login", bodyReader)
 	resp, _ := app.Test(req, 1000)
 	if resp.StatusCode != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v")
+		t.Errorf("handler returned wrong status code: got %v want %v", resp.StatusCode, http.StatusOK)
 	}
 }
 
@@ -25,7 +25,7 @@ func TestLoginWithBadPassword(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/login", bodyReader)
 	resp, _ := app.Test(req, 1000)
 	if resp.StatusCode != http.StatusBadRequest {
-		t.Errorf("handler returned wrong status code: got %v want %v")
+		t.Errorf("handler returned wrong status code: got %v want %v", resp.StatusCode, http.StatusBadRequest)
 	}
 }
 
@@ -36,6 +36,6 @@ func TestLoginAsNonExistingUser(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/login", bodyReader)
 	resp, _ := app.Test(req, 1000)
 	if resp.StatusCode != http.StatusNotFound {
-		t.Errorf("handler returned wrong status code: got %v want %v")
+		t.Errorf("handler returned wrong status code: got %v want %v", resp.StatusCode, http.StatusNotFound)
 	}
 }

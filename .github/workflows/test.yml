@@ -6,6 +6,16 @@ on:
       - main
 
 jobs:
+  lint-usernator:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.60
+          working-directory: usernator
   build-tools:
     runs-on: ubuntu-latest
     steps:
@@ -47,7 +57,7 @@ jobs:
       - name: Wait for startup
         run: sleep 20
       - name: Init services
-        run: ./build-tools
+        run: ./build-tools/tools
       - name: Restart containers
         run: |
           docker-compose -f "ci-compose.yml" stop
