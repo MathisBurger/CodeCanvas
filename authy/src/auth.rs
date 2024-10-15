@@ -22,7 +22,7 @@ pub fn create_jwt(user: &User, secret: String) -> Result<String, ApiError> {
     claims.insert("userRoles", user.roles.join(";"));
     claims
         .sign_with_key(&key)
-        .map_err(|x| ApiError::InternalServerError {
+        .map_err(|_x| ApiError::InternalServerError {
             message: "Cannot sign JWT".to_string(),
         })
 }
@@ -40,7 +40,7 @@ pub fn get_user_claims(req: &HttpRequest, secret: String) -> Result<Vec<(&str, S
         cookie
             .value()
             .verify_with_key(&key)
-            .map_err(|e| ApiError::BadRequest {
+            .map_err(|_e| ApiError::BadRequest {
                 message: "Cannot get valid user claims from cookie".to_string(),
             })?;
     if !claims.contains_key("userId") || !claims.contains_key("userRoles") {

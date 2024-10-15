@@ -59,25 +59,29 @@ async fn handle_login_request(
     config: AppConfig,
 ) -> Result<HttpResponse, ApiError> {
     let body = resp.into_body();
-    let bytes = to_bytes(body).await.map_err(|x| ApiError::Forbidden {
+    let bytes = to_bytes(body).await.map_err(|_x| ApiError::Forbidden {
         message: "Error parsing body".to_string(),
     })?;
+
     let json_string = String::from_utf8_lossy(bytes.as_ref());
     let user: User =
-        serde_json::from_str(json_string.as_ref()).map_err(|e| ApiError::InternalServerError {
+        serde_json::from_str(json_string.as_ref()).map_err(|_e| ApiError::InternalServerError {
             message: "Cannot deserialize user".to_string(),
         })?;
+
     let jwt = auth::create_jwt(&user, config.jwt_secret.clone())?;
     let mut mod_resp = HttpResponse::Ok().body("");
     let mut cookie = Cookie::new("session", jwt);
+
     cookie.set_path("/");
     cookie.set_max_age(Duration::days(1));
     cookie.set_http_only(false);
     cookie.set_secure(true);
     cookie.set_same_site(SameSite::Strict);
+
     mod_resp
         .add_cookie(&cookie)
-        .map_err(|e| ApiError::InternalServerError {
+        .map_err(|_e| ApiError::InternalServerError {
             message: "Cannot add cookie".to_string(),
         })?;
     Ok(mod_resp)
