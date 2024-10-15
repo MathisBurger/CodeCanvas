@@ -61,7 +61,7 @@ impl From<InvalidLength> for ApiError {
 }
 
 impl From<jwt::error::Error> for ApiError {
-    fn from(value: jwt::error::Error) -> Self {
+    fn from(_value: jwt::error::Error) -> Self {
         ApiError::InternalServerError {
             message: "Error with JWT".to_string(),
         }

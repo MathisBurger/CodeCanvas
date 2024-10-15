@@ -44,7 +44,7 @@ impl ProxyClient {
 
     /// gets the request path for the local service
     fn get_request_path(&self, req: &HttpRequest) -> Result<String, ApiError> {
-        let key = self.get_service_key(&req.path().path().to_string())?;
+        let key = self.get_service_key(req.path().path())?;
         let location = self.get_service_location(&key)?;
         let mut fullpath = format!("{}?{}", req.path(), req.query_string());
         fullpath = fullpath.replace(format!("/{}", key).as_str(), "");

@@ -37,7 +37,7 @@ pub async fn handle_proxy(
     }
 
     let claims = auth::get_user_claims(&req, config.jwt_secret.clone())?;
-    let service_key = proxy.get_service_key(&path.to_string())?;
+    let service_key = proxy.get_service_key(path)?;
     if auth::check_in_list(
         service_key.as_str(),
         config.admin_restricted_services.clone(),
