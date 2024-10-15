@@ -12,7 +12,7 @@ pub fn check_in_list(uri: &str, whitelist: Vec<String>) -> bool {
             return true;
         }
     }
-    return false;
+    false
 }
 
 pub fn create_jwt(user: &User, secret: String) -> Result<String, ApiError> {

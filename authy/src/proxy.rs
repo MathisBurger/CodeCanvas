@@ -51,7 +51,7 @@ pub async fn handle_proxy(
         });
     }
     let resp = proxy.proxy_request(&req, body, claims).await?;
-    return Ok(resp);
+    Ok(resp)
 }
 
 async fn handle_login_request(
@@ -80,5 +80,5 @@ async fn handle_login_request(
         .map_err(|e| ApiError::InternalServerError {
             message: "Cannot add cookie".to_string(),
         })?;
-    return Ok(mod_resp);
+    Ok(mod_resp)
 }

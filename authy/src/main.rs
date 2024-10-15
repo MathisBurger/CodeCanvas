@@ -9,7 +9,6 @@ extern crate pretty_env_logger;
 #[macro_use]
 extern crate log;
 
-use std::io::BufRead;
 use actix_cors::Cors;
 use actix_web::{App, HttpServer, middleware, web};
 use actix_web::http::header;
@@ -44,7 +43,7 @@ async fn main() -> Result<(), std::io::Error> {
     };
     HttpServer::new(move || {
         let cors = Cors::default()
-            .allowed_origin(&*config.allowed_origin)
+            .allowed_origin(&config.allowed_origin)
             .allowed_methods(vec!["GET", "POST", "DELETE", "PUT"])
             .allowed_headers(vec![header::SET_COOKIE, header::ACCEPT, header::CONTENT_TYPE, header::AUTHORIZATION])
             .send_wildcard()

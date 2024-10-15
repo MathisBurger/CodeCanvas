@@ -48,11 +48,11 @@ impl ProxyClient {
         let location = self.get_service_location(&key)?;
         let mut fullpath = format!(
             "{}?{}",
-            req.path().to_string(),
-            req.query_string().to_string()
+            req.path(),
+            req.query_string()
         );
         fullpath = fullpath.replace(format!("/{}", key).as_str(), "");
-        return Ok(format!("{}{}", location, fullpath));
+        Ok(format!("{}{}", location, fullpath))
     }
 
     /// Gets the ID of the service
