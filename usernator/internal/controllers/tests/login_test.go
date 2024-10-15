@@ -14,7 +14,9 @@ func TestLogin(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/login", bodyReader)
 	resp, _ := app.Test(req, 1000)
 	if resp.StatusCode != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v", resp.StatusCode, http.StatusOK)
+		body := make([]byte, resp.ContentLength)
+		_, _ = resp.Body.Read(body)
+		t.Errorf("handler returned wrong status code: got %v want %v. Error message: %s", resp.StatusCode, http.StatusOK, string(body))
 	}
 }
 

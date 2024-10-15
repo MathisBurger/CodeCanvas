@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	config2 "usernator/internal/config"
 	"usernator/internal/models"
@@ -45,4 +46,5 @@ func main() {
 	shared.Database.Create(&student1)
 	shared.Database.Create(&student2)
 	shared.Database.Create(&student3)
+	fmt.Println("Created fixture data")
 }

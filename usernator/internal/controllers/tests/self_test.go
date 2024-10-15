@@ -33,7 +33,6 @@ func BenchmarkSelfAsUser(b *testing.B) {
 	app := server.CreateServer("../../../config.json")
 	req := httptest.NewRequest(http.MethodGet, "/self", nil)
 	req.Header.Set("X-CodeCanvas-UserId", "1")
-	req.Header.Set("X-CodeCanvas-UserRoles", "ROLE_ADMIN")
 	for i := 0; i < b.N; i++ {
 		_, err := app.Test(req, 1000)
 		if err != nil {
