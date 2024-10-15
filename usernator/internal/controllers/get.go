@@ -17,5 +17,8 @@ func GetUser(ctx *fiber.Ctx) error {
 	}
 	var user models.User
 	shared.Database.First(&user, "id = ?", idNumber)
+	if user.Username == "" {
+		return fiber.NewError(fiber.StatusNotFound, "User not found")
+	}
 	return ctx.JSON(user)
 }

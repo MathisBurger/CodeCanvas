@@ -40,9 +40,9 @@ type TemplateConfiguration struct {
 	BaseUrl string `json:"base_url" env:"TEMPLATE_BASE_URL"`
 }
 
-func LoadConfiguration() (*Configuration, error) {
+func LoadConfiguration(path string) (*Configuration, error) {
 	c := &Configuration{}
-	configFile, err := os.Open("./config.json")
+	configFile, err := os.Open(path)
 	if err != nil {
 		ctx := context.Background()
 		if err = envconfig.Process(ctx, c); err != nil {
