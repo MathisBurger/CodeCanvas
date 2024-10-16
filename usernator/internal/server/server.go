@@ -21,7 +21,7 @@ func CreateServer(configPath string) *fiber.App {
 	if os.Getenv("TEST_MODE") != "true" {
 		go grpc.StartGrpcServer()
 	}
-	go startup.InitTaskyGrpcClient()
+	startup.InitTaskyGrpcClient()
 
 	app := fiber.New(fiber.Config{})
 
