@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"usernator/internal/config"
 	"usernator/internal/controllers"
+	"usernator/internal/grpc"
 	"usernator/internal/middleware"
 	"usernator/internal/shared"
 	"usernator/internal/startup"
@@ -16,6 +17,7 @@ func CreateServer(configPath string) *fiber.App {
 	}
 	shared.Config = conf
 	startup.Database()
+	go grpc.StartGrpcServer()
 	go startup.InitTaskyGrpcClient()
 
 	app := fiber.New(fiber.Config{})

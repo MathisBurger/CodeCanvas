@@ -10,7 +10,7 @@ import (
 
 func InitTaskyGrpcClient() {
 	// Wait some time in order to start tasky container
-	time.Sleep(15 * time.Second)
+	time.Sleep(8 * time.Second)
 	conn, err := grpc.NewClient(shared.Config.Messaging.TaskyAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		panic(err.Error())

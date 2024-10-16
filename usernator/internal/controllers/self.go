@@ -16,6 +16,9 @@ func GetSelf(ctx *fiber.Ctx) error {
 	if user == nil {
 		return fiber.NewError(fiber.StatusNotFound, "User not found")
 	}
+	if !waitForTasky() {
+		return fiber.NewError(fiber.StatusInternalServerError, "tasky GRPC service not accessable")
+	}
 	rawGroups, err := (*shared.Tasky).GetUserGroups(context.Background(), &tasky_grpc.GroupsRequest{
 		UserId: uint64(user.ID),
 	})
