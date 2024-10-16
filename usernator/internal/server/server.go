@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"os"
 	"usernator/internal/config"
 	"usernator/internal/controllers"
 	"usernator/internal/grpc"
@@ -17,7 +18,9 @@ func CreateServer(configPath string) *fiber.App {
 	}
 	shared.Config = conf
 	startup.Database()
-	go grpc.StartGrpcServer()
+	if os.Getenv("TEST_MODE") != "true" {
+		go grpc.StartGrpcServer()
+	}
 	go startup.InitTaskyGrpcClient()
 
 	app := fiber.New(fiber.Config{})

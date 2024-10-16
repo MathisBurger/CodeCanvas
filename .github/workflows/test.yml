@@ -116,5 +116,6 @@ jobs:
           cd usernator
           go mod tidy
           go run fixtures/fixtures.go
+          export TEST_MODE=true
           go test ./...
     
