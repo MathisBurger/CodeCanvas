@@ -15,6 +15,6 @@
     "base_url": "http://127.0.0.1:3000/submit_password"
   },
   "messaging": {
-    "tasky_addr": "http://localhost:3006"
+    "tasky_addr": "localhost:3006"
   }
 }
