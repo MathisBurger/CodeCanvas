@@ -29,6 +29,6 @@ impl IsGranted for CreateGroup {
         if action == SecurityAction::Create {
             return StaticSecurity::is_granted(StaticSecurityAction::IsTutor, user);
         }
-        return false;
+        false
     }
 }

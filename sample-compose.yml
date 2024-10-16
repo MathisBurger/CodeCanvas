@@ -1,10 +1,4 @@
 services:
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    volumes:
-      - .docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-    depends_on:
-      - postgres
   postgres:
     image: postgres:latest
     ports:
@@ -32,9 +26,6 @@ services:
       - SMTP_PORT=1025
       - SMTP_USERNAME=app@codecanvas.de
       - SMTP_PASSWORD=cc
-      - RABBITMQ_USERNAME=<RMQ_USERNATOR_USERNAME>
-      - RABBITMQ_PASSWORD=<RMQ_USERNATOR_PASSWORD>
-      - RABBITMQ_HOST=rabbitmq:5672
       - TASKY_ADDR=tasky:3001
       - TEMPLATE_BASE_URL=<PUBLIC_WEB_ADDR>
     depends_on:
@@ -70,9 +61,6 @@ services:
   executor:
     image: ghcr.io/mathisburger/codecanvas-tasky:<RELEASE_VERSION>
     environment:
-      - RABBITMQ_USERNAME=<RMQ_EXECUTOR_USERNAME>
-      - RABBITMQ_PASSWORD=<RMQ_EXECUTOR_PASSWORD>
-      - RABBITMQ_HOST=rabbitmq:5672
       - DATABASE_USERNAME=<PG_EXECUTOR_USERNAME>
       - DATABASE_PASSWORD=<PG_EXECUTOR_PASSWORD>
       - DATABASE_HOST=postgres
@@ -85,7 +73,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      - rabbitmq
       - postgres
   executor_ui:
     image: runabol/tork-web

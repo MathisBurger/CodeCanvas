@@ -1,9 +1,4 @@
 {
-  "rabbitmq": {
-    "username": "executor",
-    "password": "executor",
-    "host": "localhost:5672"
-  },
   "mongo": {
     "username": "executor",
     "password": "executor",

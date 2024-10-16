@@ -43,10 +43,10 @@ impl GroupRepository {
             .filter(dsl::title.eq(title))
             .get_results::<Group>(conn)
             .expect("Error loading groups");
-        if result.len() == 0 {
+        if result.is_empty() {
             return None;
         }
-        return Some(result.get(0).unwrap().clone());
+        return Some(result.first().unwrap().clone());
     }
 
     /// Inserts a group into the database

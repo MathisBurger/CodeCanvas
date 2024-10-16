@@ -34,10 +34,12 @@ pub fn validate_test_file_structure<'a>(
                         ),
                     });
                 }
+
                 let file_unwrapped = file_option.unwrap();
                 if file_unwrapped.0 {
                     return Err(ApiError::BadRequest { message: format!("File {} exists twice in file structure. Even if the files are in different folders, they need to be named differently", file.filename) });
                 }
+
                 files.insert(file.filename.clone(), (true, file_unwrapped.1));
                 actual_files.push(file);
             }
@@ -49,18 +51,19 @@ pub fn validate_test_file_structure<'a>(
 
 /// Checks if a file structure contains files
 pub fn file_structure_contains_files(structure: &AssignmentFileStructure) -> bool {
-    if structure.files.clone().unwrap_or_default().len() > 0 {
+    if !structure.files.clone().unwrap_or_default().is_empty() {
         return true;
     }
     let folders = structure.folders.clone().unwrap_or_default();
-    if folders.len() > 0 {
+
+    if !folders.is_empty() {
         for folder in folders {
             if file_structure_contains_files(&folder) {
                 return true;
             }
         }
     }
-    return false;
+    false
 }
 
 /// Builds a map with the filename as key and a tuple of bool and the file reference as value

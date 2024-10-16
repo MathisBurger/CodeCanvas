@@ -50,14 +50,17 @@ pub async fn create_solution(
     let user_data = user.into_inner();
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
+
     let assignment = get_assignment(path_data.0, &user_data, conn)?;
     let mut solution =
         handle_create_multipart(form, &user_data, &data.mongodb, conn, &assignment).await?;
+
     if assignment.language != AssignmentLanguage::QuestionBased {
         let job_id = run_task(assignment, solution.clone(), &data.config).await?;
         solution.job_id = Some(job_id);
         SolutionRepository::update_solution(solution.clone(), conn);
     }
+
     let enrichted = SolutionResponse::enrich(&solution, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(enrichted))
 }
@@ -72,6 +75,7 @@ pub async fn get_solution(
     let user_data = user.into_inner();
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
+
     let (_, solution) = get_solution_and_assignment(path_data.0, &user_data, conn)?;
     let response = SolutionResponse::enrich(&solution, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(response))
@@ -85,6 +89,7 @@ pub async fn get_solutions_for_user(
 ) -> Result<HttpResponse, ApiError> {
     let user_data = user.into_inner();
     let conn = &mut data.db.db.get().unwrap();
+
     let solutions = SolutionRepository::get_solutions_for_user(user_data.user_id, conn);
     let response = SolutionsResponse::enrich(&solutions, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(response))
@@ -99,6 +104,7 @@ pub async fn get_solutions_for_assignment(
 ) -> Result<HttpResponse, ApiError> {
     let user_data = user.into_inner();
     let path_data = path.into_inner();
+
     let conn = &mut data.db.db.get().unwrap();
     let mut assignment = get_assignment(path_data.0, &user_data, conn)?;
     if !assignment.is_granted(SecurityAction::Update, &user_data) {
@@ -106,6 +112,7 @@ pub async fn get_solutions_for_assignment(
             message: "Not allowed to read solutions for assignment".to_string(),
         });
     }
+
     let solutions = SolutionRepository::get_solutions_for_assignment(assignment.id, conn);
     let response = SolutionsResponse::enrich(&solutions, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(response))
@@ -121,6 +128,7 @@ pub async fn approve_solution(
     let user_data = user.into_inner();
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
+
     let (mut assignment, mut solution) =
         get_solution_and_assignment(path_data.0, &user_data, conn)?;
     if !solution.is_granted(SecurityAction::Update, &user_data) {
@@ -128,17 +136,20 @@ pub async fn approve_solution(
             message: "You are not allowed to approve solution".to_string(),
         });
     }
+
     solution.approval_status = Some(ApprovalStatus::Approved.string());
     SolutionRepository::update_solution(solution.clone(), conn);
+
     if !assignment
         .completed_by
         .contains(&Some(solution.submitter_id))
     {
         assignment.completed_by.push(Some(solution.submitter_id));
     }
+
     AssignmentRepository::update_assignment(assignment.clone(), conn);
     let response = SolutionResponse::enrich(&solution, &mut data.user_api.clone(), conn).await?;
-    return Ok(HttpResponse::Ok().json(response));
+    Ok(HttpResponse::Ok().json(response))
 }
 
 /// Endpoint to reject an solution
@@ -151,16 +162,19 @@ pub async fn reject_solution(
     let user_data = user.into_inner();
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
+
     let (_, mut solution) = get_solution_and_assignment(path_data.0, &user_data, conn)?;
     if !solution.is_granted(SecurityAction::Update, &user_data) {
         return Err(ApiError::Forbidden {
             message: "You are not allowed to reject solution".to_string(),
         });
     }
+
     solution.approval_status = Some(ApprovalStatus::Rejected.string());
     SolutionRepository::update_solution(solution.clone(), conn);
+
     let response = SolutionResponse::enrich(&solution, &mut data.user_api.clone(), conn).await?;
-    return Ok(HttpResponse::Ok().json(response));
+    Ok(HttpResponse::Ok().json(response))
 }
 
 /// Endpoint to fetch solution files
@@ -174,9 +188,11 @@ pub async fn get_solution_files(
     let user_data = user.into_inner();
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
+
     let (_, solution) = get_solution_and_assignment(path_data.0, &user_data, conn)?;
     let task_files_ids = parse_object_ids(query.task_files.clone())?;
     let test_files_ids = parse_object_ids(query.test_files.clone())?;
+
     let task_files =
         TaskFileCollection::get_for_solution(solution.id, task_files_ids, &data.mongodb).await;
     if !StaticSecurity::is_granted(StaticSecurityAction::IsAdminOrTutor, &user_data) {
@@ -185,16 +201,18 @@ pub async fn get_solution_files(
             test_files: vec![],
         }));
     }
+
     let test_files = TestFileCollection::get_for_assignment(
         solution.assignment_id,
         test_files_ids,
         &data.mongodb,
     )
     .await;
-    return Ok(HttpResponse::Ok().json(SolutionsFilesResponse {
+
+    Ok(HttpResponse::Ok().json(SolutionsFilesResponse {
         task_files,
         test_files,
-    }));
+    }))
 }
 
 /// Gets solution and assignment and checks basic read permissions
@@ -212,8 +230,9 @@ fn get_solution_and_assignment(
             message: "You have no access to solution".to_string(),
         });
     }
+
     let assignment = get_assignment(solution.assignment_id, user_data, conn)?;
-    return Ok((assignment, solution));
+    Ok((assignment, solution))
 }
 
 /// Gets assignment and checks basic read permissions
@@ -224,11 +243,13 @@ fn get_assignment(id: i32, user_data: &UserData, conn: &mut DB) -> Result<Assign
             message: "Invalid assignment ID".to_string(),
         });
     }
+
     let mut unwrapped = assignment.unwrap();
     if !unwrapped.is_granted(SecurityAction::Read, user_data) {
         return Err(ApiError::Forbidden {
             message: "You do not have read access to assignment".to_string(),
         });
     }
-    return Ok(unwrapped);
+
+    Ok(unwrapped)
 }

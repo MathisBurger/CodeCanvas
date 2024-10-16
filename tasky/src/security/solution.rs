@@ -8,13 +8,13 @@ impl IsGranted for NewSolution {
         action: super::SecurityAction,
         user: &crate::auth_middleware::UserData,
     ) -> bool {
-        return match action {
+        match action {
             SecurityAction::Create => {
                 StaticSecurity::is_granted(super::StaticSecurityAction::IsStudent, user)
                     && self.submitter_id == user.user_id
             }
             _ => false,
-        };
+        }
     }
 }
 
@@ -24,7 +24,7 @@ impl IsGranted for Solution {
         action: SecurityAction,
         user: &crate::auth_middleware::UserData,
     ) -> bool {
-        return match action {
+        match action {
             SecurityAction::Read => {
                 self.submitter_id == user.user_id
                     || (StaticSecurity::is_granted(
@@ -36,6 +36,6 @@ impl IsGranted for Solution {
                 StaticSecurity::is_granted(super::StaticSecurityAction::IsAdminOrTutor, user)
                     && user.groups.contains(&self.group_id.unwrap_or(-1))
             }
-        };
+        }
     }
 }

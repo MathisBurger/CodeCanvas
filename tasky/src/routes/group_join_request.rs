@@ -17,6 +17,7 @@ pub async fn create_join_request(
     path: web::Path<(i32,)>,
 ) -> Result<HttpResponse, ApiError> {
     let conn = &mut data.db.db.get().unwrap();
+
     let group =
         GroupRepository::get_by_id(path.into_inner().0, conn).ok_or(ApiError::BadRequest {
             message: "Group does not exist".to_string(),
@@ -28,11 +29,13 @@ pub async fn create_join_request(
             message: "The user is already member or not a student".to_string(),
         });
     }
+
     if GroupJoinRequestRepository::request_exists(group.id, user.user_id, conn) {
         return Err(ApiError::Forbidden {
             message: "User already sent a request".to_string(),
         });
     }
+
     let request = GroupJoinRequestRepository::create_request(
         CreateGroupJoinRequest {
             requestor: user.user_id,
@@ -40,6 +43,7 @@ pub async fn create_join_request(
         },
         conn,
     );
+
     let resp = GroupJoinRequestResponse::enrich(&request, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(resp))
 }
@@ -56,6 +60,7 @@ pub async fn get_join_requests(
             message: "User is not a tutor".to_string(),
         });
     }
+
     let conn = &mut data.db.db.get().unwrap();
     let requests = GroupJoinRequestRepository::get_group_requests(path.into_inner().0, conn);
     let resp =
@@ -73,6 +78,7 @@ pub async fn approve_join_request(
     let conn = &mut data.db.db.get().unwrap();
     let user_data = user.into_inner();
     let path_data = path.into_inner();
+
     let mut group = GroupRepository::get_by_id(path_data.0, conn).ok_or(ApiError::BadRequest {
         message: "Group does not exist".to_string(),
     })?;
@@ -81,6 +87,7 @@ pub async fn approve_join_request(
             message: "User is not allowed to approve request".to_string(),
         });
     }
+
     let mut request =
         GroupJoinRequestRepository::get_by_id(path_data.1, conn).ok_or(ApiError::BadRequest {
             message: "Group join request does not exist".to_string(),
@@ -90,9 +97,11 @@ pub async fn approve_join_request(
             message: "User is not allowed to approve request".to_string(),
         });
     }
+
     group.members.push(Some(request.requestor));
     GroupRepository::update_group(group.clone(), conn);
     GroupJoinRequestRepository::delete_request(request, conn);
+
     let enriched = GroupResponse::enrich(&group, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(enriched))
 }
@@ -107,6 +116,7 @@ pub async fn reject_join_request(
     let conn = &mut data.db.db.get().unwrap();
     let user_data = user.into_inner();
     let path_data = path.into_inner();
+
     let mut request =
         GroupJoinRequestRepository::get_by_id(path_data.1, conn).ok_or(ApiError::BadRequest {
             message: "Group join request does not exist".to_string(),
@@ -116,6 +126,7 @@ pub async fn reject_join_request(
             message: "Cannot reject request".to_string(),
         });
     }
+
     GroupJoinRequestRepository::delete_request(request, conn);
     Ok(HttpResponse::Ok().finish())
 }

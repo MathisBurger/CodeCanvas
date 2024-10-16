@@ -3,7 +3,7 @@ WORKDIR /app
 COPY . .
 RUN go mod tidy
 RUN go build -o ./bin/executor cmd/main.go
-RUN go build -o ./bin/config_setter cmd/config.go
+RUN go build -o ./bin/config_setter config/config.go
 
 FROM alpine:3 AS final
 COPY --from=build /app/bin/executor ./executor
