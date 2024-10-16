@@ -19,7 +19,7 @@ pub struct UserData {
 
 /// All roles a user can have
 #[derive(Clone, PartialEq, Debug)]
-#[warn(clippy::enum_variant_names)]
+#[allow(clippy::enum_variant_names)]
 pub enum UserRole {
     RoleAdmin,
     RoleTutor,
