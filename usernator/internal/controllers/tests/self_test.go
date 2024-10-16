@@ -23,7 +23,10 @@ func TestSelfAsUser(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/self", nil)
 	req.Header.Set("X-CodeCanvas-UserId", "1")
 	req.Header.Set("X-CodeCanvas-UserRoles", "ROLE_ADMIN")
-	resp, _ := app.Test(req, 1000)
+	resp, err := app.Test(req, 1000)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if resp.StatusCode != http.StatusOK {
 		t.Errorf("got status %d, want 200", resp.StatusCode)
 	}
