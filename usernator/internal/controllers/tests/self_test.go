@@ -28,7 +28,9 @@ func TestSelfAsUser(t *testing.T) {
 		t.Fatal(err)
 	}
 	if resp.StatusCode != http.StatusOK {
-		t.Errorf("got status %d, want 200", resp.StatusCode)
+		bodyData := make([]byte, resp.ContentLength)
+		_, _ = resp.Body.Read(bodyData)
+		t.Errorf("got status %d, want 200. Error: %s", resp.StatusCode, string(bodyData))
 	}
 }
 
