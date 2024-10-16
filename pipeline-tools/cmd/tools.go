@@ -7,7 +7,6 @@ import (
 
 func main() {
 	fmt.Println("Starting to initialize infrastructure...")
-	internal.InitRabbitMQ()
 	internal.InitPostgres()
 	internal.InitMongoDb()
 	fmt.Println("Infrastructure initialized")

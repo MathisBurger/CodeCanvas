@@ -4,7 +4,6 @@ import (
 	"executor/internal"
 	"executor/internal/global"
 	"executor/internal/handler"
-	"executor/internal/messaging"
 	"fmt"
 	"github.com/runabol/tork/cli"
 	"github.com/runabol/tork/conf"
@@ -26,9 +25,6 @@ func main() {
 
 	appConfig := internal.LoadConfig()
 	internal.InitMongoDB(appConfig)
-	rmqInit := make(chan bool)
-	go internal.InitRabbitMQ(appConfig, rmqInit)
-	go messaging.CreateCreateUserHandler(rmqInit)
 
 	engine.RegisterEndpoint("POST", "/execute", handler.ExecuteHandler)
 	// Start the Tork CLI

@@ -16,7 +16,6 @@ func CreateServer(configPath string) *fiber.App {
 	}
 	shared.Config = conf
 	startup.Database()
-	go startup.InitRabbitMQ()
 	go startup.InitTaskyGrpcClient()
 
 	app := fiber.New(fiber.Config{})

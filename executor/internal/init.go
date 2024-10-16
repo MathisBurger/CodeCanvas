@@ -6,13 +6,11 @@ import (
 	"executor/internal/config"
 	"executor/internal/global"
 	"fmt"
-	"github.com/rabbitmq/amqp091-go"
 	"github.com/sethvargo/go-envconfig"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"os"
-	"time"
 )
 
 func LoadConfig() *config.Configuration {
@@ -32,20 +30,6 @@ func LoadConfig() *config.Configuration {
 		log.Fatal(err)
 	}
 	return c
-}
-
-func InitRabbitMQ(c *config.Configuration, rmqInit chan bool) {
-	time.Sleep(15 * time.Second)
-	conn, err := amqp091.Dial("amqp://" + c.RabbitMQ.Username + ":" + c.RabbitMQ.Password + "@" + c.RabbitMQ.Host)
-	if err != nil {
-		return
-	}
-	ch, err := conn.Channel()
-	if err != nil {
-		return
-	}
-	global.RabbitMQ = ch
-	rmqInit <- true
 }
 
 func InitMongoDB(c *config.Configuration) {

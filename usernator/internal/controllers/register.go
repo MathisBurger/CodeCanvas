@@ -1,9 +1,7 @@
 package controllers
 
 import (
-	"encoding/json"
 	"github.com/gofiber/fiber/v2"
-	"github.com/rabbitmq/amqp091-go"
 	"golang.org/x/crypto/bcrypt"
 	"usernator/internal/models"
 	"usernator/internal/shared"
@@ -35,16 +33,5 @@ func RegisterUser(ctx *fiber.Ctx) error {
 	user.ResetToken = nil
 	user.Roles = []string{"ROLE_STUDENT"}
 	shared.Database.Create(&user)
-	data, err := json.Marshal(user)
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	}
-	err = shared.RabbitMQ.Publish("global_create_user", "", false, false, amqp091.Publishing{
-		ContentType: "application/json",
-		Body:        data,
-	})
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	}
 	return ctx.JSON(user)
 }
