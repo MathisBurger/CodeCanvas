@@ -12,8 +12,8 @@ func TestSelfAsNonUser(t *testing.T) {
 
 	req := httptest.NewRequest(http.MethodGet, "/self", nil)
 	resp, _ := app.Test(req, 1000)
-	if resp.StatusCode != http.StatusNotFound {
-		t.Errorf("got status %d, want 404", resp.StatusCode)
+	if resp.StatusCode != http.StatusUnauthorized {
+		t.Errorf("got status %d, want 401", resp.StatusCode)
 	}
 }
 

@@ -18,6 +18,6 @@
     "username": "guest",
     "password": "guest",
     "host": "localhost:5672",
-    "tasky_addr": "http://localhost:3005"
+    "tasky_addr": "http://localhost:3006"
   }
 }
