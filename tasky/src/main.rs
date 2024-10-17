@@ -1,46 +1,18 @@
-use std::net::SocketAddr;
-
-use crate::api::usernator_api_client::UsernatorApiClient;
-use crate::auth_middleware::Auth;
-use crate::models::database::Database;
-use crate::routes::init_services;
-use crate::tasky_grpc::tasky_api_server::TaskyApiServer;
-use crate::util::config::AppConfig;
 use actix_web::web::Data;
 use actix_web::{middleware, App, HttpServer};
 use futures::future::join;
-use grpc::MyTaskyApi;
 use log::info;
-use tonic::transport::{Channel, Server};
-
-pub mod api {
-    tonic::include_proto!("api");
-}
-
-pub mod tasky_grpc {
-    tonic::include_proto!("tasky_grpc");
-}
-
-#[derive(Clone)]
-pub struct AppState {
-    pub config: AppConfig,
-    pub db: Database,
-    pub mongodb: mongodb::Database,
-    pub user_api: UsernatorApiClient<Channel>,
-}
-
-mod auth_middleware;
-mod error;
-mod grpc;
-mod handler;
-mod http;
-mod models;
-mod mongo;
-mod response;
-mod routes;
-mod schema;
-mod security;
-mod util;
+use std::net::SocketAddr;
+use tasky::api::usernator_api_client::UsernatorApiClient;
+use tasky::auth_middleware::Auth;
+use tasky::grpc::MyTaskyApi;
+use tasky::models::database::Database;
+use tasky::mongo;
+use tasky::routes::init_services;
+use tasky::tasky_grpc::tasky_api_server::TaskyApiServer;
+use tasky::util::config::AppConfig;
+use tasky::AppState;
+use tonic::transport::Server;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
