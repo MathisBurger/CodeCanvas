@@ -12,8 +12,9 @@ impl IsGranted for GroupJoinRequest {
             // Is handled in controller
             SecurityAction::Create => false,
             SecurityAction::Update | SecurityAction::Delete | SecurityAction::Read => {
-                StaticSecurity::is_granted(StaticSecurityAction::IsTutor, user)
-                    && user.groups.contains(&self.group_id)
+                (StaticSecurity::is_granted(StaticSecurityAction::IsTutor, user)
+                    && user.groups.contains(&self.group_id))
+                    || StaticSecurity::is_granted(StaticSecurityAction::IsAdmin, user)
             }
         }
     }
