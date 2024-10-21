@@ -18,7 +18,7 @@ interface AssignmentCreateOrUpdateCodeTestModalProps {
 }
 
 const cpuOptions = [".5", "1"];
-const memoryOptions = ["20m", "30m", "50m", "100m"];
+const memoryOptions = ["50m", "100m", "200m", "300m", "500m"];
 const timeoutOptions = ["20s", "60s", "120s", "180s", "240s", "300s"];
 
 const AssignmentCreateOrUpdateCodeTestModal = ({
