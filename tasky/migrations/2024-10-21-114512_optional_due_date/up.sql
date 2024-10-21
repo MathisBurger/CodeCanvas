@@ -1,0 +1,1 @@
+ALTER TABLE assignments ALTER COLUMN due_date DROP NOT NULL;

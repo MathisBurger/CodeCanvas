@@ -30,7 +30,7 @@ use crate::util::mongo::parse_object_ids;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Deserializer};
 
-fn deserialize_naive_datetime<'de, D>(deserializer: D) -> Result<NaiveDateTime, D::Error>
+fn deserialize_naive_datetime<'de, D>(deserializer: D) -> Result<Option<NaiveDateTime>, D::Error>
 where
     D: Deserializer<'de>,
 {
@@ -40,7 +40,7 @@ where
         .map_err(serde::de::Error::custom)?
         .with_timezone(&Utc);
     // Convert to NaiveDateTime (without timezone)
-    Ok(datetime.naive_utc())
+    Ok(Some(datetime.naive_utc()))
 }
 
 /// Request to create an assignment
@@ -48,7 +48,7 @@ where
 struct CreateAssignmentRequest {
     pub title: String,
     #[serde(deserialize_with = "deserialize_naive_datetime")]
-    pub due_date: NaiveDateTime,
+    pub due_date: Option<NaiveDateTime>,
     pub description: String,
     pub language: AssignmentLanguage,
 }
@@ -58,7 +58,7 @@ struct CreateAssignmentRequest {
 struct UpdateAssignmentRequest {
     pub title: String,
     #[serde(deserialize_with = "deserialize_naive_datetime")]
-    pub due_date: NaiveDateTime,
+    pub due_date: Option<NaiveDateTime>,
     pub description: String,
 }
 

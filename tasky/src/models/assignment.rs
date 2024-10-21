@@ -53,7 +53,7 @@ pub struct QuestionCatalogueElement {
 pub struct Assignment {
     pub id: i32,
     pub title: String,
-    pub due_date: NaiveDateTime,
+    pub due_date: Option<NaiveDateTime>,
     pub group_id: i32,
     pub description: String,
     pub language: AssignmentLanguage,
@@ -71,7 +71,7 @@ pub struct Assignment {
 #[diesel(table_name = crate::schema::assignments)]
 pub struct CreateAssignment {
     pub title: String,
-    pub due_date: NaiveDateTime,
+    pub due_date: Option<NaiveDateTime>,
     pub group_id: i32,
     pub description: String,
     pub language: AssignmentLanguage,
