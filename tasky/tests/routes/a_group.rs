@@ -24,6 +24,7 @@ async fn test_create_group_as_tutor() {
         });
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
+    println!("{:?}", resp.into_body());
     assert!(resp.status().is_success())
 }
 
@@ -122,6 +123,7 @@ async fn test_get_group_as_tutor() {
     let mut req = test::TestRequest::get().uri("/groups/1");
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
+    println!("{:?}", resp.into_body());
     assert!(resp.status().is_success());
 }
 
@@ -131,5 +133,6 @@ async fn test_get_group_as_admin() {
     let mut req = test::TestRequest::get().uri("/groups/1");
     req = admin(req);
     let resp = test::call_service(&app, req.to_request()).await;
+    println!("{:?}", resp.into_body());
     assert!(resp.status().is_success());
 }
