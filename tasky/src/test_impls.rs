@@ -1,7 +1,7 @@
 use actix_web::web::Bytes;
 use serde::Serialize;
 
-use crate::routes::group::CreateGroupRequest;
+use crate::routes::{assignment::CreateAssignmentRequest, group::CreateGroupRequest};
 
 pub fn json_bytes<T>(structure: T) -> Vec<u8>
 where

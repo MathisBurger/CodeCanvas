@@ -113,6 +113,8 @@ jobs:
           go-version: '1.21'
       - name: Setup rust
         uses: actions-rust-lang/setup-rust-toolchain@v1    
+      - name: Install protoc
+        uses: arduino/setup-protoc@v3  
       - name: Test usernator
         run: |
           cd usernator
@@ -122,6 +124,7 @@ jobs:
           go test ./...
       - name: Test tasky
         run: |
+          ln ./usernator/api.proto ./tasky/api.proto
           cd tasky
           export IS_DOCKER=false
           cargo test    

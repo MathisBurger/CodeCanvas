@@ -6,6 +6,7 @@ use actix_web::post;
 use actix_web::web;
 use actix_web::HttpResponse;
 use chrono::NaiveDateTime;
+use serde::Serialize;
 
 use crate::auth_middleware::UserData;
 use crate::error::ApiError;
@@ -44,8 +45,8 @@ where
 }
 
 /// Request to create an assignment
-#[derive(Deserialize)]
-struct CreateAssignmentRequest {
+#[derive(Deserialize, Serialize)]
+pub struct CreateAssignmentRequest {
     pub title: String,
     #[serde(deserialize_with = "deserialize_naive_datetime")]
     pub due_date: NaiveDateTime,
@@ -54,8 +55,8 @@ struct CreateAssignmentRequest {
 }
 
 /// Request to update an assignment
-#[derive(Deserialize)]
-struct UpdateAssignmentRequest {
+#[derive(Deserialize, Serialize)]
+pub struct UpdateAssignmentRequest {
     pub title: String,
     #[serde(deserialize_with = "deserialize_naive_datetime")]
     pub due_date: NaiveDateTime,

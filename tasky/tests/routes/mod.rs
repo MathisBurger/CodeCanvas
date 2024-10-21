@@ -11,6 +11,7 @@ use tasky::{
     get_states, AppState,
 };
 
+pub mod assignment;
 pub mod group;
 pub mod group_join_request;
 
