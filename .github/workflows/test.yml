@@ -123,5 +123,6 @@ jobs:
       - name: Test tasky
         run: |
           cd tasky
+          export IS_DOCKER=false
           cargo test    
     
