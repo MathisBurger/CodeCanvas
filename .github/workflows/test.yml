@@ -126,6 +126,8 @@ jobs:
         run: |
           cd tasky
           export IS_DOCKER=false
+          export DB_USERNAME=admin
+          export DB_PASSWORD=admin
           cargo test  
       - name: Test authy
         run: |
