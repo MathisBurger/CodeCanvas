@@ -124,8 +124,11 @@ jobs:
           go test ./...
       - name: Test tasky
         run: |
-          ln ./usernator/api.proto ./tasky/api.proto
           cd tasky
           export IS_DOCKER=false
-          cargo test    
+          cargo test  
+      - name: Test authy
+        run: |
+          cd authy
+          cargo test        
     
