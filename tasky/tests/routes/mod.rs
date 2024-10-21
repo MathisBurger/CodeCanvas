@@ -7,9 +7,9 @@ use tasky::auth_middleware::Auth;
 use tasky::get_states;
 use tasky::routes::init_services;
 
-pub mod assignment;
-pub mod group;
-pub mod group_join_request;
+pub mod a_group;
+pub mod b_group_join_request;
+pub mod c_assignment;
 
 async fn get_app() -> impl Service<Request, Response = ServiceResponse, Error = Error> {
     let (state, _) = get_states().await;
