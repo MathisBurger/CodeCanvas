@@ -24,7 +24,15 @@ async fn test_create_group_as_tutor() {
         });
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    println!("{:?}", resp.into_body());
+    let body = resp.into_body();
+    let body_bytes = test::read_body(body).await;
+
+    // Convert to string and print
+    if let Ok(body_str) = String::from_utf8(body_bytes.to_vec()) {
+        println!("Response Body: {}", body_str);
+    } else {
+        println!("Response Body is not valid UTF-8");
+    }
     //assert!(resp.status().is_success())
 }
 
@@ -123,7 +131,15 @@ async fn test_get_group_as_tutor() {
     let mut req = test::TestRequest::get().uri("/groups/1");
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    println!("{:?}", resp.into_body());
+    let body = resp.into_body();
+    let body_bytes = test::read_body(body).await;
+
+    // Convert to string and print
+    if let Ok(body_str) = String::from_utf8(body_bytes.to_vec()) {
+        println!("Response Body: {}", body_str);
+    } else {
+        println!("Response Body is not valid UTF-8");
+    }
     //assert!(resp.status().is_success());
 }
 
@@ -133,6 +149,14 @@ async fn test_get_group_as_admin() {
     let mut req = test::TestRequest::get().uri("/groups/1");
     req = admin(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    println!("{:?}", resp.into_body());
+    let body = resp.into_body();
+    let body_bytes = test::read_body(body).await;
+
+    // Convert to string and print
+    if let Ok(body_str) = String::from_utf8(body_bytes.to_vec()) {
+        println!("Response Body: {}", body_str);
+    } else {
+        println!("Response Body is not valid UTF-8");
+    }
     //assert!(resp.status().is_success());
 }
