@@ -24,8 +24,7 @@ async fn test_create_group_as_tutor() {
         });
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    let body = resp.into_body();
-    let body_bytes = test::read_body(body).await;
+    let body_bytes = test::read_body(resp).await;
 
     // Convert to string and print
     if let Ok(body_str) = String::from_utf8(body_bytes.to_vec()) {
@@ -131,8 +130,7 @@ async fn test_get_group_as_tutor() {
     let mut req = test::TestRequest::get().uri("/groups/1");
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    let body = resp.into_body();
-    let body_bytes = test::read_body(body).await;
+    let body_bytes = test::read_body(resp).await;
 
     // Convert to string and print
     if let Ok(body_str) = String::from_utf8(body_bytes.to_vec()) {
@@ -149,8 +147,7 @@ async fn test_get_group_as_admin() {
     let mut req = test::TestRequest::get().uri("/groups/1");
     req = admin(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    let body = resp.into_body();
-    let body_bytes = test::read_body(body).await;
+    let body_bytes = test::read_body(resp).await;
 
     // Convert to string and print
     if let Ok(body_str) = String::from_utf8(body_bytes.to_vec()) {
