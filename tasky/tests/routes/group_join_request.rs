@@ -74,7 +74,7 @@ async fn test_approve_join_request_as_tutor() {
 
 #[actix_web::test]
 async fn test_approve_join_request_as_admin() {
-    create_join_request();
+    create_join_request().await;
     let app = get_app().await;
     let mut req = test::TestRequest::post().uri("/groups/1/join_requests/2/approve");
     req = admin(req);
@@ -84,7 +84,7 @@ async fn test_approve_join_request_as_admin() {
 
 #[actix_web::test]
 async fn test_reject_join_request_as_student() {
-    create_join_request2();
+    create_join_request2().await;
     let app = get_app().await;
     let mut req = test::TestRequest::post().uri("/groups/1/join_requests/3/approve");
     req = student(req);
@@ -94,7 +94,6 @@ async fn test_reject_join_request_as_student() {
 
 #[actix_web::test]
 async fn test_reject_join_request_as_tutor() {
-    create_join_request2();
     let app = get_app().await;
     let mut req = test::TestRequest::post().uri("/groups/1/join_requests/3/approve");
     req = tutor(req);

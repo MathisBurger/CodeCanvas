@@ -1,15 +1,11 @@
 use actix_http::Request;
 use actix_web::dev::{Service, ServiceResponse};
-use actix_web::http::header::ContentType;
 use actix_web::test::TestRequest;
-use actix_web::web::{Data, ReqData};
-use actix_web::{middleware, test, App, Error};
+use actix_web::web::Data;
+use actix_web::{test, App, Error};
 use tasky::auth_middleware::Auth;
+use tasky::get_states;
 use tasky::routes::init_services;
-use tasky::{
-    auth_middleware::{UserData, UserRole},
-    get_states, AppState,
-};
 
 pub mod assignment;
 pub mod group;

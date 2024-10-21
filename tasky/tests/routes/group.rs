@@ -126,7 +126,7 @@ async fn test_get_group_as_tutor() {
 }
 
 #[actix_web::test]
-async fn test_get_group_as_tutor() {
+async fn test_get_group_as_admin() {
     let app = get_app().await;
     let mut req = test::TestRequest::get().uri("/groups/1");
     req = admin(req);

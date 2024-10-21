@@ -69,16 +69,16 @@ mod tests {
 
     #[test]
     fn test_check_in_list() {
-        let uri = "hello";
+        let uri = "hello world";
         let vec1 = vec!["hello".to_string(), "world".to_string()];
-        let vec2 = vec!["hello world".to_string()];
+        let vec2 = vec!["hello".to_string()];
         assert!(check_in_list(uri, vec1));
         assert!(check_in_list(uri, vec2));
     }
 
     #[test]
     fn test_check_not_in_list() {
-        let uri = "hello1";
+        let uri = "hella";
         let vec1 = vec!["hello".to_string(), "world".to_string()];
         let vec2 = vec!["hello world".to_string()];
         assert!(!check_in_list(uri, vec1));
