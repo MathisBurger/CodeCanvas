@@ -68,11 +68,15 @@ const FileStructureDisplay = ({
     [testObjectIds, taskObjectIds],
   );
   const cumulatedSize = useMemo<number>(
-    () =>
-      filesFlattened.reduce((a, b) => ({
+    () => {
+      if (filesFlattened.length === 0) {
+        return 0;
+      }
+      return filesFlattened.reduce((a, b) => ({
         ...a,
         file_size: (a.file_size ?? 0) + (b.file_size ?? 0),
-      })).file_size!,
+      })).file_size!
+    },
     [filesFlattened],
   );
   const loadAll = useMemo<boolean>(
