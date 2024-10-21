@@ -3,6 +3,7 @@ use actix_web::web::Data;
 use actix_web::App;
 use actix_web::HttpServer;
 use futures::future::join;
+use log::info;
 use std::net::SocketAddr;
 use tasky::auth_middleware::Auth;
 use tasky::routes::init_services;
@@ -12,6 +13,12 @@ use tonic::transport::Server;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let grpc_sock_addr: SocketAddr = "0.0.0.0:3001".parse().unwrap();
+
+    let log_level = std::env::var("RUST_LOG").unwrap_or_else(|_e| "info".to_string());
+
+    std::env::set_var("RUST_LOG", log_level);
+    pretty_env_logger::init();
+    info!(target: "startup", "");
 
     let (state, tasky_api) = tasky::get_states().await;
 

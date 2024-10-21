@@ -111,6 +111,8 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.21'
+      - name: Setup rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1    
       - name: Test usernator
         run: |
           cd usernator
@@ -118,4 +120,8 @@ jobs:
           go run fixtures/fixtures.go
           export TEST_MODE=true
           go test ./...
+      - name: Test tasky
+        run: |
+          cd tasky
+          cargo test    
     

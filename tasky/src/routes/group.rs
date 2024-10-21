@@ -6,12 +6,12 @@ use crate::response::Enrich;
 use crate::security::{IsGranted, SecurityAction};
 use crate::AppState;
 use actix_web::{get, post, web, HttpResponse};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 /// Request to create a new group
-#[derive(Deserialize)]
-struct CreateGroupRequest {
-    title: String,
+#[derive(Deserialize, Serialize)]
+pub struct CreateGroupRequest {
+    pub title: String,
 }
 
 /// Endpoint to create a new group
@@ -34,7 +34,7 @@ pub async fn create_group(
         members: vec![],
     };
     if !new_group.is_granted(SecurityAction::Create, &user) {
-        return Err(ApiError::Unauthorized {
+        return Err(ApiError::Forbidden {
             message: "User is not allowed to create a group".to_string(),
         });
     }
