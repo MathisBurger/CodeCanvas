@@ -58,6 +58,12 @@ impl Auth {
     }
 }
 
+impl Default for Auth {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Implements transform for a service request
 impl<S, B> Transform<S, ServiceRequest> for Auth
 where

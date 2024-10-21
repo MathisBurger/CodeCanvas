@@ -1,7 +1,7 @@
 use actix_web::web::Bytes;
 use serde::Serialize;
 
-use crate::routes::{assignment::CreateAssignmentRequest, group::CreateGroupRequest};
+use crate::routes::group::CreateGroupRequest;
 
 pub fn json_bytes<T>(structure: T) -> Vec<u8>
 where
@@ -12,8 +12,8 @@ where
     bytes
 }
 
-impl Into<Bytes> for CreateGroupRequest {
-    fn into(self) -> Bytes {
-        Bytes::from(json_bytes(self))
+impl From<CreateGroupRequest> for Bytes {
+    fn from(val: CreateGroupRequest) -> Bytes {
+        Bytes::from(json_bytes(val))
     }
 }
