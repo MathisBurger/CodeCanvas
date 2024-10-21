@@ -12,6 +12,7 @@ use tasky::{
 };
 
 pub mod group;
+pub mod group_join_request;
 
 async fn get_app() -> impl Service<Request, Response = ServiceResponse, Error = Error> {
     let (state, _) = get_states().await;
@@ -27,6 +28,16 @@ async fn get_app() -> impl Service<Request, Response = ServiceResponse, Error = 
 
 fn student(req: TestRequest) -> TestRequest {
     req.append_header(("X-CodeCanvas-UserId", "3"))
+        .append_header(("X-CodeCanvas-UserRoles", "ROLE_STUDENT"))
+}
+
+fn student2(req: TestRequest) -> TestRequest {
+    req.append_header(("X-CodeCanvas-UserId", "4"))
+        .append_header(("X-CodeCanvas-UserRoles", "ROLE_STUDENT"))
+}
+
+fn student3(req: TestRequest) -> TestRequest {
+    req.append_header(("X-CodeCanvas-UserId", "5"))
         .append_header(("X-CodeCanvas-UserRoles", "ROLE_STUDENT"))
 }
 
