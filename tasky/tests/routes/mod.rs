@@ -8,7 +8,7 @@ use tasky::get_states;
 use tasky::routes::init_services;
 
 pub mod a_group;
-//pub mod b_group_join_request;
+pub mod b_group_join_request;
 //pub mod c_assignment;
 
 async fn get_app() -> impl Service<Request, Response = ServiceResponse, Error = Error> {
