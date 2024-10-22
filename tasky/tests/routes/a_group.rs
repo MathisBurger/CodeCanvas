@@ -6,7 +6,7 @@ async fn test_create_group_as_student() {
     let app = get_app().await;
     let mut req = test::TestRequest::post()
         .uri("/create_group")
-        .set_payload(CreateGroupRequest {
+        .set_json(CreateGroupRequest {
             title: "name".to_string(),
         });
     req = student(req);
@@ -19,20 +19,12 @@ async fn test_create_group_as_tutor() {
     let app = get_app().await;
     let mut req = test::TestRequest::post()
         .uri("/create_group")
-        .set_payload(CreateGroupRequest {
+        .set_json(CreateGroupRequest {
             title: "name".to_string(),
         });
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    let body_bytes = test::read_body(resp).await;
-
-    // Convert to string and print
-    if let Ok(body_str) = String::from_utf8(body_bytes.to_vec()) {
-        println!("Response Body: {}", body_str);
-    } else {
-        println!("Response Body is not valid UTF-8");
-    }
-    //assert!(resp.status().is_success())
+    assert!(resp.status().is_success())
 }
 
 #[actix_web::test]
@@ -40,7 +32,7 @@ async fn test_create_group_as_tutor_duplicate_name() {
     let app = get_app().await;
     let mut req = test::TestRequest::post()
         .uri("/create_group")
-        .set_payload(CreateGroupRequest {
+        .set_json(CreateGroupRequest {
             title: "name".to_string(),
         });
     req = tutor(req);
@@ -53,7 +45,7 @@ async fn test_create_group_as_admin() {
     let app = get_app().await;
     let mut req = test::TestRequest::post()
         .uri("/create_group")
-        .set_payload(CreateGroupRequest {
+        .set_json(CreateGroupRequest {
             title: "name2".to_string(),
         });
     req = admin(req);
@@ -131,14 +123,7 @@ async fn test_get_group_as_tutor() {
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
     let body_bytes = test::read_body(resp).await;
-
-    // Convert to string and print
-    if let Ok(body_str) = String::from_utf8(body_bytes.to_vec()) {
-        println!("Response Body: {}", body_str);
-    } else {
-        println!("Response Body is not valid UTF-8");
-    }
-    //assert!(resp.status().is_success());
+    assert!(resp.status().is_success());
 }
 
 #[actix_web::test]
@@ -148,12 +133,5 @@ async fn test_get_group_as_admin() {
     req = admin(req);
     let resp = test::call_service(&app, req.to_request()).await;
     let body_bytes = test::read_body(resp).await;
-
-    // Convert to string and print
-    if let Ok(body_str) = String::from_utf8(body_bytes.to_vec()) {
-        println!("Response Body: {}", body_str);
-    } else {
-        println!("Response Body is not valid UTF-8");
-    }
-    //assert!(resp.status().is_success());
+    assert!(resp.status().is_success());
 }
