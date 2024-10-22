@@ -1,4 +1,5 @@
 use super::*;
+use actix_http::StatusCode;
 use tasky::routes::group::CreateGroupRequest;
 
 #[actix_web::test]
@@ -7,7 +8,7 @@ async fn test_create_group_as_student() {
     let mut req = test::TestRequest::post()
         .uri("/create_group")
         .set_json(CreateGroupRequest {
-            title: "name".to_string(),
+            title: "name123".to_string(),
         });
     req = student(req);
     let resp = test::call_service(&app, req.to_request()).await;
@@ -37,7 +38,7 @@ async fn test_create_group_as_tutor_duplicate_name() {
         });
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    assert!(resp.status().is_client_error())
+    assert!(resp.status() == StatusCode::FOUND)
 }
 
 #[actix_web::test]
