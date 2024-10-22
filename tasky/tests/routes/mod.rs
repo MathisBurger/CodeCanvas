@@ -28,7 +28,7 @@ fn student(req: TestRequest) -> TestRequest {
         .append_header(("X-CodeCanvas-UserRoles", "ROLE_STUDENT"))
 }
 
-/*fn student2(req: TestRequest) -> TestRequest {
+fn student2(req: TestRequest) -> TestRequest {
     req.append_header(("X-CodeCanvas-UserId", "4"))
         .append_header(("X-CodeCanvas-UserRoles", "ROLE_STUDENT"))
 }
@@ -36,7 +36,7 @@ fn student(req: TestRequest) -> TestRequest {
 fn student3(req: TestRequest) -> TestRequest {
     req.append_header(("X-CodeCanvas-UserId", "5"))
         .append_header(("X-CodeCanvas-UserRoles", "ROLE_STUDENT"))
-}*/
+}
 
 fn tutor(req: TestRequest) -> TestRequest {
     req.append_header(("X-CodeCanvas-UserId", "2"))
