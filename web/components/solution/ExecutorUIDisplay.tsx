@@ -1,4 +1,5 @@
 import { Modal } from "@mantine/core";
+import getConfig from "next/config";
 
 export interface ExecutorUIDisplayProps {
   jobId: string;
@@ -6,8 +7,10 @@ export interface ExecutorUIDisplayProps {
 }
 
 const ExecutorUIDisplay = ({ jobId, onClose }: ExecutorUIDisplayProps) => {
-  const apiUrl = process.env.NODE_ENV === "production" ? "https://executor.code-canvas.app" : "http://localhost:3007";
-
+  const apiUrl =
+    getConfig().publicRuntimeConfig.EXECUTOR_UI_URL === ""
+      ? "http://localhost:3008"
+      : getConfig().publicRuntimeConfig.EXECUTOR_UI_URL;
   return (
     <Modal opened onClose={onClose} size="100%">
       <iframe

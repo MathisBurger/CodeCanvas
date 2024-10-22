@@ -1,5 +1,6 @@
 import { GetStudentsResponse, User } from "@/service/types/usernator";
 import ApiError from "@/service/types/error";
+import getConfig from "next/config";
 import {
   Assignment,
   AssignmentLanguage,
@@ -26,7 +27,11 @@ class ApiService {
   private apiUrl: string;
 
   constructor() {
-    this.apiUrl = process.env.NODE_ENV === "production" ? "https://api.code-canvas.app" : "http://localhost:3002";
+    //this.apiUrl = process.env.NODE_ENV === "production" ? "https://api.code-canvas.app" : "http://localhost:3002";
+
+    this.apiUrl = getConfig().publicRuntimeConfig.API_URL
+      ? getConfig().publicRuntimeConfig.API_URL
+      : "http://localhost:3001";
   }
 
   public async self(): Promise<User | string> {
@@ -52,7 +57,7 @@ class ApiService {
   }
 
   public async createGroup(title: string): Promise<Group> {
-    return await this.post<Group>(`/tasky/create_group`, {title});
+    return await this.post<Group>(`/tasky/create_group`, { title });
   }
 
   public async getGroups(): Promise<GroupsResponse> {
@@ -268,10 +273,10 @@ class ApiService {
         );
       } else {
         formData.set(
-            "answers",
-            new Blob(["{}"], {
-              type: "application/json",
-            }),
+          "answers",
+          new Blob(["{}"], {
+            type: "application/json",
+          }),
         );
       }
       const resp = await fetch(

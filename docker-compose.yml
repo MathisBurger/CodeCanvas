@@ -5,7 +5,7 @@ services:
       - "5434:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
-      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres-init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       - POSTGRES_PASSWORD=admin
       - POSTGRES_USER=admin
@@ -29,8 +29,8 @@ services:
     environment:
       - DB_HOST=postgres
       - DB_PORT=5434
-      - DB_USERNAME=admin
-      - DB_PASSWORD=admin
+      - DB_USERNAME=usernator
+      - DB_PASSWORD=usernator
       - DB_DATABASE=usernator
       - SMTP_HOST=maildev
       - SMTP_PORT=1025
@@ -41,6 +41,14 @@ services:
     depends_on:
       - postgres
       - maildev
+    restart: on-failure:3
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
   authy:
     build:
       context: ./authy
@@ -55,6 +63,14 @@ services:
     depends_on:
       - usernator
       - tasky
+    restart: on-failure:3
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
   tasky:
     build:
       context: ./tasky
@@ -65,8 +81,8 @@ services:
       - "3006:3001"
     environment:
       - DB_NAME=tasky
-      - DB_USERNAME=admin
-      - DB_PASSWORD=admin
+      - DB_USERNAME=usernator
+      - DB_PASSWORD=usernator
       - DB_HOST=postgres:5432
       - USERNATOR_GRPC=http://usernator:3001
       - MONGO_HOST="mongodb:27017"
@@ -77,13 +93,21 @@ services:
     depends_on:
       - usernator
       - postgres
+    restart: on-failure:3
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
   executor:
     build: ./executor
     ports:
       - "3003:8000"
     environment:
-      - DATABASE_USERNAME=admin
-      - DATABASE_PASSWORD=admin
+      - DATABASE_USERNAME=executor
+      - DATABASE_PASSWORD=executor
       - DATABASE_HOST=postgres
       - DATABASE_PORT=5432
       - DATABASE_NAME=executor
@@ -110,7 +134,7 @@ services:
       context: web/
       dockerfile: Dockerfile
     ports:
-      - "4000:3000"
+      - "3000:3000"
     environment:
       - API_URL=http://localhost:3002
       - EXECUTOR_UI_URL=http://localhost:3007
