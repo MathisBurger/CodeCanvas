@@ -28,7 +28,7 @@ use crate::security::IsGranted;
 use crate::security::SecurityAction;
 use crate::security::StaticSecurity;
 use crate::util::mongo::parse_object_ids;
-use chrono::{DateTime, Utc};
+use chrono::DateTime;
 use serde::{Deserialize, Deserializer};
 
 fn deserialize_naive_datetime<'de, D>(deserializer: D) -> Result<NaiveDateTime, D::Error>
@@ -36,12 +36,11 @@ where
     D: Deserializer<'de>,
 {
     let s: String = Deserialize::deserialize(deserializer)?;
-    // Parse as DateTime<Utc> to handle the Z suffix
-    let datetime = DateTime::parse_from_rfc3339(&s)
-        .map_err(serde::de::Error::custom)?
-        .with_timezone(&Utc);
-    // Convert to NaiveDateTime (without timezone)
-    Ok(datetime.naive_utc())
+    if let Ok(datetime_with_tz) = DateTime::parse_from_rfc3339(s.as_str()) {
+        // Convert to NaiveDateTime by discarding the time zone
+        return Ok(datetime_with_tz.naive_utc());
+    }
+    NaiveDateTime::parse_from_str(s.as_str(), "%Y-%m-%dT%H:%M:%S").map_err(serde::de::Error::custom)
 }
 
 /// Request to create an assignment
