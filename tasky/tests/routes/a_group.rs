@@ -38,6 +38,7 @@ async fn test_create_group_as_tutor_duplicate_name() {
         });
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
+    println!("{}", &resp.status());
     assert!(resp.status() == StatusCode::FOUND)
 }
 
