@@ -67,6 +67,7 @@ async fn test_e_create_assignment_as_tutor() {
         });
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
+    println!("STATUS ASSIGNMNT: {}", &resp.status());
     assert!(resp.status().is_success())
 }
 
