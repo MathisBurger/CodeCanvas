@@ -27,9 +27,7 @@ const CreateOrUpdateAssignmentModal = ({
     mode: "uncontrolled",
     initialValues: {
       title: assignment?.title ?? "title",
-      due_date: assignment?.due_date
-        ? new Date(assignment.due_date!)
-        : new Date(),
+      due_date: assignment?.due_date ? new Date(assignment.due_date) : null,
       description: "",
       language: assignment?.language ?? AssignmentLanguage.QuestionBased,
     },
@@ -38,9 +36,9 @@ const CreateOrUpdateAssignmentModal = ({
       description: (v) =>
         v.trim() === "" ? "Description should contain a value" : null,
       due_date: (v) =>
-        new Date(v).getTime() <= new Date().getTime()
+        v ? (new Date(v).getTime() <= new Date().getTime()
           ? "Date should be in the future"
-          : null,
+          : null) : null
     },
   });
 

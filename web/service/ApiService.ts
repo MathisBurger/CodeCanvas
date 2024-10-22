@@ -105,7 +105,7 @@ class ApiService {
   public async createAssignment(
     groupId: number,
     title: string,
-    due_date: Date,
+    due_date: Date|null,
     description: string,
     language: AssignmentLanguage,
   ): Promise<Assignment> {
@@ -138,7 +138,7 @@ class ApiService {
     groupId: number,
     assignmentId: number,
     title: string,
-    due_date: Date,
+    due_date: Date|null,
     description: string,
   ): Promise<Assignment> {
     return await this.post<Assignment>(
