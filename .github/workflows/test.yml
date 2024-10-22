@@ -128,7 +128,7 @@ jobs:
           export IS_DOCKER=false
           export DB_USERNAME=admin
           export DB_PASSWORD=admin
-          cargo test  
+          cargo test -- --nocapture
       - name: Test authy
         run: |
           cd authy
