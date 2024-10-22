@@ -35,7 +35,7 @@ async fn test_c_create_join_request_as_admin() {
 #[serial]
 async fn test_d_get_join_requests_as_student() {
     let app = get_app().await;
-    let mut req = test::TestRequest::post().uri("/groups/1/join_requests");
+    let mut req = test::TestRequest::get().uri("/groups/1/join_requests");
     req = student(req);
     let resp = test::call_service(&app, req.to_request()).await;
     assert!(resp.status().is_client_error())
@@ -45,10 +45,9 @@ async fn test_d_get_join_requests_as_student() {
 #[serial]
 async fn test_e_get_join_requests_as_tutor() {
     let app = get_app().await;
-    let mut req = test::TestRequest::post().uri("/groups/1/join_requests");
+    let mut req = test::TestRequest::get().uri("/groups/1/join_requests");
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    println!("get join request tutor: {}", &resp.status());
     assert!(resp.status().is_success())
 }
 
@@ -56,10 +55,9 @@ async fn test_e_get_join_requests_as_tutor() {
 #[serial]
 async fn test_f_get_join_requests_as_admin() {
     let app = get_app().await;
-    let mut req = test::TestRequest::post().uri("/groups/1/join_requests");
+    let mut req = test::TestRequest::get().uri("/groups/1/join_requests");
     req = admin(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    println!("get join request admin: {}", &resp.status());
     assert!(resp.status().is_success())
 }
 
@@ -91,7 +89,6 @@ async fn test_i_approve_join_request_as_admin() {
     let mut req = test::TestRequest::post().uri("/groups/1/join_requests/2/approve");
     req = admin(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    println!("approve join request admin: {}", &resp.status());
     assert!(resp.status().is_success())
 }
 

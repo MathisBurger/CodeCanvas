@@ -1,10 +1,12 @@
 use chrono::NaiveDateTime;
+use serial_test::serial;
 use tasky::routes::assignment::{CreateAssignmentRequest, UpdateAssignmentRequest};
 
 use super::*;
 
 #[actix_web::test]
-async fn test_get_all_group_assignments_as_student() {
+#[serial]
+async fn test_a_get_all_group_assignments_as_student() {
     let app = get_app().await;
     let mut req = test::TestRequest::get().uri("/groups/1/assignments");
     req = student(req);
@@ -13,7 +15,8 @@ async fn test_get_all_group_assignments_as_student() {
 }
 
 #[actix_web::test]
-async fn test_get_all_group_assignments_as_tutor() {
+#[serial]
+async fn test_b_get_all_group_assignments_as_tutor() {
     let app = get_app().await;
     let mut req = test::TestRequest::get().uri("/groups/1/assignments");
     req = tutor(req);
@@ -22,7 +25,8 @@ async fn test_get_all_group_assignments_as_tutor() {
 }
 
 #[actix_web::test]
-async fn test_get_all_group_assignments_as_admin() {
+#[serial]
+async fn test_c_get_all_group_assignments_as_admin() {
     let app = get_app().await;
     let mut req = test::TestRequest::get().uri("/groups/1/assignments");
     req = admin(req);
@@ -31,7 +35,8 @@ async fn test_get_all_group_assignments_as_admin() {
 }
 
 #[actix_web::test]
-async fn test_create_assignment_as_student() {
+#[serial]
+async fn test_d_create_assignment_as_student() {
     let app = get_app().await;
     let mut req = test::TestRequest::post()
         .uri("/groups/1/assignments")
@@ -48,7 +53,8 @@ async fn test_create_assignment_as_student() {
 }
 
 #[actix_web::test]
-async fn test_create_assignment_as_tutor() {
+#[serial]
+async fn test_e_create_assignment_as_tutor() {
     let app = get_app().await;
     let mut req = test::TestRequest::post()
         .uri("/groups/1/assignments")
@@ -65,7 +71,8 @@ async fn test_create_assignment_as_tutor() {
 }
 
 #[actix_web::test]
-async fn test_create_assignment_as_admin() {
+#[serial]
+async fn test_f_create_assignment_as_admin() {
     let app = get_app().await;
     let mut req = test::TestRequest::post()
         .uri("/groups/1/assignments")
@@ -82,7 +89,8 @@ async fn test_create_assignment_as_admin() {
 }
 
 #[actix_web::test]
-async fn test_get_assignment_as_student() {
+#[serial]
+async fn test_g_get_assignment_as_student() {
     let app = get_app().await;
     let mut req = test::TestRequest::get().uri("/groups/1/assignments/1");
     req = student(req);
@@ -91,7 +99,8 @@ async fn test_get_assignment_as_student() {
 }
 
 #[actix_web::test]
-async fn test_get_assignment_as_tutor() {
+#[serial]
+async fn test_h_get_assignment_as_tutor() {
     let app = get_app().await;
     let mut req = test::TestRequest::get().uri("/groups/1/assignments/1");
     req = tutor(req);
@@ -100,7 +109,8 @@ async fn test_get_assignment_as_tutor() {
 }
 
 #[actix_web::test]
-async fn test_get_assignment_as_admin() {
+#[serial]
+async fn test_i_get_assignment_as_admin() {
     let app = get_app().await;
     let mut req = test::TestRequest::get().uri("/groups/1/assignments/1");
     req = admin(req);
@@ -109,7 +119,8 @@ async fn test_get_assignment_as_admin() {
 }
 
 #[actix_web::test]
-async fn test_update_assignment_as_student() {
+#[serial]
+async fn test_j_update_assignment_as_student() {
     let app = get_app().await;
     let mut req = test::TestRequest::post()
         .uri("/groups/1/assignments/1/update")
@@ -125,7 +136,8 @@ async fn test_update_assignment_as_student() {
 }
 
 #[actix_web::test]
-async fn test_update_assignment_as_tutor() {
+#[serial]
+async fn test_k_update_assignment_as_tutor() {
     let app = get_app().await;
     let mut req = test::TestRequest::post()
         .uri("/groups/1/assignments/1/update")
@@ -141,7 +153,8 @@ async fn test_update_assignment_as_tutor() {
 }
 
 #[actix_web::test]
-async fn test_update_assignment_as_admin() {
+#[serial]
+async fn test_l_update_assignment_as_admin() {
     let app = get_app().await;
     let mut req = test::TestRequest::post()
         .uri("/groups/1/assignments/1/update")

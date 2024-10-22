@@ -42,8 +42,7 @@ async fn test_c_create_group_as_tutor_duplicate_name() {
         });
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    println!("{}", &resp.status());
-    assert!(resp.status() == StatusCode::FOUND)
+    assert!(resp.status() == StatusCode::FOUND);
 }
 
 #[actix_web::test]
@@ -57,7 +56,7 @@ async fn test_d_create_group_as_admin() {
         });
     req = admin(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    assert!(resp.status().is_client_error())
+    assert!(resp.status().is_client_error());
 }
 
 #[actix_web::test]
