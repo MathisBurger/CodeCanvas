@@ -44,7 +44,7 @@ async fn test_get_join_requests_as_tutor() {
     let resp = test::call_service(&app, req.to_request()).await;
     println!(
         "get join request tutor: {}",
-        String::from_utf8(body_bytes.to_vec())
+        String::from_utf8(body_bytes.to_vec()).unwrap()
     );
     //assert!(resp.status().is_success())
 }
@@ -57,7 +57,7 @@ async fn test_get_join_requests_as_admin() {
     let resp = test::call_service(&app, req.to_request()).await;
     println!(
         "get join request admin: {}",
-        String::from_utf8(body_bytes.to_vec())
+        String::from_utf8(body_bytes.to_vec()).unwrap()
     );
     //assert!(resp.status().is_success())
 }
@@ -90,7 +90,7 @@ async fn test_approve_join_request_as_admin() {
     let bytes = test::read_body(resp).await;
     println!(
         "approve join request admin: {}",
-        String::from_utf8(body_bytes.to_vec())
+        String::from_utf8(body_bytes.to_vec()).unwrap()
     );
     //assert!(resp.status().is_success())
 }
@@ -113,7 +113,7 @@ async fn test_reject_join_request_as_tutor() {
     let resp = test::call_service(&app, req.to_request()).await;
     println!(
         "reject join request tutor: {}",
-        String::from_utf8(body_bytes.to_vec())
+        String::from_utf8(body_bytes.to_vec()).unwrap()
     );
     //assert!(resp.status().is_client_error())
 }
