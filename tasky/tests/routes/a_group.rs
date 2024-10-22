@@ -1,9 +1,11 @@
 use super::*;
 use actix_http::StatusCode;
+use serial_test::serial;
 use tasky::routes::group::CreateGroupRequest;
 
 #[actix_web::test]
-async fn test_create_group_as_student() {
+#[serial]
+async fn test_a_create_group_as_student() {
     let app = get_app().await;
     let mut req = test::TestRequest::post()
         .uri("/create_group")
@@ -16,7 +18,8 @@ async fn test_create_group_as_student() {
 }
 
 #[actix_web::test]
-async fn test_create_group_as_tutor() {
+#[serial]
+async fn test_b_create_group_as_tutor() {
     let app = get_app().await;
     let mut req = test::TestRequest::post()
         .uri("/create_group")
@@ -29,7 +32,8 @@ async fn test_create_group_as_tutor() {
 }
 
 #[actix_web::test]
-async fn test_create_group_as_tutor_duplicate_name() {
+#[serial]
+async fn test_c_create_group_as_tutor_duplicate_name() {
     let app = get_app().await;
     let mut req = test::TestRequest::post()
         .uri("/create_group")
@@ -43,7 +47,8 @@ async fn test_create_group_as_tutor_duplicate_name() {
 }
 
 #[actix_web::test]
-async fn test_create_group_as_admin() {
+#[serial]
+async fn test_d_create_group_as_admin() {
     let app = get_app().await;
     let mut req = test::TestRequest::post()
         .uri("/create_group")
@@ -56,7 +61,8 @@ async fn test_create_group_as_admin() {
 }
 
 #[actix_web::test]
-async fn test_get_all_groups_as_student() {
+#[serial]
+async fn test_e_get_all_groups_as_student() {
     let app = get_app().await;
     let mut req = test::TestRequest::get().uri("/groups");
     req = student(req);
@@ -65,7 +71,8 @@ async fn test_get_all_groups_as_student() {
 }
 
 #[actix_web::test]
-async fn test_get_all_groups_as_tutor() {
+#[serial]
+async fn test_f_get_all_groups_as_tutor() {
     let app = get_app().await;
     let mut req = test::TestRequest::get().uri("/groups");
     req = tutor(req);
@@ -74,7 +81,8 @@ async fn test_get_all_groups_as_tutor() {
 }
 
 #[actix_web::test]
-async fn test_get_all_groups_as_admin() {
+#[serial]
+async fn test_g_get_all_groups_as_admin() {
     let app = get_app().await;
     let mut req = test::TestRequest::get().uri("/groups");
     req = admin(req);
@@ -83,7 +91,8 @@ async fn test_get_all_groups_as_admin() {
 }
 
 #[actix_web::test]
-async fn test_get_my_groups_as_student() {
+#[serial]
+async fn test_h_get_my_groups_as_student() {
     let app = get_app().await;
     let mut req = test::TestRequest::get().uri("/my_groups");
     req = student(req);
@@ -92,7 +101,8 @@ async fn test_get_my_groups_as_student() {
 }
 
 #[actix_web::test]
-async fn test_get_my_groups_as_tutor() {
+#[serial]
+async fn test_i_get_my_groups_as_tutor() {
     let app = get_app().await;
     let mut req = test::TestRequest::get().uri("/my_groups");
     req = tutor(req);
@@ -101,7 +111,8 @@ async fn test_get_my_groups_as_tutor() {
 }
 
 #[actix_web::test]
-async fn test_get_my_groups_as_admin() {
+#[serial]
+async fn test_j_get_my_groups_as_admin() {
     let app = get_app().await;
     let mut req = test::TestRequest::get().uri("/my_groups");
     req = admin(req);
@@ -110,7 +121,8 @@ async fn test_get_my_groups_as_admin() {
 }
 
 #[actix_web::test]
-async fn test_get_group_as_student() {
+#[serial]
+async fn test_k_get_group_as_student() {
     let app = get_app().await;
     let mut req = test::TestRequest::get().uri("/groups/1");
     req = student(req);
@@ -119,7 +131,8 @@ async fn test_get_group_as_student() {
 }
 
 #[actix_web::test]
-async fn test_get_group_as_tutor() {
+#[serial]
+async fn test_l_get_group_as_tutor() {
     let app = get_app().await;
     let mut req = test::TestRequest::get().uri("/groups/1");
     req = tutor(req);
@@ -128,7 +141,8 @@ async fn test_get_group_as_tutor() {
 }
 
 #[actix_web::test]
-async fn test_get_group_as_admin() {
+#[serial]
+async fn test_m_get_group_as_admin() {
     let app = get_app().await;
     let mut req = test::TestRequest::get().uri("/groups/1");
     req = admin(req);
