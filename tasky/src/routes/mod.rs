@@ -1,9 +1,9 @@
 use actix_web::web;
 
-mod assignment;
-mod group;
-mod group_join_request;
-mod solution;
+pub mod assignment;
+pub mod group;
+pub mod group_join_request;
+pub mod solution;
 
 /// Initializes all endpoints
 pub fn init_services(cfg: &mut web::ServiceConfig) {

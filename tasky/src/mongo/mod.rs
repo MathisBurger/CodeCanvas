@@ -27,11 +27,8 @@ pub async fn connect(config: AppConfig) -> Database {
 async fn read_cursor<T: DeserializeOwned>(mut cursor: Cursor<Bson>) -> Vec<T> {
     let mut results: Vec<T> = vec![];
     while let Some(result) = cursor.next().await {
-        match result {
-            Ok(document) => {
-                results.push(bson::from_bson(document).unwrap());
-            }
-            _ => {}
+        if let Ok(document) = result {
+            results.push(bson::from_bson(document).unwrap());
         }
     }
     results

@@ -13,6 +13,7 @@ func NewAuthMiddleware() fiber.Handler {
 		userId, err := strconv.Atoi(userIdString)
 		if err != nil {
 			ctx.Locals("currentUser", nil)
+			return ctx.Next()
 		}
 		if userId == -1 || userId == 0 {
 			ctx.Locals("currentUser", nil)

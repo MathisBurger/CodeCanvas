@@ -46,6 +46,7 @@ impl Enrich<GroupJoinRequest> for GroupJoinRequestResponse {
                 user_id: u64::try_from(from.requestor)?,
             })
             .await?;
+
         Ok(GroupJoinRequestResponse {
             id: from.id,
             requestor: requestor.into_inner().into(),

@@ -8,16 +8,20 @@ impl IsGranted for Assignment {
         action: SecurityAction,
         user: &crate::auth_middleware::UserData,
     ) -> bool {
-        return match action {
+        match action {
             // Use CreateAssignment for creation instead
             SecurityAction::Create => false,
-            SecurityAction::Read => user.groups.contains(&self.group_id),
+            SecurityAction::Read => {
+                user.groups.contains(&self.group_id)
+                    || StaticSecurity::is_granted(StaticSecurityAction::IsAdmin, user)
+            }
             SecurityAction::Update => {
-                StaticSecurity::is_granted(StaticSecurityAction::IsAdminOrTutor, user)
-                    && user.groups.contains(&self.group_id)
+                (StaticSecurity::is_granted(StaticSecurityAction::IsAdminOrTutor, user)
+                    && user.groups.contains(&self.group_id))
+                    || StaticSecurity::is_granted(StaticSecurityAction::IsAdmin, user)
             }
             SecurityAction::Delete => false,
-        };
+        }
     }
 }
 
@@ -28,8 +32,9 @@ impl IsGranted for CreateAssignment {
         user: &crate::auth_middleware::UserData,
     ) -> bool {
         if action == SecurityAction::Create {
-            return StaticSecurity::is_granted(StaticSecurityAction::IsAdminOrTutor, user)
-                && user.groups.contains(&self.group_id);
+            return (StaticSecurity::is_granted(StaticSecurityAction::IsTutor, user)
+                && user.groups.contains(&self.group_id))
+                || StaticSecurity::is_granted(StaticSecurityAction::IsAdmin, user);
         }
         false
     }

@@ -12,7 +12,7 @@ pub fn check_in_list(uri: &str, whitelist: Vec<String>) -> bool {
             return true;
         }
     }
-    return false;
+    false
 }
 
 pub fn create_jwt(user: &User, secret: String) -> Result<String, ApiError> {
@@ -22,7 +22,7 @@ pub fn create_jwt(user: &User, secret: String) -> Result<String, ApiError> {
     claims.insert("userRoles", user.roles.join(";"));
     claims
         .sign_with_key(&key)
-        .map_err(|x| ApiError::InternalServerError {
+        .map_err(|_x| ApiError::InternalServerError {
             message: "Cannot sign JWT".to_string(),
         })
 }
@@ -40,7 +40,7 @@ pub fn get_user_claims(req: &HttpRequest, secret: String) -> Result<Vec<(&str, S
         cookie
             .value()
             .verify_with_key(&key)
-            .map_err(|e| ApiError::BadRequest {
+            .map_err(|_e| ApiError::BadRequest {
                 message: "Cannot get valid user claims from cookie".to_string(),
             })?;
     if !claims.contains_key("userId") || !claims.contains_key("userRoles") {
@@ -58,4 +58,40 @@ pub fn get_user_claims(req: &HttpRequest, secret: String) -> Result<Vec<(&str, S
             claims.get("userRoles").unwrap().to_string(),
         ),
     ])
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{
+        auth::{check_in_list, create_jwt},
+        models::user::User,
+    };
+
+    #[test]
+    fn test_check_in_list() {
+        let uri = "hello world";
+        let vec1 = vec!["hello".to_string(), "world".to_string()];
+        let vec2 = vec!["hello".to_string()];
+        assert!(check_in_list(uri, vec1));
+        assert!(check_in_list(uri, vec2));
+    }
+
+    #[test]
+    fn test_check_not_in_list() {
+        let uri = "hella";
+        let vec1 = vec!["hello".to_string(), "world".to_string()];
+        let vec2 = vec!["hello world".to_string()];
+        assert!(!check_in_list(uri, vec1));
+        assert!(!check_in_list(uri, vec2));
+    }
+
+    #[test]
+    fn test_create_jwt() {
+        let user = User {
+            id: 1,
+            roles: vec!["ROLE_ADMIN".to_string()],
+        };
+        let secret = "SECRET".to_string();
+        assert!(create_jwt(&user, secret).is_ok());
+    }
 }

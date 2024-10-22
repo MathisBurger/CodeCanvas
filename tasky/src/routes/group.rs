@@ -6,12 +6,12 @@ use crate::response::Enrich;
 use crate::security::{IsGranted, SecurityAction};
 use crate::AppState;
 use actix_web::{get, post, web, HttpResponse};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 /// Request to create a new group
-#[derive(Deserialize)]
-struct CreateGroupRequest {
-    title: String,
+#[derive(Deserialize, Serialize)]
+pub struct CreateGroupRequest {
+    pub title: String,
 }
 
 /// Endpoint to create a new group
@@ -22,20 +22,23 @@ pub async fn create_group(
     user: web::ReqData<UserData>,
 ) -> Result<HttpResponse, ApiError> {
     let conn = &mut data.db.db.get().unwrap();
+
     let group = GroupRepository::get_by_title(&req.title, conn);
     if group.is_some() {
         return Ok(HttpResponse::Found().finish());
     }
+
     let mut new_group = CreateGroup {
         title: (req.title).clone(),
         tutor: user.user_id,
         members: vec![],
     };
     if !new_group.is_granted(SecurityAction::Create, &user) {
-        return Err(ApiError::Unauthorized {
+        return Err(ApiError::Forbidden {
             message: "User is not allowed to create a group".to_string(),
         });
     }
+
     let resp = GroupRepository::insert_group(new_group, conn);
     let enriched = GroupResponse::enrich(&resp, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(enriched))
@@ -48,8 +51,10 @@ pub async fn get_all_groups(
     user: web::ReqData<UserData>,
 ) -> Result<HttpResponse, ApiError> {
     let conn = &mut data.db.db.get().unwrap();
+
     let groups = GroupRepository::get_groups_for_not_member(user.into_inner().user_id, conn);
     let resp = GroupsResponse::enrich(&groups, &mut data.user_api.clone(), conn).await?;
+
     Ok(HttpResponse::Ok().json(resp))
 }
 
@@ -60,8 +65,10 @@ pub async fn get_all_my_groups(
     user: web::ReqData<UserData>,
 ) -> Result<HttpResponse, ApiError> {
     let conn = &mut data.db.db.get().unwrap();
+
     let groups = GroupRepository::get_groups_for_member(user.into_inner().user_id, conn);
     let resp = GroupsResponse::enrich(&groups, &mut data.user_api.clone(), conn).await?;
+
     Ok(HttpResponse::Ok().json(resp))
 }
 
@@ -73,6 +80,7 @@ pub async fn get_group(
     path: web::Path<(i32,)>,
 ) -> Result<HttpResponse, ApiError> {
     let conn = &mut data.db.db.get().unwrap();
+
     let mut group =
         GroupRepository::get_by_id(path.into_inner().0, conn).ok_or(ApiError::BadRequest {
             message: "No access to group".to_string(),
