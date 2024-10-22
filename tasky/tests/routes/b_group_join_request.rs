@@ -42,12 +42,8 @@ async fn test_get_join_requests_as_tutor() {
     let mut req = test::TestRequest::post().uri("/groups/1/join_requests");
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    let body_bytes = test::read_body(resp).await;
-    println!(
-        "get join request tutor: {}",
-        String::from_utf8(body_bytes.to_vec()).unwrap()
-    );
-    //assert!(resp.status().is_success())
+    println!("get join request tutor: {}", &resp.status());
+    assert!(resp.status().is_success())
 }
 
 #[actix_web::test]
@@ -56,12 +52,8 @@ async fn test_get_join_requests_as_admin() {
     let mut req = test::TestRequest::post().uri("/groups/1/join_requests");
     req = admin(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    let body_bytes = test::read_body(resp).await;
-    println!(
-        "get join request admin: {}",
-        String::from_utf8(body_bytes.to_vec()).unwrap()
-    );
-    //assert!(resp.status().is_success())
+    println!("get join request admin: {}", &resp.status());
+    assert!(resp.status().is_success())
 }
 
 #[actix_web::test]
@@ -89,12 +81,8 @@ async fn test_approve_join_request_as_admin() {
     let mut req = test::TestRequest::post().uri("/groups/1/join_requests/2/approve");
     req = admin(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    let body_bytes = test::read_body(resp).await;
-    println!(
-        "approve join request admin: {}",
-        String::from_utf8(body_bytes.to_vec()).unwrap()
-    );
-    //assert!(resp.status().is_success())
+    println!("approve join request admin: {}", &resp.status());
+    assert!(resp.status().is_success())
 }
 
 #[actix_web::test]
@@ -113,12 +101,7 @@ async fn test_reject_join_request_as_tutor() {
     let mut req = test::TestRequest::post().uri("/groups/1/join_requests/3/approve");
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    let body_bytes = test::read_body(resp).await;
-    println!(
-        "reject join request tutor: {}",
-        String::from_utf8(body_bytes.to_vec()).unwrap()
-    );
-    //assert!(resp.status().is_client_error())
+    assert!(resp.status().is_success())
 }
 
 async fn create_join_request() {
