@@ -85,7 +85,7 @@ async fn test_f_create_assignment_as_admin() {
         });
     req = admin(req);
     let resp = test::call_service(&app, req.to_request()).await;
-    assert!(resp.status().is_client_error())
+    assert!(resp.status().is_success())
 }
 
 #[actix_web::test]
