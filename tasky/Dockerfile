@@ -14,7 +14,7 @@ RUN rm ./target/release/deps/tasky*
 ENV IS_DOCKER="true"
 RUN cargo build --release
 
-FROM busybox:1.35.0-uclibc as busybox
+FROM busybox:1.35.0-uclibc AS busybox
 
 FROM gcr.io/distroless/cc-debian12
 ARG ARCH=x86_64
