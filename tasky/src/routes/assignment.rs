@@ -35,7 +35,11 @@ fn deserialize_naive_datetime<'de, D>(deserializer: D) -> Result<Option<NaiveDat
 where
     D: Deserializer<'de>,
 {
-    let s: String = Deserialize::deserialize(deserializer)?;
+    let str_option: Option<String> = Deserialize::deserialize(deserializer).ok();
+    if str_option.is_none() {
+        return Ok(None);
+    }
+    let s = str_option.unwrap();
     if let Ok(datetime_with_tz) = DateTime::parse_from_rfc3339(s.as_str()) {
         // Convert to NaiveDateTime by discarding the time zone
         return Ok(Some(datetime_with_tz.naive_utc()));

@@ -33,8 +33,6 @@ const CreateOrUpdateAssignmentModal = ({
     },
     validate: {
       title: (v) => (v.trim() === "" ? "Title should contain a value" : null),
-      description: (v) =>
-        v.trim() === "" ? "Description should contain a value" : null,
       due_date: (v) =>
         v ? (new Date(v).getTime() <= new Date().getTime()
           ? "Date should be in the future"
@@ -95,8 +93,8 @@ const CreateOrUpdateAssignmentModal = ({
           {...form.getInputProps("title")}
         />
         <DateTimePicker
-          withAsterisk
           label="Due date"
+          clearable
           key={form.key("due_date")}
           {...form.getInputProps("due_date")}
         />
