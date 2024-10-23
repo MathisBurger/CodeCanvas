@@ -48,7 +48,7 @@ pub struct QuestionCatalogueElement {
 
 /// The assignment entity
 #[derive(Queryable, Selectable, AsChangeset, Clone, Serialize)]
-#[diesel(table_name = crate::schema::assignments)]
+#[diesel(table_name = crate::schema::assignments, treat_none_as_null = true)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Assignment {
     pub id: i32,
@@ -68,7 +68,7 @@ pub struct Assignment {
 
 /// Used to create a new assignment
 #[derive(Insertable)]
-#[diesel(table_name = crate::schema::assignments)]
+#[diesel(table_name = crate::schema::assignments, treat_none_as_null = true)]
 pub struct CreateAssignment {
     pub title: String,
     pub due_date: Option<NaiveDateTime>,

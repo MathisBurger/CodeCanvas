@@ -46,7 +46,7 @@ where
     }
     NaiveDateTime::parse_from_str(s.as_str(), "%Y-%m-%dT%H:%M:%S")
         .map_err(serde::de::Error::custom)
-        .map(|v| Some(v))
+        .map(Some)
 }
 
 /// Request to create an assignment
