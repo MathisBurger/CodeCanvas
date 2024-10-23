@@ -38,9 +38,11 @@ where
     let s: String = Deserialize::deserialize(deserializer)?;
     if let Ok(datetime_with_tz) = DateTime::parse_from_rfc3339(s.as_str()) {
         // Convert to NaiveDateTime by discarding the time zone
-        return Ok(datetime_with_tz.naive_utc());
+        return Ok(Some(datetime_with_tz.naive_utc()));
     }
-    NaiveDateTime::parse_from_str(s.as_str(), "%Y-%m-%dT%H:%M:%S").map_err(serde::de::Error::custom)
+    NaiveDateTime::parse_from_str(s.as_str(), "%Y-%m-%dT%H:%M:%S")
+        .map_err(serde::de::Error::custom)
+        .map(|v| Some(v))
 }
 
 /// Request to create an assignment
