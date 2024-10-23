@@ -7,7 +7,7 @@ import NavigateBack from "@/components/NavigateBack";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { isGranted } from "@/service/auth";
 import { UserRoles } from "@/service/types/usernator";
-import { useState } from "react";
+import {useEffect, useState } from "react";
 import CreateOrUpdateAssignmentModal from "@/components/assignments/CreateOrUpdateAssignmentModal";
 import CentralLoading from "@/components/CentralLoading";
 import AssignmentCreateOrUpdateCodeTestModal from "@/components/assignments/AssignmentCreateOrUpdateCodeTestModal";
@@ -18,6 +18,7 @@ import AssignmentSolutionsTab from "@/components/assignments/AssignmentSolutions
 import AssignmentCompletedByTab from "@/components/assignments/AssignmentCompletedByTab";
 import CreateQuestionsModal from "@/components/assignments/CreateQuestionsModal";
 import QuestionAnswersDisplay from "@/components/solution/questions/QuestionAnswersDisplay";
+import { useSpotlightStage2 } from "@/hooks/spotlight/stage2";
 
 const AssignmentDetailsPage = ({
   params,
@@ -35,6 +36,14 @@ const AssignmentDetailsPage = ({
     () => api.getAssignmentForGroup(groupId, assignmentId),
     [assignmentId, groupId],
   );
+
+  const {addAssignment} = useSpotlightStage2();
+
+  useEffect(() => {
+      if (assignment && groupId) {
+        addAssignment(assignment, groupId);
+      }
+  }, [addAssignment, assignment, groupId])
 
   if (isNaN(groupId) || isNaN(assignmentId)) {
     return (
