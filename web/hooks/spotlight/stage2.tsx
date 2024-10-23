@@ -7,7 +7,7 @@ import {useRouter} from "next/navigation";
 /**
  * User boundary type to ensure data is user account specific if user uses two different accounts in one browser
  */
-type UserRelatedType = {userId: number|undefined};
+type UserRelatedType = {userId: number|undefined, die: Date};
 
 /**
  * Data type that is the schema of the stored data
@@ -91,9 +91,12 @@ export const useSpotlightStage2 = () => {
     const addGroup = (group: Group) => {
         if (undefined === context.content.groups.find((g) => g.userId === user?.id && g.id === group.id)) {
             const copy = Object.assign({}, context.content);
+            const die = new Date();
+            die.setDate(new Date().getDate() +7);
             copy.groups.push({
                 ...group,
-                userId: user?.id
+                userId: user?.id,
+                die
             });
             context.setContent(copy);
         }
@@ -108,10 +111,13 @@ export const useSpotlightStage2 = () => {
     const addAssignment = (assignment: Assignment, groupId: number) => {
         if (undefined === context.content.assignments.find((g) => g.userId === user?.id && g.id === assignment.id)) {
             const copy = Object.assign({}, context.content);
+            const die = new Date();
+            die.setDate(new Date().getDate() +7);
             copy.assignments.push({
                 ...assignment,
                 userId: user?.id,
-                groupId
+                groupId,
+                die
             });
             context.setContent(copy);
         }
@@ -125,9 +131,12 @@ export const useSpotlightStage2 = () => {
     const addSolution = (solution: Solution) => {
         if (undefined === context.content.solutions.find((g) => g.userId === user?.id && g.id === solution.id)) {
             const copy = Object.assign({}, context.content);
+            const die = new Date();
+            die.setDate(new Date().getDate() +7);
             copy.solutions.push({
                 ...solution,
-                userId: user?.id
+                userId: user?.id,
+                die
             });
             context.setContent(copy);
         }
