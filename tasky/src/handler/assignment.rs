@@ -50,8 +50,10 @@ pub async fn handle_create_multipart(
             message: "File structure does not contain any file".to_string(),
         });
     }
+
     let mut filename_map = build_filename_map(&form.files)?;
     let mut actual_files: Vec<&mut AssignmentFile> = vec![];
+
     validate_test_file_structure(
         &mut file_structure,
         &mut filename_map,
@@ -88,18 +90,22 @@ pub async fn handle_create_multipart(
         mongodb,
     )
     .await;
+
     for (i, file) in actual_files.into_iter().enumerate() {
         file.object_id = Some(mongo_files.get(i).unwrap().to_hex());
     }
+
     let file_structure_value =
         serde_json::to_value(file_structure).map_err(|_| ApiError::InternalServerError {
             message: "Cannot convert file structure to JSON".to_string(),
         })?;
+
     assignment.file_structure = Some(file_structure_value);
     assignment.runner_cpu = form.runner_config.runner_cpu.clone();
     assignment.runner_memory = form.runner_config.runner_memory.clone();
     assignment.runner_timeout = form.runner_config.runner_timeout.clone();
     assignment.runner_cmd = form.runner_config.runner_cmd.clone();
     AssignmentRepository::update_assignment(assignment.clone(), db);
+
     Ok(assignment)
 }

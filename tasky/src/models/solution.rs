@@ -17,13 +17,13 @@ pub enum ApprovalStatus {
 impl ApprovalStatus {
     /// Converts enum to string (this is simpler than to_string())
     pub fn string(&self) -> String {
-        return match self {
+        match self {
             Self::Pending => "PENDING".to_string(),
             Self::Approved => "APPROVED".to_string(),
             Self::Rejected => "REJECTED".to_string(),
             Self::Successful => "SUCCESSFUL".to_string(),
             Self::Failed => "FAILED".to_string(),
-        };
+        }
     }
 }
 

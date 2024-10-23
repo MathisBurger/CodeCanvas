@@ -16,8 +16,9 @@ impl IsGranted for Group {
                         && self.members.contains(&Some(user.user_id)))
             }
             SecurityAction::Update => {
-                StaticSecurity::is_granted(StaticSecurityAction::IsTutor, user)
-                    && user.groups.contains(&self.id)
+                (StaticSecurity::is_granted(StaticSecurityAction::IsTutor, user)
+                    && user.groups.contains(&self.id))
+                    || StaticSecurity::is_granted(StaticSecurityAction::IsAdmin, user)
             }
             SecurityAction::Delete => false,
         }
@@ -27,8 +28,9 @@ impl IsGranted for Group {
 impl IsGranted for CreateGroup {
     fn is_granted(&mut self, action: SecurityAction, user: &UserData) -> bool {
         if action == SecurityAction::Create {
-            return StaticSecurity::is_granted(StaticSecurityAction::IsTutor, user);
+            return StaticSecurity::is_granted(StaticSecurityAction::IsTutor, user)
+                && self.tutor == user.user_id;
         }
-        return false;
+        false
     }
 }

@@ -1,7 +1,6 @@
 package services
 
 import (
-	"context"
 	"github.com/runabol/tork"
 	"github.com/runabol/tork/engine"
 	"github.com/runabol/tork/input"
@@ -15,9 +14,7 @@ func ExecuteTask(c web.Context, task input.Task, username string) (*tork.Job, er
 		Tasks: []input.Task{task},
 	}
 
-	// pass the listener to the submit job call
-	ctx := context.WithValue(c.Request().Context(), "username", username)
-	job, err := engine.SubmitJob(ctx, input)
+	job, err := engine.SubmitJob(c.Request().Context(), input)
 	if err != nil {
 		return nil, err
 	}

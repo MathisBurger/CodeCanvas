@@ -18,9 +18,9 @@ where
     Self: Sized,
 {
     /// Enriches the from entity with some data from external APIs
-    async fn enrich(
+    fn enrich(
         from: &T,
         client: &mut UsernatorApiClient<Channel>,
         db_conn: &mut DB,
-    ) -> Result<Self, ApiError>;
+    ) -> impl std::future::Future<Output = Result<Self, ApiError>>;
 }

@@ -1,0 +1,106 @@
+services:
+  postgres:
+    image: postgres:latest
+    ports: 
+      - "5434:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=admin
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    ports: 
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+  maildev:
+    image: maildev/maildev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+  usernator:
+    build: ./usernator
+    ports: 
+      - "3001:3000"
+      - "3004:3001"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=admin
+      - DB_PASSWORD=admin
+      - DB_DATABASE=usernator
+      - SMTP_HOST=maildev
+      - SMTP_PORT=1025
+      - SMTP_USERNAME=app@codecanvas.de
+      - SMTP_PASSWORD=cc
+      - TASKY_ADDR=tasky:3001
+      - TEMPLATE_BASE_URL=http://localhost:3000/web
+    depends_on:
+      - postgres
+      - maildev
+    restart: on-failure
+  authy:
+    build:
+      context: ./authy
+    ports: 
+      - "3002:3000"
+    environment:
+      - JWT_SECRET=secret
+      - WHITELIST=["/usernator/reset_password","/usernator/submit_password","/usernator/register","/executor_ui/_next"]
+      - SERVICE_LOCATIONS={usernator="http://usernator:3000", tasky="http://tasky:3000", executor_ui="http://executor_ui:8100"}
+    depends_on:
+      - usernator
+      - tasky
+    restart: on-failure
+  tasky:
+    build:
+      context: ./tasky
+    ports: 
+      - "3005:3000"
+      - "3006:3001"
+    environment:
+      - DB_NAME=tasky
+      - DB_USERNAME=admin
+      - DB_PASSWORD=admin
+      - DB_HOST=postgres:5432
+      - USERNATOR_GRPC=http://usernator:3001
+      - MONGO_HOST="mongodb:27017"
+      - MONGO_USERNAME=admin
+      - MONGO_PASSWORD=admin
+      - MONGO_DATABASE=executor_files
+      - EXECUTOR_HTTP=http://executor:8000
+    depends_on:
+      - usernator
+      - postgres
+    restart: on-failure
+  executor:
+    build: ./executor
+    ports:
+      - "3003:8000"
+    environment:
+      - DATABASE_USERNAME=admin
+      - DATABASE_PASSWORD=admin
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=executor
+      - MONGODB_USERNAME=admin
+      - MONGODB_PASSWORD=admin
+      - MONGODB_HOST=mongodb:27017
+      - MONGODB_DATABASE=executor_files
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - postgres
+    restart: on-failure
+  executor_ui:
+    image: runabol/tork-web
+    ports:
+      - "3007:8100"
+    environment:
+      - BACKEND_URL=http://executor:8000
+    depends_on:
+      - executor
+volumes:
+  db_data:

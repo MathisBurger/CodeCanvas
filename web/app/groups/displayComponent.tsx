@@ -51,9 +51,9 @@ const GroupsDisplayComponent = ({
       name: "View",
       onClick: (row) => router.push(`/groups/${row.id}`),
       auth: [UserRoles.Admin, UserRoles.Tutor, UserRoles.Student],
-      authFunc: () =>
+      authFunc: (row) =>
         page === "groups"
-          ? isGranted(user, [UserRoles.Tutor, UserRoles.Admin])
+          ? isGranted(user, [UserRoles.Admin]) || (isGranted(user, [UserRoles.Tutor]) && (user?.groups.map((g) => g.id) ?? []).indexOf(row.id) > -1)
           : true,
     },
     {

@@ -9,9 +9,15 @@ import (
 )
 
 func GetSelf(ctx *fiber.Ctx) error {
-	user := ctx.Locals("currentUser").(*models.User)
+	user, ok := ctx.Locals("currentUser").(*models.User)
+	if !ok {
+		return fiber.NewError(fiber.StatusUnauthorized, "You need to be logged in")
+	}
 	if user == nil {
 		return fiber.NewError(fiber.StatusNotFound, "User not found")
+	}
+	if !waitForTasky() {
+		return fiber.NewError(fiber.StatusInternalServerError, "tasky GRPC service not accessable")
 	}
 	rawGroups, err := (*shared.Tasky).GetUserGroups(context.Background(), &tasky_grpc.GroupsRequest{
 		UserId: uint64(user.ID),

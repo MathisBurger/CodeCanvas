@@ -1,0 +1,136 @@
+name: Test
+
+on: 
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint-usernator:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.60
+          working-directory: usernator
+  lint-executor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.60
+          working-directory: executor
+  lint-tasky:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: clippy
+      - name: Install protoc
+        uses: arduino/setup-protoc@v3
+      - name: Run clippy
+        run: |
+          ln ./usernator/api.proto ./tasky/api.proto
+          cd tasky
+          export IS_DOCKER=false
+          cargo clippy
+  lint-authy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: clippy
+      - name: Run clippy
+        run: |
+          cd authy
+          cargo clippy
+  build-tools:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Go 1.21
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+      - name: Build tools
+        run: |
+          cd pipeline-tools
+          go mod tidy
+          go build cmd/tools.go
+      - uses: actions/upload-artifact@master
+        with:
+          name: build-tools
+          path: ./pipeline-tools/tools
+  unit-tests:
+    needs: build-tools
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout sources
+        uses: actions/checkout@v4
+      - uses: actions/download-artifact@master
+        with:
+          name: build-tools
+          path: ./build-tools
+      - name: Create proto symlinks
+        run: |
+          ln ./usernator/api.proto ./tasky/api.proto
+          ln ./tasky/tasky.proto ./usernator/tasky.proto
+      - name: Install docker-compose
+        run: |
+          curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
+      - name: Initialize compose cluster
+        run: docker-compose -f "ci-compose.yml" up -d --build
+      - name: Wait for startup
+        run: sleep 20
+      - name: Init services
+        run: |
+          chmod +x ./build-tools/tools
+          ./build-tools/tools
+      - name: Restart containers
+        run: |
+          docker-compose -f "ci-compose.yml" stop
+          docker-compose -f "ci-compose.yml" up -d
+      - name: Wait for startup
+        run: sleep 20
+      # Tests start here
+      - name: Setup golang
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+      - name: Setup rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1    
+      - name: Install protoc
+        uses: arduino/setup-protoc@v3  
+      - name: Test usernator
+        run: |
+          cd usernator
+          go mod tidy
+          go run fixtures/fixtures.go
+          export TEST_MODE=true
+          go test ./...
+      - name: Test tasky
+        run: |
+          cd tasky
+          export IS_DOCKER=false
+          export DB_USERNAME=admin
+          export DB_PASSWORD=admin
+          cargo test -- --nocapture --test-threads=1
+      - name: Test authy
+        run: |
+          cd authy
+          cargo test        
+    

@@ -34,15 +34,13 @@ impl ResponseError for ApiError {
 
     fn error_response(&self) -> HttpResponse<BoxBody> {
         let response_body = ResponseBody {
-            message: format!(
-                "{}",
-                match self {
-                    ApiError::BadRequest { message } => message,
-                    ApiError::Forbidden { message } => message,
-                    ApiError::InternalServerError { message } => message,
-                    ApiError::Unauthorized { message } => message,
-                }
-            ),
+            message: (match self {
+                ApiError::BadRequest { message } => message,
+                ApiError::Forbidden { message } => message,
+                ApiError::InternalServerError { message } => message,
+                ApiError::Unauthorized { message } => message,
+            })
+            .to_string(),
         };
         HttpResponse::build(self.status_code()).json(response_body)
     }
@@ -55,7 +53,7 @@ impl<T> From<ApiError> for Result<T, ApiError> {
 }
 
 impl From<InvalidLength> for ApiError {
-    fn from(value: InvalidLength) -> Self {
+    fn from(_value: InvalidLength) -> Self {
         ApiError::InternalServerError {
             message: "Invalid text length".to_string(),
         }
@@ -63,7 +61,7 @@ impl From<InvalidLength> for ApiError {
 }
 
 impl From<jwt::error::Error> for ApiError {
-    fn from(value: jwt::error::Error) -> Self {
+    fn from(_value: jwt::error::Error) -> Self {
         ApiError::InternalServerError {
             message: "Error with JWT".to_string(),
         }

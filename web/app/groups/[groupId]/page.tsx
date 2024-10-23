@@ -4,6 +4,7 @@ import { Group as GroupType } from "@/service/types/tasky";
 import { TabsComponent } from "./client";
 import useClientQuery from "@/hooks/useClientQuery";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
+import CentralLoading from "@/components/CentralLoading";
 
 const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
   const id = parseInt(`${params.groupId}`, 10);
@@ -23,7 +24,11 @@ const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
         <Title>{group?.title ?? "Loading"}</Title>
         <Badge>{group?.tutor?.username ?? "Loading"}</Badge>
       </Group>
-      <TabsComponent group={group} refetch={refetch} />
+        {group === null ? (
+            <CentralLoading />
+        ) : (
+            <TabsComponent group={group} refetch={refetch} />
+        )}
     </Container>
   );
 };

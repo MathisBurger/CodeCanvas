@@ -74,7 +74,7 @@ impl Enrich<Assignment> for MinifiedAssignmentResponse {
         Ok(MinifiedAssignmentResponse {
             id: from.id,
             title: from.title.clone(),
-            due_date: from.due_date.clone(),
+            due_date: from.due_date,
             description: from.description.clone(),
             language: from.language.clone(),
         })
@@ -93,6 +93,7 @@ impl Enrich<Vec<Assignment>> for AssignmentsResponse {
         for assignment in from {
             resp.push(MinifiedAssignmentResponse::enrich(assignment, client, db_conn).await?);
         }
+
         Ok(AssignmentsResponse { assignments: resp })
     }
 }
@@ -107,23 +108,27 @@ impl Enrich<Assignment> for AssignmentResponse {
     ) -> Result<Self, ApiError> {
         let group = GroupRepository::get_by_id(from.group_id, db_conn).unwrap();
         let group_response = MinifiedGroupResponse::enrich(&group, client, db_conn).await?;
+
         let completed_by: Vec<u64> = from
             .completed_by
             .iter()
             .filter(|x| x.is_some())
             .map(|m| u64::try_from(m.unwrap()).unwrap())
             .collect();
+
         let users = client
             .get_users(UsersRequest {
                 user_ids: completed_by,
             })
             .await?;
+
         let file_structure = serde_json::from_value(
             from.file_structure
                 .clone()
                 .unwrap_or(serde_json::Value::Null),
         )
         .ok();
+
         let question_catalogue = serde_json::from_value(
             from.question_catalogue
                 .clone()
@@ -134,7 +139,7 @@ impl Enrich<Assignment> for AssignmentResponse {
         Ok(AssignmentResponse {
             id: from.id,
             title: from.title.clone(),
-            due_date: from.due_date.clone(),
+            due_date: from.due_date,
             group: group_response,
             description: from.description.clone(),
             language: from.language.clone(),
