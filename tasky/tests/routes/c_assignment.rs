@@ -42,8 +42,9 @@ async fn test_d_create_assignment_as_student() {
         .uri("/groups/1/assignments")
         .set_json(CreateAssignmentRequest {
             title: "".to_string(),
-            due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-                .unwrap(),
+            due_date: Some(
+                NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+            ),
             description: "".to_string(),
             language: tasky::models::assignment::AssignmentLanguage::Java,
         });
@@ -60,8 +61,9 @@ async fn test_e_create_assignment_as_tutor() {
         .uri("/groups/1/assignments")
         .set_json(CreateAssignmentRequest {
             title: "".to_string(),
-            due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-                .unwrap(),
+            due_date: Some(
+                NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+            ),
             description: "".to_string(),
             language: tasky::models::assignment::AssignmentLanguage::Java,
         });
@@ -78,8 +80,9 @@ async fn test_f_create_assignment_as_admin() {
         .uri("/groups/1/assignments")
         .set_json(CreateAssignmentRequest {
             title: "".to_string(),
-            due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-                .unwrap(),
+            due_date: Some(
+                NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+            ),
             description: "".to_string(),
             language: tasky::models::assignment::AssignmentLanguage::Java,
         });
@@ -126,8 +129,9 @@ async fn test_j_update_assignment_as_student() {
         .uri("/groups/1/assignments/1/update")
         .set_json(UpdateAssignmentRequest {
             title: "".to_string(),
-            due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-                .unwrap(),
+            due_date: Some(
+                NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+            ),
             description: "".to_string(),
         });
     req = student(req);
@@ -143,8 +147,9 @@ async fn test_k_update_assignment_as_tutor() {
         .uri("/groups/1/assignments/1/update")
         .set_json(UpdateAssignmentRequest {
             title: "".to_string(),
-            due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-                .unwrap(),
+            due_date: Some(
+                NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+            ),
             description: "".to_string(),
         });
     req = tutor(req);
@@ -160,8 +165,9 @@ async fn test_l_update_assignment_as_admin() {
         .uri("/groups/1/assignments/1/update")
         .set_json(UpdateAssignmentRequest {
             title: "".to_string(),
-            due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-                .unwrap(),
+            due_date: Some(
+                NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+            ),
             description: "".to_string(),
         });
     req = admin(req);

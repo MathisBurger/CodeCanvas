@@ -12,8 +12,9 @@ fn test_create_assignment_disabled() {
     let mut assignment = Assignment {
         id: 1,
         title: "".to_string(),
-        due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-            .unwrap(),
+        due_date: Some(
+            NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+        ),
         group_id: 1,
         description: "".to_string(),
         language: AssignmentLanguage::Golang,
@@ -34,8 +35,9 @@ fn test_read_assignment_as_wrong_student() {
     let mut assignment = Assignment {
         id: 1,
         title: "".to_string(),
-        due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-            .unwrap(),
+        due_date: Some(
+            NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+        ),
         group_id: 1,
         description: "".to_string(),
         language: AssignmentLanguage::Golang,
@@ -56,8 +58,9 @@ fn test_read_assignment_as_student() {
     let mut assignment = Assignment {
         id: 1,
         title: "".to_string(),
-        due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-            .unwrap(),
+        due_date: Some(
+            NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+        ),
         group_id: 1,
         description: "".to_string(),
         language: AssignmentLanguage::Golang,
@@ -78,8 +81,9 @@ fn test_read_assignment_as_wrong_tutor() {
     let mut assignment = Assignment {
         id: 1,
         title: "".to_string(),
-        due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-            .unwrap(),
+        due_date: Some(
+            NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+        ),
         group_id: 1,
         description: "".to_string(),
         language: AssignmentLanguage::Golang,
@@ -100,8 +104,9 @@ fn test_read_assignment_as_tutor() {
     let mut assignment = Assignment {
         id: 1,
         title: "".to_string(),
-        due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-            .unwrap(),
+        due_date: Some(
+            NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+        ),
         group_id: 1,
         description: "".to_string(),
         language: AssignmentLanguage::Golang,
@@ -122,8 +127,9 @@ fn test_read_assignment_as_admin() {
     let mut assignment = Assignment {
         id: 1,
         title: "".to_string(),
-        due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-            .unwrap(),
+        due_date: Some(
+            NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+        ),
         group_id: 1,
         description: "".to_string(),
         language: AssignmentLanguage::Golang,
@@ -144,8 +150,9 @@ fn test_update_assignment_as_wrong_student() {
     let mut assignment = Assignment {
         id: 1,
         title: "".to_string(),
-        due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-            .unwrap(),
+        due_date: Some(
+            NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+        ),
         group_id: 1,
         description: "".to_string(),
         language: AssignmentLanguage::Golang,
@@ -166,8 +173,9 @@ fn test_update_assignment_as_student() {
     let mut assignment = Assignment {
         id: 1,
         title: "".to_string(),
-        due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-            .unwrap(),
+        due_date: Some(
+            NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+        ),
         group_id: 1,
         description: "".to_string(),
         language: AssignmentLanguage::Golang,
@@ -188,8 +196,9 @@ fn test_update_assignment_as_wrong_tutor() {
     let mut assignment = Assignment {
         id: 1,
         title: "".to_string(),
-        due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-            .unwrap(),
+        due_date: Some(
+            NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+        ),
         group_id: 1,
         description: "".to_string(),
         language: AssignmentLanguage::Golang,
@@ -210,8 +219,9 @@ fn test_update_assignment_as_tutor() {
     let mut assignment = Assignment {
         id: 1,
         title: "".to_string(),
-        due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-            .unwrap(),
+        due_date: Some(
+            NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+        ),
         group_id: 1,
         description: "".to_string(),
         language: AssignmentLanguage::Golang,
@@ -232,8 +242,9 @@ fn test_update_assignment_as_admin() {
     let mut assignment = Assignment {
         id: 1,
         title: "".to_string(),
-        due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-            .unwrap(),
+        due_date: Some(
+            NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+        ),
         group_id: 1,
         description: "".to_string(),
         language: AssignmentLanguage::Golang,
@@ -253,8 +264,9 @@ fn test_create_create_assignment_as_student() {
     let user = get_student_with_group();
     let mut create = CreateAssignment {
         title: "".to_string(),
-        due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-            .unwrap(),
+        due_date: Some(
+            NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+        ),
         group_id: 1,
         description: "".to_string(),
         language: AssignmentLanguage::Golang,
@@ -267,8 +279,9 @@ fn test_create_create_assignment_as_wrong_tutor() {
     let user = get_tutor();
     let mut create = CreateAssignment {
         title: "".to_string(),
-        due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-            .unwrap(),
+        due_date: Some(
+            NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+        ),
         group_id: 1,
         description: "".to_string(),
         language: AssignmentLanguage::Golang,
@@ -281,8 +294,9 @@ fn test_create_create_assignment_as_tutor() {
     let user = get_tutor_with_group();
     let mut create = CreateAssignment {
         title: "".to_string(),
-        due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-            .unwrap(),
+        due_date: Some(
+            NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+        ),
         group_id: 1,
         description: "".to_string(),
         language: AssignmentLanguage::Golang,
@@ -295,8 +309,9 @@ fn test_create_create_assignment_as_admin() {
     let user = get_admin();
     let mut create = CreateAssignment {
         title: "".to_string(),
-        due_date: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
-            .unwrap(),
+        due_date: Some(
+            NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap(),
+        ),
         group_id: 1,
         description: "".to_string(),
         language: AssignmentLanguage::Golang,

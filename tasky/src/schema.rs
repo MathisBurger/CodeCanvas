@@ -14,7 +14,7 @@ diesel::table! {
         id -> Int4,
         #[max_length = 100]
         title -> Varchar,
-        due_date -> Timestamp,
+        due_date -> Nullable<Timestamp>,
         group_id -> Int4,
         description -> Text,
         language -> AssignmentLanguage,

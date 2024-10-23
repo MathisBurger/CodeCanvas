@@ -37,7 +37,7 @@ pub struct AssignmentFileStructure {
 pub struct AssignmentResponse {
     pub id: i32,
     pub title: String,
-    pub due_date: NaiveDateTime,
+    pub due_date: Option<NaiveDateTime>,
     pub group: MinifiedGroupResponse,
     pub description: String,
     pub language: AssignmentLanguage,
@@ -54,7 +54,7 @@ pub struct AssignmentResponse {
 pub struct MinifiedAssignmentResponse {
     pub id: i32,
     pub title: String,
-    pub due_date: NaiveDateTime,
+    pub due_date: Option<NaiveDateTime>,
     pub description: String,
     pub language: AssignmentLanguage,
 }

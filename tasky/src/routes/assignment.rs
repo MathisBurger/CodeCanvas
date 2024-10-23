@@ -31,16 +31,22 @@ use crate::util::mongo::parse_object_ids;
 use chrono::DateTime;
 use serde::{Deserialize, Deserializer};
 
-fn deserialize_naive_datetime<'de, D>(deserializer: D) -> Result<NaiveDateTime, D::Error>
+fn deserialize_naive_datetime<'de, D>(deserializer: D) -> Result<Option<NaiveDateTime>, D::Error>
 where
     D: Deserializer<'de>,
 {
-    let s: String = Deserialize::deserialize(deserializer)?;
+    let str_option: Option<String> = Deserialize::deserialize(deserializer).ok();
+    if str_option.is_none() {
+        return Ok(None);
+    }
+    let s = str_option.unwrap();
     if let Ok(datetime_with_tz) = DateTime::parse_from_rfc3339(s.as_str()) {
         // Convert to NaiveDateTime by discarding the time zone
-        return Ok(datetime_with_tz.naive_utc());
+        return Ok(Some(datetime_with_tz.naive_utc()));
     }
-    NaiveDateTime::parse_from_str(s.as_str(), "%Y-%m-%dT%H:%M:%S").map_err(serde::de::Error::custom)
+    NaiveDateTime::parse_from_str(s.as_str(), "%Y-%m-%dT%H:%M:%S")
+        .map_err(serde::de::Error::custom)
+        .map(Some)
 }
 
 /// Request to create an assignment
@@ -48,7 +54,7 @@ where
 pub struct CreateAssignmentRequest {
     pub title: String,
     #[serde(deserialize_with = "deserialize_naive_datetime")]
-    pub due_date: NaiveDateTime,
+    pub due_date: Option<NaiveDateTime>,
     pub description: String,
     pub language: AssignmentLanguage,
 }
@@ -58,7 +64,7 @@ pub struct CreateAssignmentRequest {
 pub struct UpdateAssignmentRequest {
     pub title: String,
     #[serde(deserialize_with = "deserialize_naive_datetime")]
-    pub due_date: NaiveDateTime,
+    pub due_date: Option<NaiveDateTime>,
     pub description: String,
 }
 

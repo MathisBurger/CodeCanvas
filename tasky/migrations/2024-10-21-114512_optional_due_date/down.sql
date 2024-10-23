@@ -1,0 +1,1 @@
+-- There is no down migration, because we would need to set random date

@@ -27,20 +27,16 @@ const CreateOrUpdateAssignmentModal = ({
     mode: "uncontrolled",
     initialValues: {
       title: assignment?.title ?? "title",
-      due_date: assignment?.due_date
-        ? new Date(assignment.due_date!)
-        : new Date(),
+      due_date: assignment?.due_date ? new Date(assignment.due_date) : null,
       description: "",
       language: assignment?.language ?? AssignmentLanguage.QuestionBased,
     },
     validate: {
       title: (v) => (v.trim() === "" ? "Title should contain a value" : null),
-      description: (v) =>
-        v.trim() === "" ? "Description should contain a value" : null,
       due_date: (v) =>
-        new Date(v).getTime() <= new Date().getTime()
+        v ? (new Date(v).getTime() <= new Date().getTime()
           ? "Date should be in the future"
-          : null,
+          : null) : null
     },
   });
 
@@ -97,8 +93,8 @@ const CreateOrUpdateAssignmentModal = ({
           {...form.getInputProps("title")}
         />
         <DateTimePicker
-          withAsterisk
           label="Due date"
+          clearable
           key={form.key("due_date")}
           {...form.getInputProps("due_date")}
         />
