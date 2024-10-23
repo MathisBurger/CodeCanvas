@@ -19,6 +19,7 @@ import { DatesProvider } from "@mantine/dates";
 import SpotlightWrapper from "@/components/spotlight/SpotlightWrapper";
 import Footer from "@/components/Footer";
 import { publicRoutes } from "@/static/routes";
+import Stage2SpotlightContextWrapper from "@/components/spotlight/Stage2SpotlightContextWrapper";
 
 export default function RootLayout({
   children,
@@ -45,23 +46,25 @@ export default function RootLayout({
         <CurrentUserContext.Provider value={{ user, setUser }}>
           <MantineProvider theme={{}}>
             <DatesProvider settings={{ timezone: null }}>
-              <Notifications />
-              <AppShell
-                header={{ height: 100 }}
-                navbar={showNavbar ? { width: 250, breakpoint: "" } : undefined}
-              >
-                <AppShell.Header>
-                  <Header />
-                </AppShell.Header>
-                {showNavbar && (
-                  <AppShell.Navbar>
-                    <Navbar />
-                  </AppShell.Navbar>
-                )}
-                <AppShell.Main mb={100}>{children}</AppShell.Main>
-                <AppShell.Footer><Footer /></AppShell.Footer>
-              </AppShell>
-              <SpotlightWrapper />
+              <Stage2SpotlightContextWrapper>
+                <Notifications />
+                <AppShell
+                    header={{ height: 100 }}
+                    navbar={showNavbar ? { width: 250, breakpoint: "" } : undefined}
+                >
+                  <AppShell.Header>
+                    <Header />
+                  </AppShell.Header>
+                  {showNavbar && (
+                      <AppShell.Navbar>
+                        <Navbar />
+                      </AppShell.Navbar>
+                  )}
+                  <AppShell.Main mb={100}>{children}</AppShell.Main>
+                  <AppShell.Footer><Footer /></AppShell.Footer>
+                </AppShell>
+                <SpotlightWrapper />
+              </Stage2SpotlightContextWrapper>
             </DatesProvider>
           </MantineProvider>
         </CurrentUserContext.Provider>
