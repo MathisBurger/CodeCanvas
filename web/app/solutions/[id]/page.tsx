@@ -14,6 +14,7 @@ import SolutionBadge from "@/components/solution/SolutionBadge";
 import NavigateBack from "@/components/NavigateBack";
 import FileStructureDisplay from "@/components/FileStructureDisplay";
 import QuestionAnswersDisplay from "@/components/solution/questions/QuestionAnswersDisplay";
+import {useSpotlightStage2} from "@/hooks/spotlight/stage2";
 
 // Every 30s
 const REFETCH_INTERVAL = 1000 * 30;
@@ -26,6 +27,13 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
   const [solution, refetch] = useClientQuery<Solution>(() =>
     api.getSolution(id),
   );
+
+  const {addSolution} = useSpotlightStage2();
+  useEffect(() => {
+      if (solution) {
+        addSolution(solution);
+      }
+  }, [addSolution, solution]);
 
   useEffect(() => {
     const fetcher = async () => {

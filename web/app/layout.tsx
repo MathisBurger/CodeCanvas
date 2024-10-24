@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import { AppShell, ColorSchemeScript, MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import Header from "@/components/Header";
@@ -19,6 +19,8 @@ import { DatesProvider } from "@mantine/dates";
 import SpotlightWrapper from "@/components/spotlight/SpotlightWrapper";
 import Footer from "@/components/Footer";
 import { publicRoutes } from "@/static/routes";
+import Stage2SpotlightContextWrapper from "@/components/spotlight/Stage2SpotlightContextWrapper";
+import {Stage2Type} from "@/hooks/spotlight/stage2";
 
 export default function RootLayout({
   children,
@@ -31,6 +33,21 @@ export default function RootLayout({
     () => publicRoutes.indexOf(pathname) === -1,
     [pathname],
   );
+
+  /**
+   * Removes dangling spotlight2 entries
+   */
+  useEffect(() => {
+    const data = localStorage.getItem("spotlight-stage2");
+    if (data) {
+      const json: Stage2Type = JSON.parse(data);
+      const now = new Date().getTime();
+      json.groups = json.groups.filter((g) => g.die?.getTime() < now);
+      json.assignments = json.assignments.filter((g) => g.die?.getTime() < now);
+      json.solutions = json.solutions.filter((g) => g.die?.getTime() < now);
+      localStorage.setItem("spotlight-stage2", JSON.stringify(json));
+    }
+  }, []);
 
   return (
     <html lang="en">
@@ -45,23 +62,25 @@ export default function RootLayout({
         <CurrentUserContext.Provider value={{ user, setUser }}>
           <MantineProvider theme={{}}>
             <DatesProvider settings={{ timezone: null }}>
-              <Notifications />
-              <AppShell
-                header={{ height: 100 }}
-                navbar={showNavbar ? { width: 250, breakpoint: "" } : undefined}
-              >
-                <AppShell.Header>
-                  <Header />
-                </AppShell.Header>
-                {showNavbar && (
-                  <AppShell.Navbar>
-                    <Navbar />
-                  </AppShell.Navbar>
-                )}
-                <AppShell.Main mb={100}>{children}</AppShell.Main>
-                <AppShell.Footer><Footer /></AppShell.Footer>
-              </AppShell>
-              <SpotlightWrapper />
+              <Stage2SpotlightContextWrapper>
+                <Notifications />
+                <AppShell
+                    header={{ height: 100 }}
+                    navbar={showNavbar ? { width: 250, breakpoint: "" } : undefined}
+                >
+                  <AppShell.Header>
+                    <Header />
+                  </AppShell.Header>
+                  {showNavbar && (
+                      <AppShell.Navbar>
+                        <Navbar />
+                      </AppShell.Navbar>
+                  )}
+                  <AppShell.Main mb={100}>{children}</AppShell.Main>
+                  <AppShell.Footer><Footer /></AppShell.Footer>
+                </AppShell>
+                <SpotlightWrapper />
+              </Stage2SpotlightContextWrapper>
             </DatesProvider>
           </MantineProvider>
         </CurrentUserContext.Provider>
