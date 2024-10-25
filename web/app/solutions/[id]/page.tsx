@@ -48,7 +48,7 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
       }
     };
     fetcher();
-  }, [solution]);
+  }, [solution, refetch]);
 
   console.log(solution);
   const approve = async () => {
