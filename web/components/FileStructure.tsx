@@ -47,6 +47,7 @@ const FileStructure = ({
   displayMode = "all",
   solutionMode,
 }: FileStructureProps) => {
+
   const [fileNames, treeData] = useMemo(
     () =>
       buildDataFromStructure(
@@ -74,7 +75,7 @@ const FileStructure = ({
         }
       }
     }
-  }, [tree.selectedState, solutionMode, structure]);
+  }, [tree.selectedState, solutionMode, structure, setSelected]);
 
   return (
     <Paper withBorder>

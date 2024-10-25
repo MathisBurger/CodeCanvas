@@ -184,7 +184,7 @@ const FileStructureDisplay = ({
         setContents(map);
       });
     }
-  }, [loadAll, objectIds, solutionId, taskObjectIds, testObjectIds]);
+  }, [getApiCall, loadAll, objectIds, solutionId, taskObjectIds, testObjectIds]);
 
 
   return (
