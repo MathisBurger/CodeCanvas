@@ -1,19 +1,20 @@
+mod auth;
 mod config;
-mod proxy;
+mod endpoint;
 mod error;
 mod http;
-mod auth;
 mod models;
+mod proxy;
 
 extern crate pretty_env_logger;
 #[macro_use]
 extern crate log;
 
+use crate::config::AppConfig;
 use actix_cors::Cors;
-use actix_web::{App, HttpServer, middleware, web};
 use actix_web::http::header;
 use actix_web::web::Data;
-use crate::config::AppConfig;
+use actix_web::{middleware, web, App, HttpServer};
 
 #[derive(Clone)]
 pub struct State {
@@ -36,7 +37,12 @@ async fn main() -> Result<(), std::io::Error> {
             std::process::exit(2);
         }
     };
-    let locations: Vec<String> = config.clone().service_locations.iter().map(|x|format!("{}={}", x.0, x.1)).collect();
+    let locations: Vec<String> = config
+        .clone()
+        .service_locations
+        .iter()
+        .map(|x| format!("{}={}", x.0, x.1))
+        .collect();
     println!("{}", locations.join("-"));
     let state = State {
         config: config.clone(),
@@ -45,7 +51,12 @@ async fn main() -> Result<(), std::io::Error> {
         let cors = Cors::default()
             .allowed_origin(&config.allowed_origin)
             .allowed_methods(vec!["GET", "POST", "DELETE", "PUT"])
-            .allowed_headers(vec![header::SET_COOKIE, header::ACCEPT, header::CONTENT_TYPE, header::AUTHORIZATION])
+            .allowed_headers(vec![
+                header::SET_COOKIE,
+                header::ACCEPT,
+                header::CONTENT_TYPE,
+                header::AUTHORIZATION,
+            ])
             .send_wildcard()
             .supports_credentials()
             .max_age(3600);
@@ -53,10 +64,14 @@ async fn main() -> Result<(), std::io::Error> {
             .wrap(middleware::Logger::default())
             .wrap(cors)
             .app_data(Data::new(state.clone()))
+            .route(
+                "/report_issue",
+                web::post().to(endpoint::report_bug::report_bug),
+            )
             .default_service(web::to(proxy::handle_proxy))
     })
-        .bind("0.0.0.0:3000")
-        .expect("Already in use")
-        .run()
-        .await
+    .bind("0.0.0.0:3000")
+    .expect("Already in use")
+    .run()
+    .await
 }
