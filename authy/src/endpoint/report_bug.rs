@@ -34,44 +34,6 @@ pub async fn report_bug(
         return Ok(HttpResponse::BadRequest().finish());
     }
 
-    /*let mut root_cert_store = RootCertStore::empty();
-    root_cert_store.add_server_trust_anchors(TLS_SERVER_ROOTS.0.iter().map(|ta| {
-        OwnedTrustAnchor::from_subject_spki_name_constraints(
-            ta.subject,
-            ta.spki,
-            ta.name_constraints,
-        )
-    }));
-
-    // Configure the Rustls client with the root certificates
-    let config = ClientConfig::builder()
-        .with_safe_defaults()
-        .with_root_certificates(root_cert_store)
-        .with_no_client_auth(); // No client-side authentication
-
-    // Initialize Actix Client with the custom Rustls connector
-    let client = Client::builder()
-        .connector(Connector::new().rustls(Arc::new(config)))
-        .finish();
-
-    let resp = client
-        .post("https://api.github.com/repos/MathisBurger/CodeCanvas/issues")
-        .append_header((
-            "Authorization",
-            format!("Bearer {}", app_config.github_api_key.clone().unwrap()),
-        ))
-        .append_header(("X-GitHub-Api-Version", "2022-11-28"))
-        .append_header(("Accept", "application/vnd.github+json"))
-        .send_json(&GithubRequest {
-            title: body.title.clone(),
-            body: body.body.clone(),
-            labels: vec!["bug".to_string()],
-        })
-        .await
-        .map_err(|_x| ApiError::BadRequest {
-            message: "Generel Error".to_string(),
-        })?;*/
-
     let github = octorust::Client::new(
         String::from("user-agent-name"),
         Credentials::Token(app_config.github_api_key.clone().unwrap()),
@@ -97,5 +59,5 @@ pub async fn report_bug(
             message: "Bad Request".to_string(),
         })?;
 
-    return Ok(HttpResponse::Ok().finish());
+    Ok(HttpResponse::Ok().finish())
 }
