@@ -138,3 +138,9 @@ export interface ValidatedQuestionSolution {
   answer: any;
   correct: boolean;
 }
+
+export interface AssignmentWish {
+  id: number;
+  title: string;
+  description: string;
+}

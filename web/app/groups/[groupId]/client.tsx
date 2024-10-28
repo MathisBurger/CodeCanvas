@@ -16,6 +16,7 @@ import { UserRoles } from "@/service/types/usernator";
 import GroupAssignmentsTab from "@/components/assignments/GroupAssignmentsTab";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { isGranted } from "@/service/auth";
+import GroupAssignmentWishesTab from "@/components/group/GroupAssignmentWishesTab";
 
 const MembersComponent: React.FC<{ members: TaskyUser[] }> = ({ members }) => {
   const cols: EntityListCol[] = [
@@ -97,6 +98,7 @@ export const TabsComponent: React.FC<{
       <Tabs.List>
         <Tabs.Tab value="assignments">Assignments</Tabs.Tab>
         <Tabs.Tab value="members">Members</Tabs.Tab>
+        <Tabs.Tab value="assignmentWishes">Assignment Wishes</Tabs.Tab>
         {isGranted(user, [UserRoles.Admin, UserRoles.Tutor]) && (
           <Tabs.Tab
             value="joinRequests"
@@ -116,6 +118,11 @@ export const TabsComponent: React.FC<{
         </Tabs.Panel>
         <Tabs.Panel value="members">
           <MembersComponent members={group?.members ?? []} />
+        </Tabs.Panel>
+        <Tabs.Panel value="assignmentWishes">
+          {group !== null && (
+              <GroupAssignmentWishesTab group={group} />
+          )}
         </Tabs.Panel>
         {isGranted(user, [UserRoles.Admin, UserRoles.Tutor]) && (
           <Tabs.Panel value="joinRequests">
