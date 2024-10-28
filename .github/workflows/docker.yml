@@ -12,6 +12,7 @@ jobs:
         run: |
           ln ./usernator/api.proto ./tasky/api.proto
           ln ./tasky/tasky.proto ./usernator/tasky.proto
+          ln ./tasky/tasky.proto ./executor/tasky.proto
       - name: set up buildx
         uses: docker/setup-buildx-action@v1
       - name: log in to ghcr
