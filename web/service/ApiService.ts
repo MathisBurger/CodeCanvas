@@ -202,6 +202,10 @@ class ApiService {
     );
   }
 
+  public async reportBug(title: string, body: string): Promise<any> {
+    return await this.post<any>("/report_issue", {title, body});
+  }
+
   public async createCodeTests(
     groupId: number,
     assignmentId: number,
@@ -349,7 +353,7 @@ class ApiService {
       });
       const txt = await resp.text();
       const obj = this.getObject(txt);
-      if (resp.status !== 200) {
+      if (resp.status !== 200 && resp.status !== 201) {
         throw new ApiError(resp.status, obj.message);
       }
       return obj as T;

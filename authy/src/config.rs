@@ -12,6 +12,7 @@ pub struct AppConfig {
     pub service_locations: HashMap<String, String>,
     pub jwt_secret: String,
     pub allowed_origin: String,
+    pub github_api_key: Option<String>,
 }
 
 impl AppConfig {
