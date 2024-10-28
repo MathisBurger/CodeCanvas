@@ -7,6 +7,16 @@ pub mod sql_types {
 }
 
 diesel::table! {
+    assignment_wishes (id) {
+        id -> Int4,
+        #[max_length = 255]
+        title -> Varchar,
+        description -> Text,
+        group_id -> Int4,
+    }
+}
+
+diesel::table! {
     use diesel::sql_types::*;
     use super::sql_types::AssignmentLanguage;
 
@@ -63,12 +73,14 @@ diesel::table! {
     }
 }
 
+diesel::joinable!(assignment_wishes -> groups (group_id));
 diesel::joinable!(assignments -> groups (group_id));
 diesel::joinable!(group_join_requests -> groups (group_id));
 diesel::joinable!(solutions -> assignments (assignment_id));
 diesel::joinable!(solutions -> groups (group_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
+    assignment_wishes,
     assignments,
     group_join_requests,
     groups,

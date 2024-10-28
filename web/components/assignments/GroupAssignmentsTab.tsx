@@ -20,8 +20,8 @@ interface GroupAssignmentsTabProps {
 }
 
 const assignmentSort = (a: Assignment, b: Assignment) => {
-  const timeA = new Date(a.due_date).getTime();
-  const timeB = new Date(b.due_date).getTime();
+  const timeA = new Date(a.due_date ?? "").getTime();
+  const timeB = new Date(b.due_date ?? "").getTime();
   if (timeA < timeB) return 1;
   if (timeA > timeB) return -1;
   return 0;

@@ -15,6 +15,7 @@ import {
   Solution,
   SolutionFilesResponse,
   SolutionsResponse,
+    AssignmentWish
 } from "@/service/types/tasky";
 import { FileStructureTree } from "@/components/FileStructure";
 
@@ -206,6 +207,18 @@ class ApiService {
     return await this.post<any>("/report_issue", {title, body});
   }
 
+  public async createAssignmentWish(groupId: number, title: string, description: string): Promise<AssignmentWish> {
+    return await this.post<AssignmentWish>(`/tasky/groups/${groupId}/assignment_wishes`, {title, description})
+  }
+
+  public async getAssignmentWishes(groupId: number): Promise<AssignmentWish[]> {
+    return await this.get<AssignmentWish[]>(`/tasky/groups/${groupId}/assignment_wishes`);
+  }
+
+  public async deleteAssignmentWish(groupId: number, wishId: number): Promise<void> {
+    await this.delete<any>(`/tasky/groups/${groupId}/assignment_wishes/${wishId}`);
+  }
+
   public async createCodeTests(
     groupId: number,
     assignmentId: number,
@@ -325,6 +338,18 @@ class ApiService {
    */
   private async post<T>(path: string, body: object): Promise<T> {
     return await this.fetch<T>(path, "POST", body);
+  }
+
+  /**
+   * Executes a general delete request
+   *
+   * @param path The path
+   * @param body The json body
+   * @throws ApiError The api error
+   * @private
+   */
+  private async delete<T>(path: string, body?: object): Promise<T> {
+    return await this.fetch<T>(path, "DELETE", body);
   }
 
   /**
