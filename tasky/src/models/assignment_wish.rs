@@ -3,7 +3,6 @@ use crate::schema::assignment_wishes::dsl;
 use diesel::associations::HasTable;
 use diesel::prelude::*;
 use diesel::Selectable;
-use serde::Deserialize;
 use serde::Serialize;
 
 /// Assignment wish entity type
@@ -18,7 +17,7 @@ pub struct AssignmentWish {
 }
 
 /// Assignment wish insertion type
-#[derive(Insertable, Deserialize)]
+#[derive(Insertable)]
 #[diesel(table_name = crate::schema::assignment_wishes)]
 pub struct CreateAssignmentWish {
     pub title: String,

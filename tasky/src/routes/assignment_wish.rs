@@ -6,12 +6,19 @@ use crate::{
     AppState,
 };
 use actix_web::{delete, get, post, web, HttpResponse};
+use serde::Deserialize;
+
+#[derive(Deserialize)]
+struct CreateWishRequest {
+    pub title: String,
+    pub description: String,
+}
 
 #[post("/groups/{group_id}/assignment_wishes")]
 pub async fn create_wish(
     data: web::Data<AppState>,
     user: web::ReqData<UserData>,
-    mut req: web::Json<CreateAssignmentWish>,
+    req: web::Json<CreateWishRequest>,
     path: web::Path<(i32,)>,
 ) -> Result<HttpResponse, ApiError> {
     let user_data = user.into_inner();
@@ -27,13 +34,19 @@ pub async fn create_wish(
         });
     }
 
-    if !req.is_granted(SecurityAction::Create, &user_data) {
+    let mut create = CreateAssignmentWish {
+        title: req.title.clone(),
+        description: req.description.clone(),
+        group_id: group.id,
+    };
+
+    if !create.is_granted(SecurityAction::Create, &user_data) {
         return Err(ApiError::Forbidden {
             message: "Cannot create assignment wish".to_string(),
         });
     }
 
-    let wish = AssignmentWishRepository::create_wish(&req, conn);
+    let wish = AssignmentWishRepository::create_wish(&create, conn);
     Ok(HttpResponse::Ok().json(wish))
 }
 
