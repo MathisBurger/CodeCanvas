@@ -40,26 +40,31 @@ export default function RootLayout({
   useEffect(() => {
     const data = localStorage.getItem("spotlight-stage2");
     if (data) {
-      const json: Stage2Type = JSON.parse(data);
-      const now = new Date().getTime();
-      json.groups = json.groups.filter((g) => g.die?.getTime() < now);
-      json.assignments = json.assignments.filter((g) => g.die?.getTime() < now);
-      json.solutions = json.solutions.filter((g) => g.die?.getTime() < now);
-      localStorage.setItem("spotlight-stage2", JSON.stringify(json));
+      try {
+        const json: Stage2Type = JSON.parse(data);
+        const now = new Date().getTime();
+        json.groups = json.groups.filter((g) => g.die?.getTime() < now);
+        json.assignments = json.assignments.filter((g) => g.die?.getTime() < now);
+        json.solutions = json.solutions.filter((g) => g.die?.getTime() < now);
+        localStorage.setItem("spotlight-stage2", JSON.stringify(json));
+      } catch (e) {
+        console.error(e);
+      }
     }
   }, []);
 
   return (
     <html lang="en">
-      <head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>CodeCanvas</title>
+    <head>
+      <meta charSet="UTF-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+      <title>CodeCanvas</title>
 
-        <ColorSchemeScript />
-      </head>
-      <body>
-        <CurrentUserContext.Provider value={{ user, setUser }}>
+      <ColorSchemeScript/>
+    </head>
+    <body>
+    <CurrentUserContext.Provider value={{ user, setUser }}>
           <MantineProvider theme={{}}>
             <DatesProvider settings={{ timezone: null }}>
               <Stage2SpotlightContextWrapper>
