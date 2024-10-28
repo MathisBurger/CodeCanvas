@@ -1,6 +1,7 @@
 use crate::auth_middleware::{UserData, UserRole};
 
 pub mod assignment;
+pub mod assignment_wish;
 pub mod group;
 pub mod group_join_request;
 pub mod solution;

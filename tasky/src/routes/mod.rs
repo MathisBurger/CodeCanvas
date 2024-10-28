@@ -1,6 +1,7 @@
 use actix_web::web;
 
 pub mod assignment;
+pub mod assignment_wish;
 pub mod group;
 pub mod group_join_request;
 pub mod solution;
@@ -28,5 +29,9 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(solution::get_solutions_for_user)
         .service(solution::approve_solution)
         .service(solution::reject_solution)
-        .service(solution::get_solution_files);
+        .service(solution::get_solution_files)
+        .service(assignment_wish::create_wish)
+        .service(assignment_wish::get_wishes)
+        .service(assignment_wish::get_wish)
+        .service(assignment_wish::delete_wish);
 }
