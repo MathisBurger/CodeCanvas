@@ -11,7 +11,7 @@ impl IsGranted for CreateAssignmentWish {
         if action == SecurityAction::Create {
             return user.groups.contains(&self.group_id);
         }
-        return false;
+        false
     }
 }
 
