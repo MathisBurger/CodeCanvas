@@ -4,7 +4,7 @@ package tasky_grpc;
 
 service TaskyApi {
   rpc GetUserGroups (GroupsRequest) returns (GroupsResponse) {}
-  rpc UpdateSolutionStatus (SolutionUpdateStatusRequest) {}
+  rpc UpdateSolutionStatus (SolutionUpdateStatusRequest) returns (SolutionUpdateStatusResponse) {}
 }
 
 
@@ -26,4 +26,8 @@ message Group {
 message SolutionUpdateStatusRequest {
     uint64 solution_id = 1;
     string status = 2;
+}
+
+message SolutionUpdateStatusResponse {
+    string message = 1;
 }
