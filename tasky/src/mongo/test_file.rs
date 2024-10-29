@@ -20,7 +20,7 @@ pub struct TestFileCollection;
 impl TestFileCollection {
     /// Creates many test files
     pub async fn create_many(files: Vec<TestFile>, mongodb: &mongodb::Database) -> Vec<ObjectId> {
-        if files.len() == 0 {
+        if files.is_empty() {
             return vec![];
         }
         mongodb

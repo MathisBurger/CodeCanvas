@@ -20,7 +20,7 @@ pub struct TaskFileCollection;
 impl TaskFileCollection {
     /// Creates many task files
     pub async fn create_many(files: Vec<TaskFile>, mongodb: &mongodb::Database) -> Vec<ObjectId> {
-        if files.len() == 0 {
+        if files.is_empty() {
             return vec![];
         }
         mongodb
