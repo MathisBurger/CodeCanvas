@@ -4,5 +4,6 @@
     "password": "executor",
     "host": "localhost:27017",
     "database": "executor_files"
-  }
+  },
+  "tasky_grpc_addr": "localhost:3006"
 }

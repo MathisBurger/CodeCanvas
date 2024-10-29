@@ -83,7 +83,6 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
         <Badge color="indigo">{solution.submitter.username}</Badge>
         <SolutionBadge
           status={solution.approval_status}
-          job={solution.job ?? undefined}
         />
         {isGranted(user, [UserRoles.Admin]) && (
           <Button onClick={() => setExecutorModalOpen(true)}>

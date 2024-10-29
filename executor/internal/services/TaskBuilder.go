@@ -107,8 +107,16 @@ func getFileContents(files []ExecutionFile) map[string]string {
 	testFiles := filterFiles(files, true)
 	taskFiles := filterFiles(files, false)
 
-	testFilesCursor, _ := testFileCollection.Find(context.Background(), bson.M{"_id": bson.M{"$in": testFiles}})
-	taskFilesCursor, _ := taskFileCollection.Find(context.Background(), bson.M{"_id": bson.M{"$in": taskFiles}})
+	testFilesCursor, err := testFileCollection.Find(context.Background(), bson.M{"_id": bson.M{"$in": testFiles}})
+	fmt.Println(testFileCollection)
+	if err != nil || testFilesCursor == nil {
+		return make(map[string]string)
+	}
+	taskFilesCursor, err := taskFileCollection.Find(context.Background(), bson.M{"_id": bson.M{"$in": taskFiles}})
+	fmt.Println(taskFilesCursor)
+	if err != nil || taskFilesCursor == nil {
+		return make(map[string]string)
+	}
 
 	testFilesResult := readCursorTestFile[testFile](testFilesCursor)
 	taskFilesResult := readCursorTestFile[taskFile](taskFilesCursor)

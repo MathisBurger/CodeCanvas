@@ -4,7 +4,6 @@ import (
 	"executor/internal/services"
 	"github.com/runabol/tork/middleware/web"
 	"net/http"
-	"strconv"
 )
 
 type jobResponse struct {
@@ -22,7 +21,7 @@ func ExecuteHandler(c web.Context) error {
 	if err != nil {
 		c.Error(http.StatusBadRequest, err)
 	}
-	job, err := services.ExecuteTask(c, task, strconv.Itoa(req.Solution.SubmitterId))
+	job, err := services.ExecuteTask(c, task, req.Solution.Id)
 	if err != nil {
 		c.Error(http.StatusInternalServerError, err)
 	}

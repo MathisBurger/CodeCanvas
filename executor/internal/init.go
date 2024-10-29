@@ -36,7 +36,7 @@ func InitMongoDB(c *config.Configuration) {
 	uri := fmt.Sprintf("mongodb://%s:%s@%s/%s?retryWrites=true&w=majority", c.Mongo.Username, c.Mongo.Password, c.Mongo.Host, c.Mongo.Database)
 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(uri))
 	if err != nil {
-		return
+		panic(err.Error())
 	}
 	global.MongoDB = client.Database(c.Mongo.Database)
 }

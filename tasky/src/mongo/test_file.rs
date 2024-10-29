@@ -20,6 +20,9 @@ pub struct TestFileCollection;
 impl TestFileCollection {
     /// Creates many test files
     pub async fn create_many(files: Vec<TestFile>, mongodb: &mongodb::Database) -> Vec<ObjectId> {
+        if files.len() == 0 {
+            return vec![];
+        }
         mongodb
             .collection("test_files")
             .insert_many(files, None)
