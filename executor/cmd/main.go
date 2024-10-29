@@ -4,12 +4,16 @@ import (
 	"executor/internal"
 	"executor/internal/global"
 	"executor/internal/handler"
+	"executor/tasky_grpc"
 	"fmt"
 	"github.com/runabol/tork/cli"
 	"github.com/runabol/tork/conf"
 	"github.com/runabol/tork/datastore"
 	"github.com/runabol/tork/engine"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"os"
+	"time"
 )
 
 func main() {
@@ -25,6 +29,15 @@ func main() {
 
 	appConfig := internal.LoadConfig()
 	internal.InitMongoDB(appConfig)
+
+	time.Sleep(time.Second * 8)
+	conn, err := grpc.NewClient(appConfig.TaskyGrpcAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		panic(err.Error())
+	}
+	client := tasky_grpc.NewTaskyApiClient(conn)
+
+	global.Tasky = &client
 
 	engine.RegisterEndpoint("POST", "/execute", handler.ExecuteHandler)
 	// Start the Tork CLI

@@ -27,6 +27,19 @@ impl ApprovalStatus {
     }
 }
 
+impl From<&str> for ApprovalStatus {
+    fn from(value: &str) -> Self {
+        match value {
+            "PENDING" => Self::Pending,
+            "APPROVED" => Self::Approved,
+            "REJECTED" => Self::Rejected,
+            "SUCCESSFUL" => Self::Successful,
+            "FAILED" => Self::Failed,
+            _ => Self::Pending,
+        }
+    }
+}
+
 /// A solution to a question
 #[derive(Deserialize)]
 pub struct QuestionSolution {

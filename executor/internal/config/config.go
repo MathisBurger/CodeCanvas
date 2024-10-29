@@ -1,7 +1,8 @@
 package config
 
 type Configuration struct {
-	Mongo MongoConfig `json:"mongo"`
+	Mongo         MongoConfig `json:"mongo"`
+	TaskyGrpcAddr string      `json:"tasky_grpc_addr" env:"TASKY_GRPC_ADDR"`
 }
 
 type MongoConfig struct {

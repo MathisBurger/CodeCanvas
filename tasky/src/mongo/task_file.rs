@@ -20,6 +20,9 @@ pub struct TaskFileCollection;
 impl TaskFileCollection {
     /// Creates many task files
     pub async fn create_many(files: Vec<TaskFile>, mongodb: &mongodb::Database) -> Vec<ObjectId> {
+        if files.is_empty() {
+            return vec![];
+        }
         mongodb
             .collection("task_files")
             .insert_many(files, None)

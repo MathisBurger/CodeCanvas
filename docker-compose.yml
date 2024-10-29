@@ -90,6 +90,7 @@ services:
       - MONGODB_PASSWORD=executor
       - MONGODB_HOST=mongodb:27017
       - MONGODB_DATABASE=executor_files
+      - TASKY_GRPC_ADDR=tasky:3001
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
