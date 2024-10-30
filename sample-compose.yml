@@ -24,7 +24,7 @@ services:
       - DB_DATABASE=<PG_USERNATOR_DATABASE>
       - SMTP_HOST=maildev
       - SMTP_PORT=1025
-      - SMTP_USERNAME=app@codecanvas.de
+      - SMTP_USERNAME=app@code-canvas.app
       - SMTP_PASSWORD=cc
       - TASKY_ADDR=tasky:3001
       - TEMPLATE_BASE_URL=<PUBLIC_WEB_ADDR>
@@ -70,6 +70,7 @@ services:
       - MONGODB_PASSWORD=<MONGODB_EXECUTOR_PASSWORD>
       - MONGODB_HOST=mongodb:27017
       - MONGODB_DATABASE=executor_files
+      - TASKY_GRPC_ADDR=tasky:3001
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
