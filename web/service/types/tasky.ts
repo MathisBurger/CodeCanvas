@@ -144,3 +144,10 @@ export interface AssignmentWish {
   title: string;
   description: string;
 }
+
+export interface CodeComment {
+  id: number;
+  title: string;
+  content: string;
+  commentor: number;
+}

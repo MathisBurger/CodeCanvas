@@ -15,7 +15,7 @@ import {
   Solution,
   SolutionFilesResponse,
   SolutionsResponse,
-    AssignmentWish
+  AssignmentWish, CodeComment
 } from "@/service/types/tasky";
 import { FileStructureTree } from "@/components/FileStructure";
 
@@ -217,6 +217,14 @@ class ApiService {
 
   public async deleteAssignmentWish(groupId: number, wishId: number): Promise<void> {
     await this.delete<any>(`/tasky/groups/${groupId}/assignment_wishes/${wishId}`);
+  }
+
+  public async getCodeComments(solutionId: number): Promise<CodeComment[]> {
+    return await this.get<CodeComment[]>(`/tasky/solutions/${solutionId}/code_comments`);
+  }
+
+  public async createCodeComment(solutionId: number, title: string, content: string): Promise<CodeComment> {
+    return await this.post<CodeComment>(`/tasky/solutions/${solutionId}/code_comments`, {title, content});
   }
 
   public async createCodeTests(

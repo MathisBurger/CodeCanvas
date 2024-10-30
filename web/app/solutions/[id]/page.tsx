@@ -15,6 +15,7 @@ import NavigateBack from "@/components/NavigateBack";
 import FileStructureDisplay from "@/components/FileStructureDisplay";
 import QuestionAnswersDisplay from "@/components/solution/questions/QuestionAnswersDisplay";
 import {useSpotlightStage2} from "@/hooks/spotlight/stage2";
+import CommentTab from "@/components/solution/CommentTab";
 
 // Every 30s
 const REFETCH_INTERVAL = 1000 * 30;
@@ -120,6 +121,7 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
               <Tabs.Tab value="code">Code</Tabs.Tab>
             </>
           )}
+          <Tabs.Tab value="comments">Comments</Tabs.Tab>
         </Tabs.List>
 
         {solution.assignment.language === AssignmentLanguage.QuestionBased ? (
@@ -144,6 +146,9 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
             </Tabs.Panel>
           </>
         )}
+        <Tabs.Panel value="comments" mt={10}>
+          <CommentTab solution={solution} />
+        </Tabs.Panel>
       </Tabs>
       {executorModalOpen &&
         solution.job !== undefined &&
