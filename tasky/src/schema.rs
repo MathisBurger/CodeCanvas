@@ -42,6 +42,18 @@ diesel::table! {
 }
 
 diesel::table! {
+    code_comments (id) {
+        id -> Int4,
+        #[max_length = 255]
+        title -> Varchar,
+        content -> Text,
+        commentor -> Int4,
+        group_id -> Int4,
+        solution_id -> Int4,
+    }
+}
+
+diesel::table! {
     group_join_requests (id) {
         id -> Int4,
         requestor -> Int4,
@@ -75,6 +87,8 @@ diesel::table! {
 
 diesel::joinable!(assignment_wishes -> groups (group_id));
 diesel::joinable!(assignments -> groups (group_id));
+diesel::joinable!(code_comments -> groups (group_id));
+diesel::joinable!(code_comments -> solutions (solution_id));
 diesel::joinable!(group_join_requests -> groups (group_id));
 diesel::joinable!(solutions -> assignments (assignment_id));
 diesel::joinable!(solutions -> groups (group_id));
@@ -82,6 +96,7 @@ diesel::joinable!(solutions -> groups (group_id));
 diesel::allow_tables_to_appear_in_same_query!(
     assignment_wishes,
     assignments,
+    code_comments,
     group_join_requests,
     groups,
     solutions,

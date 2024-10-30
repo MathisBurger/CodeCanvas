@@ -3,6 +3,7 @@ use diesel::r2d2::{ConnectionManager, PooledConnection};
 
 pub mod assignment;
 pub mod assignment_wish;
+pub mod code_comment;
 pub mod database;
 pub mod group;
 pub mod group_join_request;
