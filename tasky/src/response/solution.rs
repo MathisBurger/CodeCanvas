@@ -36,7 +36,6 @@ pub struct ListSolutionResponse {
     pub submitter: User,
     pub approval_status: Option<String>,
     pub assignment: MinifiedAssignmentResponse,
-    pub job: Option<Job>,
 }
 
 /// Vec of solutions
@@ -62,21 +61,11 @@ impl Enrich<Solution> for ListSolutionResponse {
         let assignment_response =
             MinifiedAssignmentResponse::enrich(&assignment, client, db_conn).await?;
 
-        let mut job = None;
-
-        if assignment.language != AssignmentLanguage::QuestionBased {
-            job = match from.job_id.as_ref() {
-                Some(id) => Some(get_job(id).await?),
-                None => None,
-            };
-        }
-
         Ok(ListSolutionResponse {
             id: from.id,
             submitter: submitter.into_inner().into(),
             approval_status: from.approval_status.clone(),
             assignment: assignment_response,
-            job,
         })
     }
 }

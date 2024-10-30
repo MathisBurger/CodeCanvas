@@ -2,7 +2,6 @@ import useApiServiceClient from "@/hooks/useApiServiceClient";
 import useClientQuery from "@/hooks/useClientQuery";
 import { Solution } from "@/service/types/tasky";
 import {Badge, Button, Card, Group, Stack, Title} from "@mantine/core";
-import AssignmentDateDisplay from "@/components/assignments/AssignmentDateDisplay";
 import RichTextDisplay from "@/components/display/RichTextDisplay";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import {IconPlus} from "@tabler/icons-react";

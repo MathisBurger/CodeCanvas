@@ -31,8 +31,8 @@ const PersonalSolutionsPage = () => {
     {
       field: "approval_status",
       label: "Approval Status",
-      render: (value, row) => (
-        <SolutionBadge status={value as string} job={row.job} />
+      render: (value) => (
+        <SolutionBadge status={value as string} />
       ),
     },
   ];

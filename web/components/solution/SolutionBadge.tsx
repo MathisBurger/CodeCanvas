@@ -1,5 +1,4 @@
 import { Badge } from "@mantine/core";
-import { Job } from "@/service/types/tasky";
 
 interface SolutionBadgeProps {
   status: string | null;

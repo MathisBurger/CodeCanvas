@@ -104,7 +104,7 @@ export interface Solution {
 }
 
 export interface SolutionsResponse {
-  solutions: Solution[];
+  solutions: Omit<Solution, 'job'>[];
 }
 
 export interface SolutionFilesResponse {

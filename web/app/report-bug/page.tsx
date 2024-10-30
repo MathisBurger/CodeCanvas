@@ -2,7 +2,6 @@
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import {Container, Stack, Textarea, TextInput, Title, Button} from "@mantine/core";
 import {useForm} from "@mantine/form";
-import {GenericMessage} from "@/service/ApiService";
 import {showNotification} from "@mantine/notifications";
 
 
