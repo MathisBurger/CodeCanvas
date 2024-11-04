@@ -9,6 +9,7 @@ import (
 	"github.com/runabol/tork/input"
 	"github.com/runabol/tork/middleware/web"
 	"log"
+	"strings"
 )
 
 func ExecuteTask(c web.Context, task input.Task, solutionId int) (*tork.Job, error) {
@@ -20,13 +21,25 @@ func ExecuteTask(c web.Context, task input.Task, solutionId int) (*tork.Job, err
 
 	listener := func(j *tork.Job) {
 		if j.State == tork.JobStateCompleted {
+			if len(j.Execution) == 0 {
+				return
+			}
+			status := "SUCCESSFUL"
+			if strings.HasSuffix(strings.TrimSuffix(j.Execution[0].Result, "\n"), "FAILED") {
+				status = "FAILED"
+				_ = (*global.Postgres).UpdateJob(context.Background(), j.ID, func(u *tork.Job) error {
+					u.State = tork.JobStateFailed
+					return nil
+				})
+			}
 			_, err := (*global.Tasky).UpdateSolutionStatus(context.Background(), &tasky_grpc.SolutionUpdateStatusRequest{
-				Status:     "SUCCESSFUL",
+				Status:     status,
 				SolutionId: uint64(solutionId),
 			})
 			if err != nil {
 				log.Fatal(err.Error())
 			}
+
 		} else {
 			_, err := (*global.Tasky).UpdateSolutionStatus(context.Background(), &tasky_grpc.SolutionUpdateStatusRequest{
 				Status:     "FAILED",
