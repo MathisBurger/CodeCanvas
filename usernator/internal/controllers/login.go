@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
+	"time"
 	"usernator/internal/models"
 	"usernator/internal/shared"
 )
@@ -19,6 +20,13 @@ const (
 var (
 	loginAttempts map[string]int
 )
+
+func LoginAttemptReset() {
+	for {
+		loginAttempts = make(map[string]int)
+		time.Sleep(3 * time.Hour)
+	}
+}
 
 func LoginUser(ctx *fiber.Ctx) error {
 

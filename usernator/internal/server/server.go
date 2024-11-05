@@ -12,6 +12,7 @@ import (
 )
 
 func CreateServer(configPath string) *fiber.App {
+	go controllers.LoginAttemptReset()
 	conf, err := config.LoadConfiguration(configPath)
 	if err != nil {
 		panic(err.Error())
