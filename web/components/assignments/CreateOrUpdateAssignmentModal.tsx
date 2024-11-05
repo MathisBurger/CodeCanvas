@@ -28,7 +28,7 @@ const CreateOrUpdateAssignmentModal = ({
     initialValues: {
       title: assignment?.title ?? "title",
       due_date: assignment?.due_date ? new Date(assignment.due_date) : null,
-      description: "",
+      description: assignment?.description ?? "",
       language: assignment?.language ?? AssignmentLanguage.QuestionBased,
     },
     validate: {
@@ -95,6 +95,8 @@ const CreateOrUpdateAssignmentModal = ({
         <DateTimePicker
           label="Due date"
           clearable
+          mt={10}
+          mb={10}
           key={form.key("due_date")}
           {...form.getInputProps("due_date")}
         />

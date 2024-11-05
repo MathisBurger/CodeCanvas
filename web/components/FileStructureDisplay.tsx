@@ -44,6 +44,7 @@ const FileStructureDisplay = ({
   }
   const { user } = useCurrentUser();
   const api = useApiServiceClient();
+  const [selectedFiles, setSelectedFiles] = useState<(MongoTaskFile|MongoTestFile)[]>([]);
 
   const filesFlattened = useMemo<FileStructureFile[]>(
     () => flattenStructureToFiles(structure),
@@ -163,6 +164,16 @@ const FileStructureDisplay = ({
   }, [selected, contents, getApiCall, solutionId]);
 
   useEffect(() => {
+    if (selected) {
+      const newFile = getSelectedValue();
+      if (newFile && selectedFiles.indexOf(newFile) === -1) {
+        setSelectedFiles([...selectedFiles, newFile]);
+      }
+
+    }
+  }, [getSelectedValue, selected]);
+
+  useEffect(() => {
     if (loadAll) {
       getApiCall(
         solutionId !== undefined ? taskObjectIds : objectIds,
@@ -208,7 +219,7 @@ const FileStructureDisplay = ({
         {loading ? (
           <CentralLoading />
         ) : (
-          <CodeDisplay file={getSelectedValue()} />
+          <CodeDisplay files={selectedFiles} />
         )}
       </Grid.Col>
     </Grid>

@@ -24,6 +24,13 @@ export const routes: Route[] = [
     authRoles: [UserRoles.Tutor, UserRoles.Admin],
   },
   {
+    path: "/tutors",
+    name: "Tutors",
+    description: "All tutors in the system",
+    icon: <IconSchool />,
+    authRoles: [UserRoles.Admin],
+  },
+  {
     path: "/my-groups",
     name: "My Groups",
     description: "All groups you are a member of",

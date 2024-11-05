@@ -31,7 +31,7 @@ func BuildTask(er ExecRequest) (input.Task, error) {
 	return input.Task{
 		Name:  er.Assignment.Title + " - " + strconv.Itoa(er.Solution.Id),
 		Image: image,
-		Run:   er.Assignment.RunnerCmd + " > $TORK_OUTPUT",
+		Run:   er.Assignment.RunnerCmd + " > $TORK_OUTPUT 2>&1; exit_code=$?; ( [ $exit_code -eq 0 ] && echo 'SUCCESS' >> $TORK_OUTPUT || echo 'FAILED' >> $TORK_OUTPUT ); exit 0",
 		Limits: &input.Limits{
 			CPUs:   er.Assignment.RunnerCpu,
 			Memory: er.Assignment.RunnerMemory,
