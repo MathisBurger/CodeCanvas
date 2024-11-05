@@ -1,7 +1,12 @@
+use diesel::dsl::{count_star, CountStar};
+use diesel::pg::Pg;
 use diesel::prelude::*;
-use diesel::query_dsl::methods::{LimitDsl, OffsetDsl};
+use diesel::query_builder::{QueryFragment, QueryId};
+use diesel::query_dsl::methods::{LimitDsl, OffsetDsl, SelectDsl};
 use diesel::query_dsl::LoadQuery;
 use diesel::r2d2::{ConnectionManager, PooledConnection};
+use diesel::sql_types::HasSqlType;
+use diesel::sql_types::SingleValue;
 
 pub mod assignment;
 pub mod assignment_wish;
@@ -41,14 +46,28 @@ impl<T> Paginated<T> {
 
     pub fn load_and_count_pages<'a, U>(self, conn: &mut DB) -> QueryResult<PaginatedModel<U>>
     where
-        // Ensure the original query can load results of type `U` with a `PgConnection`
-        T: LoadQuery<'a, PgConnection, U> + LimitDsl,
-        // Ensure the limited query can be offset
+        T: LoadQuery<'a, PgConnection, U> + LimitDsl + SelectDsl<CountStar> + Clone,
         <T as LimitDsl>::Output: OffsetDsl,
-        // Ensure the fully chained query (limit + offset) supports loading with `PgConnection`
         <<T as LimitDsl>::Output as OffsetDsl>::Output: LoadQuery<'a, PgConnection, U>,
+        <T as SelectDsl<CountStar>>::Output: RunQueryDsl<PgConnection>,
+        <T as SelectDsl<CountStar>>::Output: QueryId,
+        <T as SelectDsl<CountStar>>::Output: QueryFragment<Pg>,
+        <T as SelectDsl<CountStar>>::Output: diesel::query_builder::Query,
+        i64: diesel::deserialize::FromSql<
+            <<T as SelectDsl<CountStar>>::Output as diesel::query_builder::Query>::SqlType,
+            Pg,
+        >,
+        Pg: HasSqlType<
+            <<T as SelectDsl<CountStar>>::Output as diesel::query_builder::Query>::SqlType,
+        >,
+        <<T as SelectDsl<CountStar>>::Output as diesel::query_builder::Query>::SqlType: SingleValue,
     {
-        let total = diesel::select(diesel::dsl::count_star()).get_result::<i64>(conn)?;
+        let total = self
+            .query
+            .clone()
+            .select(count_star())
+            .get_result::<i64>(conn)?;
+
         let results = self
             .query
             .limit(Self::PAGE_SIZE)
