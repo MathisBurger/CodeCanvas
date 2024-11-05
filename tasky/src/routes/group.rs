@@ -1,6 +1,8 @@
+use super::PaginationParams;
 use crate::auth_middleware::UserData;
 use crate::error::ApiError;
 use crate::models::group::{CreateGroup, GroupRepository};
+use crate::models::PaginatedModel;
 use crate::response::group::{GroupResponse, GroupsResponse};
 use crate::response::Enrich;
 use crate::security::{IsGranted, SecurityAction};
@@ -49,10 +51,15 @@ pub async fn create_group(
 pub async fn get_all_groups(
     data: web::Data<AppState>,
     user: web::ReqData<UserData>,
+    pagination: web::Query<PaginationParams>,
 ) -> Result<HttpResponse, ApiError> {
     let conn = &mut data.db.db.get().unwrap();
 
-    let groups = GroupRepository::get_groups_for_not_member(user.into_inner().user_id, conn);
+    let groups = GroupRepository::get_groups_for_not_member(
+        user.into_inner().user_id,
+        pagination.page,
+        conn,
+    );
     let resp = GroupsResponse::enrich(&groups, &mut data.user_api.clone(), conn).await?;
 
     Ok(HttpResponse::Ok().json(resp))
@@ -67,7 +74,12 @@ pub async fn get_all_my_groups(
     let conn = &mut data.db.db.get().unwrap();
 
     let groups = GroupRepository::get_groups_for_member(user.into_inner().user_id, conn);
-    let resp = GroupsResponse::enrich(&groups, &mut data.user_api.clone(), conn).await?;
+    let pagination = PaginatedModel {
+        results: groups.clone(),
+        page: 0,
+        total: groups.len() as i64,
+    };
+    let resp = GroupsResponse::enrich(&pagination, &mut data.user_api.clone(), conn).await?;
 
     Ok(HttpResponse::Ok().json(resp))
 }

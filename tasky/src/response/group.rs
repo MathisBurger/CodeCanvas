@@ -1,6 +1,7 @@
 use crate::api::usernator_api_client::UsernatorApiClient;
 use crate::error::ApiError;
 use crate::models::group_join_request::GroupJoinRequestRepository;
+use crate::models::PaginatedModel;
 use crate::{api::UserRequest, api::UsersRequest, models::group::Group, response::shared::User};
 use serde::Serialize;
 use tonic::transport::Channel;
@@ -29,6 +30,8 @@ pub struct MinifiedGroupResponse {
 /// The groups response
 #[derive(Serialize)]
 pub struct GroupsResponse {
+    total: i64,
+    page: i64,
     groups: Vec<MinifiedGroupResponse>,
 }
 
@@ -53,17 +56,21 @@ impl Enrich<Group> for MinifiedGroupResponse {
     }
 }
 
-impl Enrich<Vec<Group>> for GroupsResponse {
+impl Enrich<PaginatedModel<Group>> for GroupsResponse {
     async fn enrich(
-        from: &Vec<Group>,
+        from: &PaginatedModel<Group>,
         client: &mut UsernatorApiClient<Channel>,
         db_conn: &mut DB,
     ) -> Result<Self, ApiError> {
         let mut groups: Vec<MinifiedGroupResponse> = vec![];
-        for group in from {
-            groups.push(MinifiedGroupResponse::enrich(group, client, db_conn).await?);
+        for group in from.results.clone() {
+            groups.push(MinifiedGroupResponse::enrich(&group, client, db_conn).await?);
         }
-        Ok(GroupsResponse { groups })
+        Ok(GroupsResponse {
+            groups,
+            total: from.total,
+            page: from.page,
+        })
     }
 }
 
