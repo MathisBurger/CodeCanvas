@@ -23,15 +23,20 @@ impl TaskFileCollection {
         if files.is_empty() {
             return vec![];
         }
-        mongodb
+        let vec_len = files.len();
+        let result = mongodb
             .collection("task_files")
             .insert_many(files, None)
             .await
             .unwrap()
-            .inserted_ids
-            .values()
-            .map(|x| x.as_object_id().unwrap())
-            .collect()
+            .inserted_ids;
+        let mut object_ids = Vec::new();
+        for i in 0..vec_len {
+            if let Some(id) = result.get(&i) {
+                object_ids.push(id.as_object_id().unwrap());
+            }
+        }
+        object_ids
     }
 
     /// Gets all task files for a solution by solution_id and object_ids
