@@ -36,7 +36,7 @@ impl TestFileCollection {
                 object_ids.push(id.as_object_id().unwrap());
             }
         }
-        return object_ids;
+        object_ids
     }
 
     /// gets all for an assignment
