@@ -227,6 +227,14 @@ class ApiService {
     return await this.post<CodeComment>(`/tasky/solutions/${solutionId}/code_comments`, {title, content});
   }
 
+  public async createTutor(username: string, password: string): Promise<User> {
+    return await this.post<User>('/usernator/create_tutor', {username, password, email: ""});
+  }
+
+  public async getTutors(): Promise<{tutors: User[]}> {
+    return await this.get('/usernator/all-tutors');
+  }
+
   public async createCodeTests(
     groupId: number,
     assignmentId: number,
