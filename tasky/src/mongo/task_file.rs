@@ -36,7 +36,7 @@ impl TaskFileCollection {
                 object_ids.push(id.as_object_id().unwrap());
             }
         }
-        return object_ids;
+        object_ids
     }
 
     /// Gets all task files for a solution by solution_id and object_ids
