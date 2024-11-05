@@ -2,6 +2,8 @@ import { FileStructureTree } from "@/components/FileStructure";
 
 export interface GroupsResponse {
   groups: MinifiedGroup[];
+  total: number;
+  page: number;
 }
 
 export interface MinifiedGroup {
