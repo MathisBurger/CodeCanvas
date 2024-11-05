@@ -8,6 +8,7 @@ use actix_web::cookie::{Cookie, SameSite};
 use actix_web::dev::ResourcePath;
 use actix_web::{web, HttpRequest, HttpResponse};
 use awc::body::to_bytes;
+use actix_web::http::StatusCode;
 
 /// Handles all requests in order to filter out whitelisted ones and authenticates the rest
 pub async fn handle_proxy(
@@ -58,6 +59,11 @@ async fn handle_login_request(
     resp: HttpResponse,
     config: AppConfig,
 ) -> Result<HttpResponse, ApiError> {
+
+    if resp.status() != StatusCode::OK {
+        return Ok(resp);
+    }
+
     let body = resp.into_body();
     let bytes = to_bytes(body).await.map_err(|_x| ApiError::Forbidden {
         message: "Error parsing body".to_string(),
