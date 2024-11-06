@@ -149,6 +149,11 @@ export interface AssignmentWish {
   description: string;
 }
 
+export interface AssignmentWishesResponse {
+  results: AssignmentWish[];
+  total: number
+}
+
 export interface CodeComment {
   id: number;
   title: string;

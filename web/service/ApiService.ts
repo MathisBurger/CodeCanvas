@@ -15,7 +15,7 @@ import {
   Solution,
   SolutionFilesResponse,
   SolutionsResponse,
-  AssignmentWish, CodeComment
+  AssignmentWish, CodeComment, AssignmentWishesResponse
 } from "@/service/types/tasky";
 import { FileStructureTree } from "@/components/FileStructure";
 
@@ -213,8 +213,8 @@ class ApiService {
     return await this.post<AssignmentWish>(`/tasky/groups/${groupId}/assignment_wishes`, {title, description})
   }
 
-  public async getAssignmentWishes(groupId: number): Promise<AssignmentWish[]> {
-    return await this.get<AssignmentWish[]>(`/tasky/groups/${groupId}/assignment_wishes`);
+  public async getAssignmentWishes(groupId: number, page?: number): Promise<AssignmentWishesResponse> {
+    return await this.get<AssignmentWishesResponse>(`/tasky/groups/${groupId}/assignment_wishes?page=${page ?? 1}`);
   }
 
   public async deleteAssignmentWish(groupId: number, wishId: number): Promise<void> {
