@@ -8,7 +8,7 @@ use super::*;
 #[serial]
 async fn test_a_get_all_group_assignments_as_student() {
     let app = get_app().await;
-    let mut req = test::TestRequest::get().uri("/groups/1/assignments");
+    let mut req = test::TestRequest::get().uri("/groups/1/assignments?page=1");
     req = student(req);
     let resp = test::call_service(&app, req.to_request()).await;
     assert!(resp.status().is_success())
@@ -18,7 +18,7 @@ async fn test_a_get_all_group_assignments_as_student() {
 #[serial]
 async fn test_b_get_all_group_assignments_as_tutor() {
     let app = get_app().await;
-    let mut req = test::TestRequest::get().uri("/groups/1/assignments");
+    let mut req = test::TestRequest::get().uri("/groups/1/assignments?page=1");
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
     assert!(resp.status().is_success())
@@ -28,7 +28,7 @@ async fn test_b_get_all_group_assignments_as_tutor() {
 #[serial]
 async fn test_c_get_all_group_assignments_as_admin() {
     let app = get_app().await;
-    let mut req = test::TestRequest::get().uri("/groups/1/assignments");
+    let mut req = test::TestRequest::get().uri("/groups/1/assignments?page=1");
     req = admin(req);
     let resp = test::call_service(&app, req.to_request()).await;
     assert!(resp.status().is_success())

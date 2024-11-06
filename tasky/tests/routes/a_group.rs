@@ -63,7 +63,7 @@ async fn test_d_create_group_as_admin() {
 #[serial]
 async fn test_e_get_all_groups_as_student() {
     let app = get_app().await;
-    let mut req = test::TestRequest::get().uri("/groups");
+    let mut req = test::TestRequest::get().uri("/groups?page=1");
     req = student(req);
     let resp = test::call_service(&app, req.to_request()).await;
     assert!(resp.status().is_success());
@@ -73,7 +73,7 @@ async fn test_e_get_all_groups_as_student() {
 #[serial]
 async fn test_f_get_all_groups_as_tutor() {
     let app = get_app().await;
-    let mut req = test::TestRequest::get().uri("/groups");
+    let mut req = test::TestRequest::get().uri("/groups?page=1");
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
     assert!(resp.status().is_success());
@@ -83,7 +83,7 @@ async fn test_f_get_all_groups_as_tutor() {
 #[serial]
 async fn test_g_get_all_groups_as_admin() {
     let app = get_app().await;
-    let mut req = test::TestRequest::get().uri("/groups");
+    let mut req = test::TestRequest::get().uri("/groups?page=1");
     req = admin(req);
     let resp = test::call_service(&app, req.to_request()).await;
     assert!(resp.status().is_success());
@@ -93,7 +93,7 @@ async fn test_g_get_all_groups_as_admin() {
 #[serial]
 async fn test_h_get_my_groups_as_student() {
     let app = get_app().await;
-    let mut req = test::TestRequest::get().uri("/my_groups");
+    let mut req = test::TestRequest::get().uri("/my_groups?page=1");
     req = student(req);
     let resp = test::call_service(&app, req.to_request()).await;
     assert!(resp.status().is_success());
@@ -103,7 +103,7 @@ async fn test_h_get_my_groups_as_student() {
 #[serial]
 async fn test_i_get_my_groups_as_tutor() {
     let app = get_app().await;
-    let mut req = test::TestRequest::get().uri("/my_groups");
+    let mut req = test::TestRequest::get().uri("/my_groups?page=1");
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
     assert!(resp.status().is_success());
@@ -113,7 +113,7 @@ async fn test_i_get_my_groups_as_tutor() {
 #[serial]
 async fn test_j_get_my_groups_as_admin() {
     let app = get_app().await;
-    let mut req = test::TestRequest::get().uri("/my_groups");
+    let mut req = test::TestRequest::get().uri("/my_groups?page=1");
     req = admin(req);
     let resp = test::call_service(&app, req.to_request()).await;
     assert!(resp.status().is_success());
