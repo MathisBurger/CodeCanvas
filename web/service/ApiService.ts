@@ -121,9 +121,10 @@ class ApiService {
 
   public async getAssignmentsForGroup(
     id: number,
+    page?: number
   ): Promise<AssignmentsResponse> {
     return await this.get<AssignmentsResponse>(
-      `/tasky/groups/${id}/assignments`,
+      `/tasky/groups/${id}/assignments?page=${page ?? 1}`,
     );
   }
 

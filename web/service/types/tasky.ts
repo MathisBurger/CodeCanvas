@@ -60,6 +60,7 @@ export interface Assignment {
 
 export interface AssignmentsResponse {
   assignments: Assignment[];
+  total: number;
 }
 
 export interface RunnerConfig {
