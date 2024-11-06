@@ -60,8 +60,8 @@ class ApiService {
     return await this.get<GroupsResponse>(`/tasky/groups?page=${page ?? 1}`);
   }
 
-  public async getMyGroups(): Promise<GroupsResponse> {
-    return await this.get<GroupsResponse>("/tasky/my_groups");
+  public async getMyGroups(page?: number): Promise<GroupsResponse> {
+    return await this.get<GroupsResponse>(`/tasky/my_groups?page=${page ?? 1}`);
   }
 
   public async getGroup(id: number): Promise<Group> {
