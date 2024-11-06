@@ -1,3 +1,4 @@
+use super::PaginationParams;
 use crate::auth_middleware::UserData;
 use crate::error::ApiError;
 use crate::models::group::GroupRepository;
@@ -54,6 +55,7 @@ pub async fn get_join_requests(
     data: web::Data<AppState>,
     user: web::ReqData<UserData>,
     path: web::Path<(i32,)>,
+    pagination: web::Query<PaginationParams>,
 ) -> Result<HttpResponse, ApiError> {
     if !StaticSecurity::is_granted(StaticSecurityAction::IsAdminOrTutor, &user) {
         return Err(ApiError::Forbidden {
@@ -62,7 +64,8 @@ pub async fn get_join_requests(
     }
 
     let conn = &mut data.db.db.get().unwrap();
-    let requests = GroupJoinRequestRepository::get_group_requests(path.into_inner().0, conn);
+    let requests =
+        GroupJoinRequestRepository::get_group_requests(path.into_inner().0, pagination.page, conn);
     let resp =
         GroupJoinRequestsResponse::enrich(&requests, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(resp))

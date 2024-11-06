@@ -1,4 +1,4 @@
-use super::DB;
+use super::{Paginate, PaginatedModel, DB};
 use crate::models::group::Group;
 use crate::schema::group_join_requests;
 use crate::schema::group_join_requests::dsl;
@@ -64,10 +64,15 @@ impl GroupJoinRequestRepository {
     }
 
     /// Gets all group requests for a group by group_id
-    pub fn get_group_requests(group_id: i32, conn: &mut DB) -> Vec<GroupJoinRequest> {
+    pub fn get_group_requests(
+        group_id: i32,
+        page: i64,
+        conn: &mut DB,
+    ) -> PaginatedModel<GroupJoinRequest> {
         dsl::group_join_requests
             .filter(dsl::group_id.eq(group_id))
-            .get_results::<GroupJoinRequest>(conn)
+            .paginate(page)
+            .load_and_count_pages::<GroupJoinRequest>(conn)
             .expect("Cannot get requests")
     }
 

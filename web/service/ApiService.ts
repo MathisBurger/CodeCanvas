@@ -15,7 +15,7 @@ import {
   Solution,
   SolutionFilesResponse,
   SolutionsResponse,
-  AssignmentWish, CodeComment
+  AssignmentWish, CodeComment, AssignmentWishesResponse
 } from "@/service/types/tasky";
 import { FileStructureTree } from "@/components/FileStructure";
 
@@ -48,20 +48,20 @@ class ApiService {
     });
   }
 
-  public async getStudents(): Promise<GetStudentsResponse> {
-    return await this.get<GetStudentsResponse>("/usernator/all-students");
+  public async getStudents(page?: number): Promise<GetStudentsResponse> {
+    return await this.get<GetStudentsResponse>(`/usernator/all-students?page=${page}`);
   }
 
   public async createGroup(title: string): Promise<Group> {
     return await this.post<Group>(`/tasky/create_group`, {title});
   }
 
-  public async getGroups(): Promise<GroupsResponse> {
-    return await this.get<GroupsResponse>("/tasky/groups");
+  public async getGroups(page?: number): Promise<GroupsResponse> {
+    return await this.get<GroupsResponse>(`/tasky/groups?page=${page ?? 1}`);
   }
 
-  public async getMyGroups(): Promise<GroupsResponse> {
-    return await this.get<GroupsResponse>("/tasky/my_groups");
+  public async getMyGroups(page?: number): Promise<GroupsResponse> {
+    return await this.get<GroupsResponse>(`/tasky/my_groups?page=${page ?? 1}`);
   }
 
   public async getGroup(id: number): Promise<Group> {
@@ -70,9 +70,10 @@ class ApiService {
 
   public async getGroupJoinRequests(
     id: number,
+    page?: number
   ): Promise<GroupJoinRequestResponse> {
     return await this.get<GroupJoinRequestResponse>(
-      `/tasky/groups/${id}/join_requests`,
+      `/tasky/groups/${id}/join_requests?page=${page ?? 1}`,
     );
   }
 
@@ -120,9 +121,10 @@ class ApiService {
 
   public async getAssignmentsForGroup(
     id: number,
+    page?: number
   ): Promise<AssignmentsResponse> {
     return await this.get<AssignmentsResponse>(
-      `/tasky/groups/${id}/assignments`,
+      `/tasky/groups/${id}/assignments?page=${page ?? 1}`,
     );
   }
 
@@ -158,8 +160,8 @@ class ApiService {
     );
   }
 
-  public async getPersonalSolutions(): Promise<SolutionsResponse> {
-    return await this.get<SolutionsResponse>("/tasky/personal_solutions");
+  public async getPersonalSolutions(page?: number): Promise<SolutionsResponse> {
+    return await this.get<SolutionsResponse>(`/tasky/personal_solutions?page=${page ?? 1}`);
   }
 
   public async getSolution(id: number): Promise<Solution> {
@@ -178,9 +180,10 @@ class ApiService {
 
   public async getSolutionsForAssignment(
     id: number,
+    page?: number
   ): Promise<SolutionsResponse> {
     return await this.get<SolutionsResponse>(
-      `/tasky/assignments/${id}/solutions`,
+      `/tasky/assignments/${id}/solutions?page=${page ?? 1}`,
     );
   }
 
@@ -211,8 +214,8 @@ class ApiService {
     return await this.post<AssignmentWish>(`/tasky/groups/${groupId}/assignment_wishes`, {title, description})
   }
 
-  public async getAssignmentWishes(groupId: number): Promise<AssignmentWish[]> {
-    return await this.get<AssignmentWish[]>(`/tasky/groups/${groupId}/assignment_wishes`);
+  public async getAssignmentWishes(groupId: number, page?: number): Promise<AssignmentWishesResponse> {
+    return await this.get<AssignmentWishesResponse>(`/tasky/groups/${groupId}/assignment_wishes?page=${page ?? 1}`);
   }
 
   public async deleteAssignmentWish(groupId: number, wishId: number): Promise<void> {
@@ -231,8 +234,8 @@ class ApiService {
     return await this.post<User>('/usernator/create_tutor', {username, password, email: ""});
   }
 
-  public async getTutors(): Promise<{tutors: User[]}> {
-    return await this.get('/usernator/all-tutors');
+  public async getTutors(page?: number): Promise<{tutors: User[], total: number}> {
+    return await this.get(`/usernator/all-tutors?page=${page ?? 1}`);
   }
 
   public async createCodeTests(

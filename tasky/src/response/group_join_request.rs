@@ -1,5 +1,5 @@
-use crate::api::usernator_api_client::UsernatorApiClient;
 use crate::api::UserRequest;
+use crate::{api::usernator_api_client::UsernatorApiClient, models::PaginatedModel};
 use serde::Serialize;
 use tonic::transport::Channel;
 
@@ -19,19 +19,23 @@ pub struct GroupJoinRequestResponse {
 #[derive(Serialize)]
 pub struct GroupJoinRequestsResponse {
     requests: Vec<GroupJoinRequestResponse>,
+    total: i64,
 }
 
-impl Enrich<Vec<GroupJoinRequest>> for GroupJoinRequestsResponse {
+impl Enrich<PaginatedModel<GroupJoinRequest>> for GroupJoinRequestsResponse {
     async fn enrich(
-        from: &Vec<GroupJoinRequest>,
+        from: &PaginatedModel<GroupJoinRequest>,
         client: &mut UsernatorApiClient<Channel>,
         db_conn: &mut DB,
     ) -> Result<Self, ApiError> {
         let mut requests: Vec<GroupJoinRequestResponse> = vec![];
-        for request in from {
+        for request in &from.results {
             requests.push(GroupJoinRequestResponse::enrich(request, client, db_conn).await?);
         }
-        Ok(GroupJoinRequestsResponse { requests })
+        Ok(GroupJoinRequestsResponse {
+            requests,
+            total: from.total,
+        })
     }
 }
 

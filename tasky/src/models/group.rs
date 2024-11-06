@@ -1,5 +1,6 @@
 use super::group_join_request::GroupJoinRequestRepository;
-use super::DB;
+use super::Paginate;
+use super::{PaginatedModel, DB};
 use crate::schema::groups::dsl;
 use diesel::prelude::*;
 use diesel::{associations::HasTable, dsl::not};
@@ -78,8 +79,29 @@ impl GroupRepository {
             .expect("Cannot fetch groups for member")
     }
 
+    /// Gets all groups a user is not member or tutor of
+    pub fn get_groups_for_member_paginated(
+        member_id: i32,
+        page: i64,
+        conn: &mut DB,
+    ) -> PaginatedModel<Group> {
+        dsl::groups
+            .filter(
+                dsl::tutor
+                    .eq(member_id)
+                    .or(dsl::members.contains(vec![Some(member_id)])),
+            )
+            .paginate(page)
+            .load_and_count_pages::<Group>(conn)
+            .expect("Cannot fetch groups for member")
+    }
+
     /// Gets all groups a user is member or tutor of
-    pub fn get_groups_for_not_member(member_id: i32, conn: &mut DB) -> Vec<Group> {
+    pub fn get_groups_for_not_member(
+        member_id: i32,
+        page: i64,
+        conn: &mut DB,
+    ) -> PaginatedModel<Group> {
         let requested: Vec<i32> = GroupJoinRequestRepository::get_user_requests(member_id, conn)
             .into_iter()
             .map(|x| x.group_id)
@@ -89,7 +111,8 @@ impl GroupRepository {
                 .eq(member_id)
                 .or(dsl::id.eq_any(requested))
                 .or(dsl::members.contains(vec![Some(member_id)]))))
-            .get_results::<Group>(conn)
+            .paginate(page)
+            .load_and_count_pages::<Group>(conn)
             .expect("Cannot fetch groups for member")
     }
 }

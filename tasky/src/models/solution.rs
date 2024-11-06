@@ -3,7 +3,7 @@ use diesel::associations::HasTable;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use super::DB;
+use super::{Paginate, PaginatedModel, DB};
 
 /// Approval status of a request
 pub enum ApprovalStatus {
@@ -82,10 +82,15 @@ pub struct SolutionRepository;
 
 impl SolutionRepository {
     /// Gets all solutions created on an assignment
-    pub fn get_solutions_for_assignment(id: i32, conn: &mut DB) -> Vec<Solution> {
+    pub fn get_solutions_for_assignment(
+        id: i32,
+        page: i64,
+        conn: &mut DB,
+    ) -> PaginatedModel<Solution> {
         dsl::solutions
             .filter(dsl::assignment_id.eq(id))
-            .get_results::<Solution>(conn)
+            .paginate(page)
+            .load_and_count_pages::<Solution>(conn)
             .expect("Cannot fetch solutions")
     }
 
@@ -99,10 +104,11 @@ impl SolutionRepository {
     }
 
     /// Gets all solutions for an user (submitter)
-    pub fn get_solutions_for_user(id: i32, conn: &mut DB) -> Vec<Solution> {
+    pub fn get_solutions_for_user(id: i32, page: i64, conn: &mut DB) -> PaginatedModel<Solution> {
         dsl::solutions
             .filter(dsl::submitter_id.eq(id))
-            .get_results::<Solution>(conn)
+            .paginate(page)
+            .load_and_count_pages::<Solution>(conn)
             .expect("Cannot fetch solutions")
     }
 

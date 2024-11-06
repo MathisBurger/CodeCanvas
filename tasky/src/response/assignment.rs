@@ -1,5 +1,6 @@
 use crate::api::UsersRequest;
 use crate::models::assignment::QuestionCatalogue;
+use crate::models::PaginatedModel;
 use crate::security::{StaticSecurity, StaticSecurityAction};
 use crate::{api::usernator_api_client::UsernatorApiClient, auth_middleware::UserData};
 use chrono::NaiveDateTime;
@@ -63,6 +64,7 @@ pub struct MinifiedAssignmentResponse {
 #[derive(Serialize)]
 pub struct AssignmentsResponse {
     assignments: Vec<MinifiedAssignmentResponse>,
+    total: i64,
 }
 
 impl Enrich<Assignment> for MinifiedAssignmentResponse {
@@ -81,20 +83,23 @@ impl Enrich<Assignment> for MinifiedAssignmentResponse {
     }
 }
 
-impl Enrich<Vec<Assignment>> for AssignmentsResponse {
+impl Enrich<PaginatedModel<Assignment>> for AssignmentsResponse {
     async fn enrich(
-        from: &Vec<Assignment>,
+        from: &PaginatedModel<Assignment>,
         client: &mut crate::api::usernator_api_client::UsernatorApiClient<
             tonic::transport::Channel,
         >,
         db_conn: &mut super::DB,
     ) -> Result<Self, ApiError> {
         let mut resp: Vec<MinifiedAssignmentResponse> = vec![];
-        for assignment in from {
+        for assignment in &from.results {
             resp.push(MinifiedAssignmentResponse::enrich(assignment, client, db_conn).await?);
         }
 
-        Ok(AssignmentsResponse { assignments: resp })
+        Ok(AssignmentsResponse {
+            assignments: resp,
+            total: from.total,
+        })
     }
 }
 

@@ -5,7 +5,7 @@ import {
   Group as TaskyGroup,
 } from "@/service/types/tasky";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
-import { Button, Container, Flex, Group } from "@mantine/core";
+import {Button, Container, Flex, Group, Pagination} from "@mantine/core";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { isGranted } from "@/service/auth";
 import { UserRoles } from "@/service/types/usernator";
@@ -29,10 +29,11 @@ const assignmentSort = (a: Assignment, b: Assignment) => {
 
 const GroupAssignmentsTab = ({ group }: GroupAssignmentsTabProps) => {
   const api = useApiServiceClient();
+  const [page, setPage] = useState(1);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [assignments, refetch] = useClientQuery<AssignmentsResponse>(
-    () => api.getAssignmentsForGroup(group?.id ?? -1),
-    [group?.id],
+    () => api.getAssignmentsForGroup(group?.id ?? -1, page),
+    [group?.id, page],
   );
 
   const { user } = useCurrentUser();
@@ -61,6 +62,7 @@ const GroupAssignmentsTab = ({ group }: GroupAssignmentsTabProps) => {
         {(assignments?.assignments ?? []).sort(assignmentSort).map((a) => (
           <AssignmentCard assignment={a} groupId={group?.id ?? -1} key={a.id} />
         ))}
+        <Pagination total={Math.ceil((assignments?.total ?? 0) / 50)} value={page} onChange={setPage} />
       </Flex>
     </Container>
   );
