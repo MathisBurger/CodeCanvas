@@ -1,3 +1,5 @@
+use super::Paginate;
+use super::PaginatedModel;
 use super::DB;
 use crate::schema::assignment_wishes::dsl;
 use diesel::associations::HasTable;
@@ -47,10 +49,15 @@ impl AssignmentWishRepository {
     }
 
     /// Gets all wishes for a specific group
-    pub fn get_wishes_for_group(group_id: i32, conn: &mut DB) -> Vec<AssignmentWish> {
+    pub fn get_wishes_for_group(
+        group_id: i32,
+        page: i64,
+        conn: &mut DB,
+    ) -> PaginatedModel<AssignmentWish> {
         dsl::assignment_wishes
             .filter(dsl::group_id.eq(group_id))
-            .get_results::<AssignmentWish>(conn)
+            .paginate(page)
+            .load_and_count_pages::<AssignmentWish>(conn)
             .expect("Cannot fetch wishes")
     }
 

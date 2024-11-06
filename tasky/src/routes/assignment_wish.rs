@@ -1,3 +1,4 @@
+use super::PaginationParams;
 use crate::models::assignment_wish::AssignmentWishRepository;
 use crate::models::group::GroupRepository;
 use crate::security::{IsGranted, SecurityAction};
@@ -55,6 +56,7 @@ pub async fn get_wishes(
     data: web::Data<AppState>,
     user: web::ReqData<UserData>,
     path: web::Path<(i32,)>,
+    pagination: web::Query<PaginationParams>,
 ) -> Result<HttpResponse, ApiError> {
     let user_data = user.into_inner();
     let conn = &mut data.db.db.get().unwrap();
@@ -69,7 +71,7 @@ pub async fn get_wishes(
         });
     }
 
-    let wishes = AssignmentWishRepository::get_wishes_for_group(group.id, conn);
+    let wishes = AssignmentWishRepository::get_wishes_for_group(group.id, pagination.page, conn);
     Ok(HttpResponse::Ok().json(wishes))
 }
 

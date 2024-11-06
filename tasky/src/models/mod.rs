@@ -7,6 +7,7 @@ use diesel::query_dsl::LoadQuery;
 use diesel::r2d2::{ConnectionManager, PooledConnection};
 use diesel::sql_types::HasSqlType;
 use diesel::sql_types::SingleValue;
+use serde::Serialize;
 
 pub mod assignment;
 pub mod assignment_wish;
@@ -24,7 +25,7 @@ pub struct Paginated<T> {
     page: i64,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct PaginatedModel<T> {
     pub results: Vec<T>,
     pub page: i64,
