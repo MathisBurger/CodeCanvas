@@ -70,9 +70,10 @@ class ApiService {
 
   public async getGroupJoinRequests(
     id: number,
+    page?: number
   ): Promise<GroupJoinRequestResponse> {
     return await this.get<GroupJoinRequestResponse>(
-      `/tasky/groups/${id}/join_requests`,
+      `/tasky/groups/${id}/join_requests?page=${page ?? 1}`,
     );
   }
 

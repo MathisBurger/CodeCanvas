@@ -35,6 +35,7 @@ export interface GroupJoinRequest {
 
 export interface GroupJoinRequestResponse {
   requests: GroupJoinRequest[];
+  total: number;
 }
 
 export enum AssignmentLanguage {
