@@ -79,6 +79,23 @@ impl GroupRepository {
             .expect("Cannot fetch groups for member")
     }
 
+    /// Gets all groups a user is not member or tutor of
+    pub fn get_groups_for_member_paginated(
+        member_id: i32,
+        page: i64,
+        conn: &mut DB,
+    ) -> PaginatedModel<Group> {
+        dsl::groups
+            .filter(
+                dsl::tutor
+                    .eq(member_id)
+                    .or(dsl::members.contains(vec![Some(member_id)])),
+            )
+            .paginate(page)
+            .load_and_count_pages::<Group>(conn)
+            .expect("Cannot fetch groups for member")
+    }
+
     /// Gets all groups a user is member or tutor of
     pub fn get_groups_for_not_member(
         member_id: i32,
