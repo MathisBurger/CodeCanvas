@@ -1,3 +1,4 @@
+use super::PaginationParams;
 use crate::models::assignment::QuestionCatalogueElement;
 use crate::AppState;
 use actix_multipart::form::MultipartForm;
@@ -74,6 +75,7 @@ pub async fn get_all_group_assignments(
     data: web::Data<AppState>,
     user: web::ReqData<UserData>,
     path: web::Path<(i32,)>,
+    pagination: web::Query<PaginationParams>,
 ) -> Result<HttpResponse, ApiError> {
     let user_data = user.into_inner();
     let conn = &mut data.db.db.get().unwrap();
@@ -88,7 +90,8 @@ pub async fn get_all_group_assignments(
         });
     }
 
-    let assignments = AssignmentRepository::get_all_group_assignments(group.id, conn);
+    let assignments =
+        AssignmentRepository::get_all_group_assignments(group.id, pagination.page, conn);
     let enriched =
         AssignmentsResponse::enrich(&assignments, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(enriched))

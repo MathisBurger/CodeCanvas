@@ -2,7 +2,6 @@ use super::PaginationParams;
 use crate::auth_middleware::UserData;
 use crate::error::ApiError;
 use crate::models::group::{CreateGroup, GroupRepository};
-use crate::models::PaginatedModel;
 use crate::response::group::{GroupResponse, GroupsResponse};
 use crate::response::Enrich;
 use crate::security::{IsGranted, SecurityAction};
