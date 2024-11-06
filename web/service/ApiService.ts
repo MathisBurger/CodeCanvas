@@ -48,8 +48,8 @@ class ApiService {
     });
   }
 
-  public async getStudents(): Promise<GetStudentsResponse> {
-    return await this.get<GetStudentsResponse>("/usernator/all-students");
+  public async getStudents(page?: number): Promise<GetStudentsResponse> {
+    return await this.get<GetStudentsResponse>(`/usernator/all-students?page=${page}`);
   }
 
   public async createGroup(title: string): Promise<Group> {
@@ -234,8 +234,8 @@ class ApiService {
     return await this.post<User>('/usernator/create_tutor', {username, password, email: ""});
   }
 
-  public async getTutors(): Promise<{tutors: User[]}> {
-    return await this.get('/usernator/all-tutors');
+  public async getTutors(page?: number): Promise<{tutors: User[], total: number}> {
+    return await this.get(`/usernator/all-tutors?page=${page ?? 1}`);
   }
 
   public async createCodeTests(

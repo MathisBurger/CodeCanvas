@@ -1,4 +1,4 @@
-import { MinifiedGroup, TaskyUser } from "@/service/types/tasky";
+import { MinifiedGroup } from "@/service/types/tasky";
 
 export enum UserRoles {
   Student = "ROLE_STUDENT",
@@ -19,4 +19,5 @@ export interface User {
 
 export interface GetStudentsResponse {
   students: User[];
+  total: number;
 }
