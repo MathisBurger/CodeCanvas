@@ -64,7 +64,7 @@ const GroupAssignmentWishesTab = ({group}: GroupAssignmentWishesTabProps) => {
                     rows={wishes?.results ?? []}
                     rowActions={rowActions}
                 />
-                <Pagination total={wishes?.total ?? 0} value={page} onChange={setPage} />
+                <Pagination total={Math.ceil((wishes?.total ?? 0) / 50)} value={page} onChange={setPage} />
             </Container>
             {createModalOpen && (
                 <CreateAssignmentWishModal

@@ -109,6 +109,7 @@ export interface Solution {
 
 export interface SolutionsResponse {
   solutions: Omit<Solution, 'job'>[];
+  total: number;
 }
 
 export interface SolutionFilesResponse {

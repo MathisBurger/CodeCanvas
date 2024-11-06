@@ -62,7 +62,7 @@ const GroupAssignmentsTab = ({ group }: GroupAssignmentsTabProps) => {
         {(assignments?.assignments ?? []).sort(assignmentSort).map((a) => (
           <AssignmentCard assignment={a} groupId={group?.id ?? -1} key={a.id} />
         ))}
-        <Pagination total={assignments?.total ?? 0} value={page} onChange={setPage} />
+        <Pagination total={Math.ceil((assignments?.total ?? 0) / 50)} value={page} onChange={setPage} />
       </Flex>
     </Container>
   );

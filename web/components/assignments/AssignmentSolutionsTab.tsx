@@ -8,6 +8,8 @@ import { SolutionsResponse } from "@/service/types/tasky";
 import { useRouter } from "next/navigation";
 import { UserRoles } from "@/service/types/usernator";
 import SolutionBadge from "@/components/solution/SolutionBadge";
+import {useState} from "react";
+import {Container, Pagination} from "@mantine/core";
 
 interface AssignmentSolutionsTabProps {
   assignmentId: number;
@@ -17,10 +19,11 @@ const AssignmentSolutionsTab = ({
   assignmentId,
 }: AssignmentSolutionsTabProps) => {
   const api = useApiServiceClient();
+  const [page, setPage] = useState(1);
   const router = useRouter();
   const [solutions] = useClientQuery<SolutionsResponse>(
-    () => api.getSolutionsForAssignment(assignmentId),
-    [assignmentId],
+    () => api.getSolutionsForAssignment(assignmentId, page),
+    [assignmentId, page],
   );
 
   const cols: EntityListCol[] = [
@@ -52,11 +55,14 @@ const AssignmentSolutionsTab = ({
   ];
 
   return (
-    <EntityList
-      cols={cols}
-      rows={solutions?.solutions ?? []}
-      rowActions={rowActions}
-    />
+    <Container fluid>
+      <EntityList
+          cols={cols}
+          rows={solutions?.solutions ?? []}
+          rowActions={rowActions}
+      />
+      <Pagination total={Math.ceil((solutions?.total ?? 0) / 50)} value={page} onChange={setPage} />
+    </Container>
   );
 };
 

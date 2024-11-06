@@ -86,7 +86,7 @@ export const JoinRequestsComponent: React.FC<{
           rows={requests ? (requests as GroupJoinRequestResponse).requests : []}
           rowActions={actions}
       />
-      <Pagination total={requests?.total ?? 0} value={page} onChange={setPage} />
+      <Pagination total={Math.ceil((requests?.total ?? 0) / 50)} value={page} onChange={setPage} />
     </>
   );
 };

@@ -160,8 +160,8 @@ class ApiService {
     );
   }
 
-  public async getPersonalSolutions(): Promise<SolutionsResponse> {
-    return await this.get<SolutionsResponse>("/tasky/personal_solutions");
+  public async getPersonalSolutions(page?: number): Promise<SolutionsResponse> {
+    return await this.get<SolutionsResponse>(`/tasky/personal_solutions?page=${page ?? 1}`);
   }
 
   public async getSolution(id: number): Promise<Solution> {
@@ -180,9 +180,10 @@ class ApiService {
 
   public async getSolutionsForAssignment(
     id: number,
+    page?: number
   ): Promise<SolutionsResponse> {
     return await this.get<SolutionsResponse>(
-      `/tasky/assignments/${id}/solutions`,
+      `/tasky/assignments/${id}/solutions?page=${page ?? 1}`,
     );
   }
 
