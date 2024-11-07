@@ -1,3 +1,4 @@
+use super::PaginationParams;
 use crate::auth_middleware::UserData;
 use crate::error::ApiError;
 use crate::models::group::{CreateGroup, GroupRepository};
@@ -49,10 +50,15 @@ pub async fn create_group(
 pub async fn get_all_groups(
     data: web::Data<AppState>,
     user: web::ReqData<UserData>,
+    pagination: web::Query<PaginationParams>,
 ) -> Result<HttpResponse, ApiError> {
     let conn = &mut data.db.db.get().unwrap();
 
-    let groups = GroupRepository::get_groups_for_not_member(user.into_inner().user_id, conn);
+    let groups = GroupRepository::get_groups_for_not_member(
+        user.into_inner().user_id,
+        pagination.page,
+        conn,
+    );
     let resp = GroupsResponse::enrich(&groups, &mut data.user_api.clone(), conn).await?;
 
     Ok(HttpResponse::Ok().json(resp))
@@ -63,10 +69,15 @@ pub async fn get_all_groups(
 pub async fn get_all_my_groups(
     data: web::Data<AppState>,
     user: web::ReqData<UserData>,
+    pagination: web::Query<PaginationParams>,
 ) -> Result<HttpResponse, ApiError> {
     let conn = &mut data.db.db.get().unwrap();
 
-    let groups = GroupRepository::get_groups_for_member(user.into_inner().user_id, conn);
+    let groups = GroupRepository::get_groups_for_member_paginated(
+        user.into_inner().user_id,
+        pagination.page,
+        conn,
+    );
     let resp = GroupsResponse::enrich(&groups, &mut data.user_api.clone(), conn).await?;
 
     Ok(HttpResponse::Ok().json(resp))

@@ -1,6 +1,6 @@
 "use client";
-import { Badge, Tabs } from "@mantine/core";
-import React from "react";
+import {Badge, Pagination, Tabs} from "@mantine/core";
+import React, {useState} from "react";
 import {
   Group,
   GroupJoinRequestResponse,
@@ -38,9 +38,10 @@ export const JoinRequestsComponent: React.FC<{
   refetchParent: () => void;
 }> = ({ group, refetchParent }) => {
   const api = useApiServiceClient();
+  const [page, setPage] = useState(1);
   const [requests, refetch] = useClientQuery<GroupJoinRequestResponse>(
-    () => api.getGroupJoinRequests(group?.id ?? -1),
-    [group?.id],
+    () => api.getGroupJoinRequests(group?.id ?? -1, page),
+    [group?.id, page],
   );
 
   const cols: EntityListCol[] = [
@@ -79,11 +80,14 @@ export const JoinRequestsComponent: React.FC<{
   ];
 
   return (
-    <EntityList
-      cols={cols}
-      rows={requests ? (requests as GroupJoinRequestResponse).requests : []}
-      rowActions={actions}
-    />
+    <>
+      <EntityList
+          cols={cols}
+          rows={requests ? (requests as GroupJoinRequestResponse).requests : []}
+          rowActions={actions}
+      />
+      <Pagination total={Math.ceil((requests?.total ?? 0) / 50)} value={page} onChange={setPage} />
+    </>
   );
 };
 

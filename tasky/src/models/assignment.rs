@@ -1,4 +1,4 @@
-use super::DB;
+use super::{Paginate, PaginatedModel, DB};
 use crate::schema::assignments::dsl;
 use chrono::NaiveDateTime;
 use diesel::associations::HasTable;
@@ -90,10 +90,15 @@ impl AssignmentRepository {
     }
 
     /// Gets assignments by group_id
-    pub fn get_all_group_assignments(group_id: i32, conn: &mut DB) -> Vec<Assignment> {
+    pub fn get_all_group_assignments(
+        group_id: i32,
+        page: i64,
+        conn: &mut DB,
+    ) -> PaginatedModel<Assignment> {
         dsl::assignments
             .filter(dsl::group_id.eq(group_id))
-            .get_results::<Assignment>(conn)
+            .paginate(page)
+            .load_and_count_pages::<Assignment>(conn)
             .expect("Error loading group")
     }
 

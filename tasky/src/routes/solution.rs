@@ -1,3 +1,4 @@
+use super::PaginationParams;
 use crate::http::run_task;
 use crate::models::assignment::AssignmentLanguage;
 use crate::models::solution::{ApprovalStatus, Solution, SolutionRepository};
@@ -86,11 +87,13 @@ pub async fn get_solution(
 pub async fn get_solutions_for_user(
     data: web::Data<AppState>,
     user: web::ReqData<UserData>,
+    pagination: web::Query<PaginationParams>,
 ) -> Result<HttpResponse, ApiError> {
     let user_data = user.into_inner();
     let conn = &mut data.db.db.get().unwrap();
 
-    let solutions = SolutionRepository::get_solutions_for_user(user_data.user_id, conn);
+    let solutions =
+        SolutionRepository::get_solutions_for_user(user_data.user_id, pagination.page, conn);
     let response = SolutionsResponse::enrich(&solutions, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(response))
 }
@@ -101,6 +104,7 @@ pub async fn get_solutions_for_assignment(
     data: web::Data<AppState>,
     user: web::ReqData<UserData>,
     path: web::Path<(i32,)>,
+    pagination: web::Query<PaginationParams>,
 ) -> Result<HttpResponse, ApiError> {
     let user_data = user.into_inner();
     let path_data = path.into_inner();
@@ -113,7 +117,8 @@ pub async fn get_solutions_for_assignment(
         });
     }
 
-    let solutions = SolutionRepository::get_solutions_for_assignment(assignment.id, conn);
+    let solutions =
+        SolutionRepository::get_solutions_for_assignment(assignment.id, pagination.page, conn);
     let response = SolutionsResponse::enrich(&solutions, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(response))
 }

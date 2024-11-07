@@ -1,5 +1,5 @@
 import {Group} from "@/service/types/tasky";
-import {Button, Container, Group as GroupComponent} from "@mantine/core";
+import {Button, Container, Group as GroupComponent, Pagination} from "@mantine/core";
 import {IconPlus} from "@tabler/icons-react";
 import {useState} from "react";
 import CreateAssignmentWishModal from "@/components/group/CreateAssignmentWishModal";
@@ -16,8 +16,9 @@ interface GroupAssignmentWishesTabProps {
 const GroupAssignmentWishesTab = ({group}: GroupAssignmentWishesTabProps) => {
 
     const [createModalOpen, setCreateModalOpen] = useState(false);
+    const [page, setPage] = useState(1);
     const api = useApiServiceClient();
-    const [wishes, refetch] = useClientQuery(() => api.getAssignmentWishes(group.id), [group]);
+    const [wishes, refetch] = useClientQuery(() => api.getAssignmentWishes(group.id, page), [group, page]);
 
     const cols: EntityListCol[] = [
         {
@@ -60,9 +61,10 @@ const GroupAssignmentWishesTab = ({group}: GroupAssignmentWishesTabProps) => {
                 </GroupComponent>
                 <EntityList
                     cols={cols}
-                    rows={wishes ?? []}
+                    rows={wishes?.results ?? []}
                     rowActions={rowActions}
                 />
+                <Pagination total={Math.ceil((wishes?.total ?? 0) / 50)} value={page} onChange={setPage} />
             </Container>
             {createModalOpen && (
                 <CreateAssignmentWishModal

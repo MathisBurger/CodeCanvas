@@ -2,7 +2,7 @@
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import useClientQuery from "@/hooks/useClientQuery";
 import { SolutionsResponse } from "@/service/types/tasky";
-import { Container, Title } from "@mantine/core";
+import {Container, Pagination, Title} from "@mantine/core";
 import EntityList, {
   EntityListCol,
   EntityListRowAction,
@@ -10,12 +10,14 @@ import EntityList, {
 import { UserRoles } from "@/service/types/usernator";
 import SolutionBadge from "@/components/solution/SolutionBadge";
 import { useRouter } from "next/navigation";
+import {useState} from "react";
 
 const PersonalSolutionsPage = () => {
   const api = useApiServiceClient();
+  const [page, setPage] = useState(1);
   const router = useRouter();
   const [solutions] = useClientQuery<SolutionsResponse>(() =>
-    api.getPersonalSolutions(),
+    api.getPersonalSolutions(page), [page]
   );
 
   const cols: EntityListCol[] = [
@@ -56,6 +58,7 @@ const PersonalSolutionsPage = () => {
         rowActions={rowActions}
         rows={solutions?.solutions ?? []}
       />
+      <Pagination total={Math.ceil((solutions?.total ?? 0) / 50)} value={page} onChange={setPage} />
     </Container>
   );
 };

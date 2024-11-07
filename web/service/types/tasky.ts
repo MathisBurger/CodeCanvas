@@ -2,6 +2,8 @@ import { FileStructureTree } from "@/components/FileStructure";
 
 export interface GroupsResponse {
   groups: MinifiedGroup[];
+  total: number;
+  page: number;
 }
 
 export interface MinifiedGroup {
@@ -33,6 +35,7 @@ export interface GroupJoinRequest {
 
 export interface GroupJoinRequestResponse {
   requests: GroupJoinRequest[];
+  total: number;
 }
 
 export enum AssignmentLanguage {
@@ -58,6 +61,7 @@ export interface Assignment {
 
 export interface AssignmentsResponse {
   assignments: Assignment[];
+  total: number;
 }
 
 export interface RunnerConfig {
@@ -106,6 +110,7 @@ export interface Solution {
 
 export interface SolutionsResponse {
   solutions: Omit<Solution, 'job'>[];
+  total: number;
 }
 
 export interface SolutionFilesResponse {
@@ -144,6 +149,11 @@ export interface AssignmentWish {
   id: number;
   title: string;
   description: string;
+}
+
+export interface AssignmentWishesResponse {
+  results: AssignmentWish[];
+  total: number
 }
 
 export interface CodeComment {

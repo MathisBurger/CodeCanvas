@@ -1,4 +1,5 @@
 use actix_web::web;
+use serde::Deserialize;
 
 pub mod assignment;
 pub mod assignment_wish;
@@ -6,6 +7,11 @@ pub mod code_comment;
 pub mod group;
 pub mod group_join_request;
 pub mod solution;
+
+#[derive(Deserialize)]
+pub struct PaginationParams {
+    pub page: i64,
+}
 
 /// Initializes all endpoints
 pub fn init_services(cfg: &mut web::ServiceConfig) {

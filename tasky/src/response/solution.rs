@@ -2,6 +2,7 @@ use crate::api::UserRequest;
 use crate::http::get_job;
 use crate::models::assignment::AssignmentLanguage;
 use crate::models::solution::QuestionResult;
+use crate::models::PaginatedModel;
 use crate::{api::usernator_api_client::UsernatorApiClient, http::Job};
 use serde::Serialize;
 
@@ -42,6 +43,7 @@ pub struct ListSolutionResponse {
 #[derive(Serialize)]
 pub struct SolutionsResponse {
     pub solutions: Vec<ListSolutionResponse>,
+    total: i64,
 }
 
 impl Enrich<Solution> for ListSolutionResponse {
@@ -70,18 +72,19 @@ impl Enrich<Solution> for ListSolutionResponse {
     }
 }
 
-impl Enrich<Vec<Solution>> for SolutionsResponse {
+impl Enrich<PaginatedModel<Solution>> for SolutionsResponse {
     async fn enrich(
-        from: &Vec<Solution>,
+        from: &PaginatedModel<Solution>,
         client: &mut UsernatorApiClient<tonic::transport::Channel>,
         db_conn: &mut super::DB,
     ) -> Result<Self, ApiError> {
         let mut responses: Vec<ListSolutionResponse> = vec![];
-        for solution in from {
+        for solution in &from.results {
             responses.push(ListSolutionResponse::enrich(solution, client, db_conn).await?);
         }
         Ok(SolutionsResponse {
             solutions: responses,
+            total: from.total,
         })
     }
 }
