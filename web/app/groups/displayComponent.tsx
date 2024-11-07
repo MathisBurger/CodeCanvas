@@ -10,6 +10,7 @@ import useApiServiceClient from "@/hooks/useApiServiceClient";
 import { notifications } from "@mantine/notifications";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { isGranted } from "@/service/auth";
+import {useTranslation} from "react-i18next";
 
 interface DisplayComponentProps {
   groups: MinifiedGroup[];
@@ -23,22 +24,23 @@ const GroupsDisplayComponent = ({
   refetch,
 }: DisplayComponentProps) => {
   const router = useRouter();
+  const {t} = useTranslation(['common', 'group']);
   const cols: EntityListCol[] = [
     {
       field: "id",
-      label: "ID",
+      label: t('cols.id'),
     },
     {
       field: "title",
-      label: "Title",
+      label: t('cols.title'),
     },
     {
       field: "member_count",
-      label: "Members Count",
+      label: t('cols.members-count'),
     },
     {
       field: "tutor",
-      label: "Tutor",
+      label: t('cols.tutor'),
       getter: (row) => row.tutor.username,
     },
   ];
@@ -48,7 +50,7 @@ const GroupsDisplayComponent = ({
   const actions: EntityListRowAction[] = [
     {
       color: "blue",
-      name: "View",
+      name: t('actions.view'),
       onClick: (row) => router.push(`/groups/${row.id}`),
       auth: [UserRoles.Admin, UserRoles.Tutor, UserRoles.Student],
       authFunc: (row) =>
@@ -58,12 +60,12 @@ const GroupsDisplayComponent = ({
     },
     {
       color: "blue",
-      name: "Request Join",
+      name: t('actions.request-join'),
       onClick: (row) =>
         api.createGroupJoinRequest(row.id).then(() => {
           notifications.show({
-            title: "Join Request created",
-            message: "Created join request on group " + row.title,
+            title: t('messages.join-request-created-title'),
+            message: t('messages.join-request-created-text') + row.title,
           });
           if (refetch) refetch();
         }),

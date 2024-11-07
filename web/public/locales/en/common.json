@@ -1,0 +1,12 @@
+{
+  "invalid-group-id": "Invalid group ID",
+  "cols": {
+    "id": "ID",
+    "username": "Username"
+  },
+  "actions": {
+    "approve": "Approve",
+    "reject": "Reject",
+    "view": "View"
+  }
+}
