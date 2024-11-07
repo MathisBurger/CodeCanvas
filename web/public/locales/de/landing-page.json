@@ -1,0 +1,15 @@
+{
+  "a": "Eine",
+  "modern": "moderne",
+  "platform": "Plattform",
+  "title": "zum Programmieren üben",
+  "subtitle": "Entwickelt, um eine universelle Anwendung für Tutoren und Studierende zur Verwaltung von Programmieraufgaben bereitzustellen. Es ist eine einfache und praktische Möglichkeit, Programmieren und Muster für Prüfungen und Tests zu üben.",
+  "question-assignments": "Fragenbasierte Aufgaben",
+  "free-open-source": "Frei und Quelloffen",
+  "code-testing": "Code Tests",
+  "questions-text": "Neben Programmieraufgaben, können auch Aufgaben mit Fragen erstellt werden",
+  "free-text": "Das Projekt ist community-basiert und kann kostenlos genutzt werden. Jeder kann den Quellcode einsehen.",
+  "test-text": "Tutoren können Code-Tests erstellen, um zu überprüfen, ob der eingereichte Code wie erwartet funktioniert.",
+  "dashboard": "Dashboard",
+  "source-code": "Quellcode"
+}

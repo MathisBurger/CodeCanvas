@@ -21,6 +21,8 @@ import Footer from "@/components/Footer";
 import { publicRoutes } from "@/static/routes";
 import Stage2SpotlightContextWrapper from "@/components/spotlight/Stage2SpotlightContextWrapper";
 import {Stage2Type} from "@/hooks/spotlight/stage2";
+import i18n from "../i18n"
+import CentralLoading from "@/components/CentralLoading";
 
 export default function RootLayout({
   children,
@@ -28,6 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const pathname = usePathname();
   const showNavbar = useMemo(
     () => publicRoutes.indexOf(pathname) === -1,
@@ -51,6 +54,8 @@ export default function RootLayout({
         console.error(e);
       }
     }
+    i18n.init();
+    setLoading(false);
   }, []);
 
   return (
@@ -67,25 +72,29 @@ export default function RootLayout({
     <CurrentUserContext.Provider value={{ user, setUser }}>
           <MantineProvider theme={{}}>
             <DatesProvider settings={{ timezone: null }}>
-              <Stage2SpotlightContextWrapper>
-                <Notifications />
-                <AppShell
-                    header={{ height: 100 }}
-                    navbar={showNavbar ? { width: 250, breakpoint: "" } : undefined}
-                >
-                  <AppShell.Header>
-                    <Header />
-                  </AppShell.Header>
-                  {showNavbar && (
-                      <AppShell.Navbar>
-                        <Navbar />
-                      </AppShell.Navbar>
-                  )}
-                  <AppShell.Main mb={100}>{children}</AppShell.Main>
-                  <AppShell.Footer><Footer /></AppShell.Footer>
-                </AppShell>
-                <SpotlightWrapper />
-              </Stage2SpotlightContextWrapper>
+              {loading ? (
+                  <CentralLoading />
+              ) : (
+                  <Stage2SpotlightContextWrapper>
+                    <Notifications />
+                    <AppShell
+                        header={{ height: 100 }}
+                        navbar={showNavbar ? { width: 250, breakpoint: "" } : undefined}
+                    >
+                      <AppShell.Header>
+                        <Header />
+                      </AppShell.Header>
+                      {showNavbar && (
+                          <AppShell.Navbar>
+                            <Navbar />
+                          </AppShell.Navbar>
+                      )}
+                      <AppShell.Main mb={100}>{children}</AppShell.Main>
+                      <AppShell.Footer><Footer /></AppShell.Footer>
+                    </AppShell>
+                    <SpotlightWrapper />
+                  </Stage2SpotlightContextWrapper>
+              )}
             </DatesProvider>
           </MantineProvider>
         </CurrentUserContext.Provider>

@@ -1,0 +1,15 @@
+{
+  "a": "A",
+  "modern": "modern",
+  "platform": "platform",
+  "title": "to practise coding",
+  "subtitle": "Built to provide an universal application for tutors and students to manage coding assignments. It is an easy and practical way to practise coding and patterns for exams and tests.",
+  "question-assignments": "Question assignments",
+  "free-open-source": "Free and open source",
+  "code-testing": "Code testing",
+  "questions-text": "Besides coding assignments, you can also create assignments with questions that can be answered.",
+  "free-text": "The project is community driven and can be used for free. Everyone can view the source code.",
+  "test-text": "Tutors can create code tests to validate if the code works as expected.",
+  "dashboard": "Dashboard",
+  "source-code": "Source code"
+}
