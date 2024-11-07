@@ -86,12 +86,14 @@ pub fn build_filename_map(
     Ok(map)
 }
 
+/// Compares existing file structures and checks object_ids of existing files in from structure
+/// and to structure.
 pub fn compare_structures(
     from: &AssignmentFileStructure,
     to: &AssignmentFileStructure,
 ) -> Result<(), ApiError> {
-    for folder in to.folders.as_ref().unwrap_or(&mut default_structure_vec()) {
-        if let Some(ref from_folder) = get_folder_by_name(&from, folder.current_folder_name.clone())
+    for folder in to.folders.as_ref().unwrap_or(&default_structure_vec()) {
+        if let Some(ref from_folder) = get_folder_by_name(from, folder.current_folder_name.clone())
         {
             compare_structures(from_folder, folder)?;
         }

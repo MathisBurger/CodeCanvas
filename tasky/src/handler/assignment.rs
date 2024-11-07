@@ -1,6 +1,6 @@
 use std::{collections::HashMap, io::Read};
 
-use super::file_structure::{self, *};
+use super::file_structure::*;
 use actix_multipart::form::{json::Json, tempfile::TempFile, MultipartForm};
 use mongodb::Database;
 use serde::Deserialize;
@@ -129,9 +129,9 @@ pub async fn handle_update_multipart(
 
         return Ok(assignment);
     }
-    return Err(ApiError::BadRequest {
+    Err(ApiError::BadRequest {
         message: "The assignment does not have a file structure".to_string(),
-    });
+    })
 }
 
 /// Creates files and updates the correlated object_ids
@@ -143,7 +143,7 @@ async fn create_files_and_update_ids(
     assignment: &Assignment,
 ) {
     let mut file_data: Vec<(String, String, usize)> = vec![];
-    for file in actual_files.into_iter() {
+    for file in actual_files.iter_mut() {
         let mut content = String::new();
         let size = filename_map
             .get(&file.filename)
@@ -172,7 +172,7 @@ async fn create_files_and_update_ids(
     )
     .await;
 
-    for (i, file) in actual_files.into_iter().enumerate() {
+    for (i, file) in actual_files.iter_mut().enumerate() {
         file.object_id = Some(mongo_files.get(i).unwrap().to_hex());
     }
 }
