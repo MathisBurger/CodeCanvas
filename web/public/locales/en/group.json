@@ -1,5 +1,6 @@
 {
   "groups": "Groups",
+  "my-groups": "My groups",
   "tabs": {
     "assignments": "Assignments",
     "members": "Members",
@@ -12,7 +13,8 @@
     "tutor": "Tutor"
   },
   "actions": {
-    "request-join": "Request Join"
+    "request-join": "Request Join",
+    "create-group": "Create group"
   },
   "messages": {
     "join-request-created-title": "Join Request created",

@@ -1,12 +1,43 @@
 {
   "invalid-group-id": "Invalid group ID",
+  "login-to-cc": "Login to CodeCanvas",
+  "register-cc": "Welcome to CodeCanvas please sign up",
+  "report-bug": "Report bug",
+  "students": "Students",
+  "tutors": "Tutors",
   "cols": {
     "id": "ID",
     "username": "Username"
   },
+  "fields": {
+    "username": "Username",
+    "username-placeholder": "Your username",
+    "password": "Password",
+    "password-placeholder": "Your password",
+    "title": "Title",
+    "description": "Description"
+  },
   "actions": {
     "approve": "Approve",
     "reject": "Reject",
-    "view": "View"
+    "view": "View",
+    "login": "Login",
+    "sign-up": "Sign up",
+    "submit": "Submit",
+    "create-tutor": "Create tutor"
+  },
+  "messages": {
+    "login-failed": "Login failed",
+    "registration-failed": "Registration failed",
+    "password-requirements": "Password should include at least 6 characters",
+    "success": "Success",
+    "created-report": "Created report"
+  },
+  "errors": {
+    "title-empty": "The title should not be empty",
+    "body-empty": "The body should not be empty"
+  },
+  "settings": {
+    "settings": "Settings"
   }
 }
