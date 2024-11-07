@@ -47,6 +47,7 @@ pub struct AssignmentResponse {
     pub runner_cpu: String,
     pub runner_memory: String,
     pub runner_timeout: String,
+    pub runnner_cmd: String,
 }
 
 /// Minified response returned for list views
@@ -154,6 +155,7 @@ impl Enrich<Assignment> for AssignmentResponse {
             runner_cpu: from.runner_cpu.clone(),
             runner_memory: from.runner_memory.clone(),
             runner_timeout: from.runner_timeout.clone(),
+            runnner_cmd: from.runner_cmd.clone(),
         })
     }
 }

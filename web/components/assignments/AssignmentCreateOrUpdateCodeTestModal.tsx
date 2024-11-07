@@ -111,7 +111,7 @@ const AssignmentCreateOrUpdateCodeTestModal = ({
           {...form.getInputProps("runner_cmd")}
         />
         <Group mt={10}>
-          <Button type="submit">Create tests</Button>
+          <Button type="submit">Save</Button>
           <Button onClick={onClose} color="gray">
             Cancel
           </Button>
