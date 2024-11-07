@@ -11,6 +11,7 @@ import { UserRoles } from "@/service/types/usernator";
 import SolutionBadge from "@/components/solution/SolutionBadge";
 import { useRouter } from "next/navigation";
 import {useState} from "react";
+import {useTranslation} from "react-i18next";
 
 const PersonalSolutionsPage = () => {
   const api = useApiServiceClient();
@@ -19,20 +20,21 @@ const PersonalSolutionsPage = () => {
   const [solutions] = useClientQuery<SolutionsResponse>(() =>
     api.getPersonalSolutions(page), [page]
   );
+  const {t} = useTranslation(['common', 'solution']);
 
   const cols: EntityListCol[] = [
     {
       field: "id",
-      label: "ID",
+      label: t('cols.id'),
     },
     {
       field: "assignment",
-      label: "Assignment",
+      label: t('cols.assignment'),
       getter: (row) => row.assignment.title,
     },
     {
       field: "approval_status",
-      label: "Approval Status",
+      label: t('cols.approval-status'),
       render: (value) => (
         <SolutionBadge status={value as string} />
       ),
@@ -41,7 +43,7 @@ const PersonalSolutionsPage = () => {
 
   const rowActions: EntityListRowAction[] = [
     {
-      name: "View",
+      name: t('actions.view'),
       onClick: (row) => router.push(`/solutions/${row.id}`),
       color: undefined,
       auth: [UserRoles.Student],
@@ -51,7 +53,7 @@ const PersonalSolutionsPage = () => {
   return (
     <Container fluid>
       <Title order={1} mb={20}>
-        Personal solutions
+        {t('personal-solutions')}
       </Title>
       <EntityList
         cols={cols}

@@ -16,6 +16,7 @@ import FileStructureDisplay from "@/components/FileStructureDisplay";
 import QuestionAnswersDisplay from "@/components/solution/questions/QuestionAnswersDisplay";
 import {useSpotlightStage2} from "@/hooks/spotlight/stage2";
 import CommentTab from "@/components/solution/CommentTab";
+import {useTranslation} from "react-i18next";
 
 // Every 30s
 const REFETCH_INTERVAL = 1000 * 30;
@@ -28,6 +29,7 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
   const [solution, refetch] = useClientQuery<Solution>(() =>
     api.getSolution(id),
   );
+  const {t} = useTranslation(['solution', 'common']);
 
   const {addSolution} = useSpotlightStage2();
   useEffect(() => {
@@ -51,7 +53,6 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
     fetcher();
   }, [solution, refetch]);
 
-  console.log(solution);
   const approve = async () => {
     await api.approveSolution(id);
     refetch();
@@ -65,7 +66,7 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
   if (isNaN(id)) {
     return (
       <Container fluid>
-        <Title>Invalid Solution ID</Title>
+        <Title>{t('invalid-solution-id')}</Title>
       </Container>
     );
   }
@@ -96,10 +97,10 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
           ) > -1 && (
             <>
               <Button color="lime" onClick={approve}>
-                Approve
+                {t('actions.approve')}
               </Button>
               <Button color="red" onClick={reject}>
-                Reject
+                {t('actions.reject')}
               </Button>
             </>
           )}
@@ -114,14 +115,14 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
       >
         <Tabs.List>
           {solution.assignment.language === AssignmentLanguage.QuestionBased ? (
-            <Tabs.Tab value="answers">Answers</Tabs.Tab>
+            <Tabs.Tab value="answers">{t('tabs.answers')}</Tabs.Tab>
           ) : (
             <>
-              <Tabs.Tab value="log">Log</Tabs.Tab>
-              <Tabs.Tab value="code">Code</Tabs.Tab>
+              <Tabs.Tab value="log">{t('tabs.log')}</Tabs.Tab>
+              <Tabs.Tab value="code">{t('tabs.code')}</Tabs.Tab>
             </>
           )}
-          <Tabs.Tab value="comments">Comments</Tabs.Tab>
+          <Tabs.Tab value="comments">{t('tabs.comments')}</Tabs.Tab>
         </Tabs.List>
 
         {solution.assignment.language === AssignmentLanguage.QuestionBased ? (

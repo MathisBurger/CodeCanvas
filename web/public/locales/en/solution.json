@@ -1,0 +1,21 @@
+{
+  "invalid-solution-id": "Invalid solution ID",
+  "personal-solutions": "Personal solutions",
+  "tabs": {
+    "answers": "Answers",
+    "log": "Log",
+    "code": "Code",
+    "comments": "Comments"
+  },
+  "status": {
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "successful": "Successful",
+    "failed": "Failed",
+    "pending": "Pending"
+  },
+  "cols": {
+    "assignment": "Assignment",
+    "approval-status": "Approval status"
+  }
+}
