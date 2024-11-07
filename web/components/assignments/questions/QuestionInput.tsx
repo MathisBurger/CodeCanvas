@@ -11,6 +11,7 @@ import {
 } from "@mantine/core";
 import { AnswerType, QuestionCatalogueElement } from "@/service/types/tasky";
 import { useMemo } from "react";
+import {useTranslation} from "react-i18next";
 
 interface QuestionInputProps {
   value: QuestionCatalogueElement;
@@ -19,6 +20,9 @@ interface QuestionInputProps {
 }
 
 const QuestionInput = ({ value, setValue, remove }: QuestionInputProps) => {
+
+  const {t} = useTranslation(['assignment', 'common']);
+
   const answerInput = useMemo<JSX.Element | null>(() => {
     switch (value.answer_type) {
       case AnswerType.String:
@@ -27,7 +31,7 @@ const QuestionInput = ({ value, setValue, remove }: QuestionInputProps) => {
           <TextInput
             value={value.answer ?? ""}
             onChange={(e) => setValue({ ...value, answer: e.target.value })}
-            label="Answer"
+            label={t('fields.answer')}
           />
         );
       case AnswerType.Number:
@@ -35,7 +39,7 @@ const QuestionInput = ({ value, setValue, remove }: QuestionInputProps) => {
           <NumberInput
             value={value.answer ?? 0}
             onChange={(val) => setValue({ ...value, answer: val })}
-            label="Answer"
+            label={t('fields.answer')}
           />
         );
       case AnswerType.Boolean:
@@ -43,7 +47,7 @@ const QuestionInput = ({ value, setValue, remove }: QuestionInputProps) => {
           <Checkbox
             checked={value.answer ?? false}
             onChange={(e) => setValue({ ...value, answer: e.target.checked })}
-            label="Answer"
+            label={t('fields.answer')}
           />
         );
       default:
@@ -56,11 +60,11 @@ const QuestionInput = ({ value, setValue, remove }: QuestionInputProps) => {
       <Stack>
         <Group justify="flex-end">
           <Button onClick={remove} w={100} color="red">
-            Remove
+            {t('actions.remove')}
           </Button>
         </Group>
         <TextInput
-          label="Question"
+          label={t('fields.question')}
           value={value.question}
           onChange={(e) => setValue({ ...value, question: e.target.value })}
         />
@@ -69,7 +73,7 @@ const QuestionInput = ({ value, setValue, remove }: QuestionInputProps) => {
           onChange={(type) =>
             setValue({ ...value, answer_type: type as AnswerType })
           }
-          label="Answer type"
+          label={t('fields.answer-type')}
           data={Object.values(AnswerType)}
         />
         {answerInput}

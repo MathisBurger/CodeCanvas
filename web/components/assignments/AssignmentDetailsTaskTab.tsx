@@ -8,6 +8,7 @@ import useCurrentUser from "@/hooks/useCurrentUser";
 import { UserRoles } from "@/service/types/usernator";
 import CreateTaskCodeModal from "@/components/assignments/CreateSolutionModal";
 import AnswerQuestionsModal from "@/components/assignments/questions/AnswerQuestionsModal";
+import {useTranslation} from "react-i18next";
 
 interface AssignmentDetailsTaskProps {
   assignment: Assignment | null;
@@ -18,6 +19,8 @@ const AssignmentDetailsTaskTab = ({
 }: AssignmentDetailsTaskProps) => {
   const { user } = useCurrentUser();
   const [createSolutionModalOpen, setCreateSolutionModalOpen] = useState(false);
+
+  const {t} = useTranslation('assignment');
 
   const assignmentCompleted = useMemo<boolean>(() => {
     return (
@@ -38,7 +41,7 @@ const AssignmentDetailsTaskTab = ({
       {assignment !== null && assignment.file_structure !== null && (
         <>
           <Title order={3} mb={10}>
-            Required files
+              {t('required-files')}
           </Title>
           <FileStructure
             structure={assignment.file_structure}
@@ -53,7 +56,7 @@ const AssignmentDetailsTaskTab = ({
           mt={20}
           onClick={() => setCreateSolutionModalOpen(true)}
         >
-          Create Solution
+            {t('actions.submit-solution')}
         </Button>
       )}
       {createSolutionModalOpen &&

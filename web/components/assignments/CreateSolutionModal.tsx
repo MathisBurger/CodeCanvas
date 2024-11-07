@@ -7,6 +7,7 @@ import InternalDropzone from "@/components/InternalDropzone";
 import { notifications } from "@mantine/notifications";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import { useRouter } from "next/navigation";
+import {useTranslation} from "react-i18next";
 
 interface CreateTaskCodeModalProps {
   onClose: () => void;
@@ -20,6 +21,7 @@ const CreateSolutionModal = ({
   const [files, setFiles] = useState<FileWithPath[]>([]);
   const api = useApiServiceClient();
   const router = useRouter();
+  const {t} = useTranslation(['common', 'assignment']);
 
   const requiredFiles = useMemo<string[]>(
     () =>
@@ -38,8 +40,8 @@ const CreateSolutionModal = ({
     e.preventDefault();
     if (missingFiles.length > 0) {
       notifications.show({
-        title: "Missing file",
-        message: `Following files are missing: ${missingFiles.join(", ")}`,
+        title: t('messages.error'),
+        message: `${t('errors.missing-files')} ${missingFiles.join(", ")}`,
         color: "red",
       });
       return;
@@ -49,7 +51,7 @@ const CreateSolutionModal = ({
   };
 
   return (
-    <Modal opened onClose={onClose} title="Create new Solution" size="lg">
+    <Modal opened onClose={onClose} title={t('titles.create-solution')} size="lg">
       <form onSubmit={submit}>
         {missingFiles.length > 0 && (
           <Paper withBorder mb={20} p={10}>
@@ -62,9 +64,9 @@ const CreateSolutionModal = ({
         )}
         <InternalDropzone files={files} setFiles={setFiles} />
         <Group mt={10}>
-          <Button type="submit">Create Solution</Button>
+          <Button type="submit">{t('actions.create')}</Button>
           <Button onClick={onClose} color="gray">
-            Cancel
+            {t('actions.cancel')}
           </Button>
         </Group>
       </form>

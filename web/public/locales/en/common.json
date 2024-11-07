@@ -24,13 +24,19 @@
     "login": "Login",
     "sign-up": "Sign up",
     "submit": "Submit",
-    "create-tutor": "Create tutor"
+    "create-tutor": "Create tutor",
+    "cancel": "Cancel",
+    "remove": "Remove",
+    "save": "Save",
+    "create": "Create",
+    "update": "Update"
   },
   "messages": {
     "login-failed": "Login failed",
     "registration-failed": "Registration failed",
     "password-requirements": "Password should include at least 6 characters",
     "success": "Success",
+    "error": "Error",
     "created-report": "Created report"
   },
   "errors": {

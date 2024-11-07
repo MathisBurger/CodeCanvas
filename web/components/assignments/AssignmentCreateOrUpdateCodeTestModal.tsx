@@ -9,6 +9,7 @@ import { notifications } from "@mantine/notifications";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import { useForm } from "@mantine/form";
 import {Assignment, RunnerConfig} from "@/service/types/tasky";
+import {useTranslation} from "react-i18next";
 
 interface AssignmentCreateOrUpdateCodeTestModalProps {
   onClose: () => void;
@@ -33,6 +34,7 @@ const AssignmentCreateOrUpdateCodeTestModal = ({
     current_folder_name: null,
   });
   const [files, setFiles] = useState<FileWithPath[]>([]);
+  const {t} = useTranslation(['assignment', 'common']);
 
   useEffect(() => {
     if (assignment.file_structure) {
@@ -50,13 +52,13 @@ const AssignmentCreateOrUpdateCodeTestModal = ({
     },
     validate: {
       runner_cpu: (v) =>
-        cpuOptions.indexOf(v) === -1 ? "Invalid CPU option" : null,
+        cpuOptions.indexOf(v) === -1 ? t('errors.invalid-cpu') : null,
       runner_memory: (v) =>
-        memoryOptions.indexOf(v) === -1 ? "Invalid memory option" : null,
+        memoryOptions.indexOf(v) === -1 ? t('errors.invalid-memory') : null,
       runner_timeout: (v) =>
-        timeoutOptions.indexOf(v) === -1 ? "Invalid timeout option" : null,
+        timeoutOptions.indexOf(v) === -1 ? t('errors.invalid-timeout') : null,
       runner_cmd: (v) =>
-        v.trim() === "" ? "Please enter a execution cmd" : null,
+        v.trim() === "" ? t('errors.empty-cmd') : null,
     },
   });
 
@@ -71,7 +73,7 @@ const AssignmentCreateOrUpdateCodeTestModal = ({
       onClose();
     } catch (e: any) {
       notifications.show({
-        message: e?.message ?? "Failed to create code tests",
+        message: e?.message ?? t('errors.code-test-creation-failed'),
         color: "red",
       });
     }
@@ -86,34 +88,34 @@ const AssignmentCreateOrUpdateCodeTestModal = ({
       />
       <InternalDropzone files={files} setFiles={setFiles} />
       <form onSubmit={submit}>
-        <Title order={3}>Runner configuration</Title>
+        <Title order={3}>{t('runner-configuration')}</Title>
         <Select
           key={form.key("runner_cpu")}
-          label="CPU"
+          label={t('fields.cpu')}
           {...form.getInputProps("runner_cpu")}
           data={cpuOptions}
         />
         <Select
           key={form.key("runner_memory")}
-          label="Memory"
+          label={t('fields.memory')}
           {...form.getInputProps("runner_memory")}
           data={memoryOptions}
         />
         <Select
           key={form.key("runner_timeout")}
-          label="Timeout"
+          label={t('fields.timeout')}
           {...form.getInputProps("runner_timeout")}
           data={timeoutOptions}
         />
         <TextInput
           key={form.key("runner_cmd")}
-          label="CMD"
+          label={t('fields.cmd')}
           {...form.getInputProps("runner_cmd")}
         />
         <Group mt={10}>
-          <Button type="submit">Save</Button>
+          <Button type="submit">{t('actions.save')}</Button>
           <Button onClick={onClose} color="gray">
-            Cancel
+            {t('actions.cancel')}
           </Button>
         </Group>
       </form>
