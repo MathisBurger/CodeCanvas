@@ -192,7 +192,7 @@ class ApiService {
     return await this.post<Solution>(`/tasky/solutions/${id}/reject`, {});
   }
 
-  public async createQuestionCatalogue(
+  public async createOrUpdateQuestionCatalogue(
     groupId: number,
     assignmentId: number,
     questions: QuestionCatalogueElement[],

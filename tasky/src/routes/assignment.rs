@@ -300,9 +300,7 @@ pub async fn create_question_catalogue(
         });
     }
 
-    if assignment.file_structure.is_some()
-        || assignment.language != AssignmentLanguage::QuestionBased
-    {
+    if assignment.language != AssignmentLanguage::QuestionBased {
         return Err(ApiError::BadRequest {
             message: "The assigment is not question based".to_string(),
         });

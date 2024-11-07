@@ -16,7 +16,7 @@ import FileStructureDisplay from "@/components/FileStructureDisplay";
 import AssignmentDetailsTaskTab from "@/components/assignments/AssignmentDetailsTaskTab";
 import AssignmentSolutionsTab from "@/components/assignments/AssignmentSolutionsTab";
 import AssignmentCompletedByTab from "@/components/assignments/AssignmentCompletedByTab";
-import CreateQuestionsModal from "@/components/assignments/CreateQuestionsModal";
+import CreateOrUpdateQuestionsModal from "@/components/assignments/CreateOrUpdateQuestionsModal";
 import QuestionAnswersDisplay from "@/components/solution/questions/QuestionAnswersDisplay";
 import { useSpotlightStage2 } from "@/hooks/spotlight/stage2";
 
@@ -74,10 +74,9 @@ const AssignmentDetailsPage = ({
             </Button>
           )}
         {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) &&
-          assignment.question_catalogue === null &&
           assignment.language === AssignmentLanguage.QuestionBased && (
             <Button onClick={() => setQuestionsModalOpen(true)}>
-              Create questions
+              Questions
             </Button>
           )}
       </Group>
@@ -153,10 +152,10 @@ const AssignmentDetailsPage = ({
               refetch={refetch}
           />
       )}
-      {questionsModalOpen && (
-        <CreateQuestionsModal
+      {questionsModalOpen && assignment && (
+        <CreateOrUpdateQuestionsModal
           groupId={groupId}
-          assignmentId={assignmentId}
+          assignment={assignment}
           refetch={refetch}
           onClose={() => setQuestionsModalOpen(false)}
         />
