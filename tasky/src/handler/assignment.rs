@@ -78,6 +78,9 @@ pub async fn handle_create_multipart(
     Ok(assignment)
 }
 
+/// Handles file structure updates
+/// This means storing data in postgres, files in mongo
+/// and validating the input
 pub async fn handle_update_multipart(
     form: CreateCodeTestMultipart,
     mongodb: &Database,

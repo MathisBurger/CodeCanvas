@@ -68,10 +68,9 @@ const AssignmentDetailsPage = ({
           <Button onClick={() => setUpdateModalOpen(true)}>Edit</Button>
         )}
         {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) &&
-          assignment.file_structure === null &&
           assignment.language !== AssignmentLanguage.QuestionBased && (
             <Button onClick={() => setFileStructureModalOpen(true)}>
-              Create code tests
+              Code tests
             </Button>
           )}
         {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) &&
@@ -104,14 +103,14 @@ const AssignmentDetailsPage = ({
         </Tabs.List>
         <Tabs.Panel mt={20} value="task">
           <AssignmentDetailsTaskTab
-            assignment={Object.assign({}, assignment)}
+              assignment={structuredClone(assignment)}
           />
         </Tabs.Panel>
         {assignment.file_structure !== null &&
           isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && (
             <Tabs.Panel value="codeTests" mt={20}>
               <FileStructureDisplay
-                structure={Object.assign({}, assignment.file_structure)}
+                structure={structuredClone(assignment.file_structure)}
                 groupId={groupId}
                 assignmentId={assignmentId}
               />
@@ -146,13 +145,13 @@ const AssignmentDetailsPage = ({
           assignment={assignment ?? undefined}
         />
       )}
-      {fileStructureModalOpen && (
-        <AssignmentCreateOrUpdateCodeTestModal
-          onClose={() => setFileStructureModalOpen(false)}
-          groupId={groupId}
-          assignmentId={assignmentId}
-          refetch={refetch}
-        />
+      {fileStructureModalOpen && assignment && (
+          <AssignmentCreateOrUpdateCodeTestModal
+              onClose={() => setFileStructureModalOpen(false)}
+              groupId={groupId}
+              assignment={structuredClone(assignment)}
+              refetch={refetch}
+          />
       )}
       {questionsModalOpen && (
         <CreateQuestionsModal
