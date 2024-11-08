@@ -22,7 +22,8 @@
     "create-solution": "Create solution",
     "create-assignment": "Create assignment",
     "update-assignment": "Update assignment",
-    "question-catalogue": "Question catalogue"
+    "question-catalogue": "Question catalogue",
+    "create-wish": "Create assignment wish"
   },
   "messages": {
     "failed-solution-creation": "Error creating solution",
@@ -45,7 +46,8 @@
     "create-or-update": "Failed to create or update assignment",
     "all-required-fields": "Please fill all question fields",
     "failed-question-cu": "Failed to create/update question",
-    "missing-files": "Following files are missing:"
+    "missing-files": "Following files are missing:",
+    "assignment-wish": "Error creating assignment wish"
   },
   "cols": {
     "submitter": "Submitter"

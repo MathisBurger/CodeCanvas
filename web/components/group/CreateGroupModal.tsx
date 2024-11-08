@@ -3,6 +3,7 @@ import {useForm} from "@mantine/form";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import {useRouter} from "next/navigation";
 import {notifications} from "@mantine/notifications";
+import {useTranslation} from "react-i18next";
 
 interface CreateGroupModalProps {
     onClose: () => void;
@@ -10,12 +11,14 @@ interface CreateGroupModalProps {
 
 const CreateGroupModal = ({onClose}: CreateGroupModalProps) => {
 
+    const {t} = useTranslation('common');
+
     const form = useForm({
         initialValues: {
             title : ''
         },
         validate: {
-            title: (val) => val.trim() == '' ? 'Title should not be empty' : null
+            title: (val) => val.trim() == '' ? t('errors.title-empty') : null
         }
     });
     const router = useRouter();
@@ -27,20 +30,20 @@ const CreateGroupModal = ({onClose}: CreateGroupModalProps) => {
             router.push(`/groups/${res.id}`);
         } catch (e: any) {
             notifications.show({
-                title: 'Error',
-                message: e?.message ?? "Error creating group",
+                title: t('messages.error'),
+                message: e?.message ?? t('errors.create-group'),
             });
         }
     })
 
     return (
-        <Modal opened onClose={onClose} title="Create group">
+        <Modal opened onClose={onClose} title={t('titles.create-group')}>
             <form onSubmit={submit}>
-                <TextInput label="Title" key={form.key('title')} {...form.getInputProps('title')} />
+                <TextInput label={t('fields.title')} key={form.key('title')} {...form.getInputProps('title')} />
                 <Group mt={10}>
-                    <Button type="submit">Create group</Button>
+                    <Button type="submit">{t('actions.create')}</Button>
                     <Button onClick={onClose} color="gray">
-                        Cancel
+                        {t('actions.cancel')}
                     </Button>
                 </Group>
             </form>

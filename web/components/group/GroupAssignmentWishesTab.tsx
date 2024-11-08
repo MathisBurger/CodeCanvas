@@ -8,6 +8,7 @@ import useClientQuery from "@/hooks/useClientQuery";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import {UserRoles} from "@/service/types/usernator";
 import {showNotification} from "@mantine/notifications";
+import {useTranslation} from "react-i18next";
 
 interface GroupAssignmentWishesTabProps {
     group: Group;
@@ -16,6 +17,7 @@ interface GroupAssignmentWishesTabProps {
 const GroupAssignmentWishesTab = ({group}: GroupAssignmentWishesTabProps) => {
 
     const [createModalOpen, setCreateModalOpen] = useState(false);
+    const {t} = useTranslation(['common', 'assignment']);
     const [page, setPage] = useState(1);
     const api = useApiServiceClient();
     const [wishes, refetch] = useClientQuery(() => api.getAssignmentWishes(group.id, page), [group, page]);
@@ -23,26 +25,26 @@ const GroupAssignmentWishesTab = ({group}: GroupAssignmentWishesTabProps) => {
     const cols: EntityListCol[] = [
         {
             field: 'title',
-            label: 'Title'
+            label: t('fields.title')
         },
         {
             field: 'description',
-            label: 'Description'
+            label: t('fields.description')
         }
     ];
 
     const rowActions: EntityListRowAction[] = [
         {
             auth: [UserRoles.Admin, UserRoles.Tutor],
-            name: 'Delete',
+            name: t('actions.delete'),
             onClick: async (row) => {
                 try {
                     await api.deleteAssignmentWish(group.id, row.id);
                     refetch();
                 } catch (e: any) {
                     showNotification({
-                        title: 'Error',
-                        message: e?.message ?? 'Cannot delete wish'
+                        title: t('messages.error'),
+                        message: e?.message ?? ''
                     })
                 }
             },
@@ -56,7 +58,7 @@ const GroupAssignmentWishesTab = ({group}: GroupAssignmentWishesTabProps) => {
                 <GroupComponent justify="end" mb={20}>
                     <Button onClick={() => setCreateModalOpen(true)}>
                         <IconPlus />
-                        &nbsp;Create Assignment wish
+                        &nbsp;{t('titles.create-wish')}
                     </Button>
                 </GroupComponent>
                 <EntityList

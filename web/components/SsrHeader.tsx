@@ -40,7 +40,7 @@ const SsrHeader: React.FC<SsrHeaderProps> = ({ user }) => {
   return (
     <Group>
       <Group>
-        <Text>{t('titles.spotlight-action')}:</Text>
+        <Text>{t('titles.spotlight-actions')}:</Text>
         <div dir="ltr">
           <Kbd>CMD</Kbd> + <Kbd>K</Kbd> or <Kbd>CTRL</Kbd> + <Kbd>K</Kbd>
         </div>
