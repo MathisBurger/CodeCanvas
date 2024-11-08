@@ -1,0 +1,25 @@
+{
+  "invalid-solution-id": "Ungültige Lösungs-ID",
+  "personal-solutions": "Persönliche Lösungen",
+  "tabs": {
+    "answers": "Antworten",
+    "log": "Protokoll",
+    "code": "Code",
+    "comments": "Kommentare"
+  },
+  "status": {
+    "approved": "Genehmigt",
+    "rejected": "Abgelehnt",
+    "successful": "Erfolgreich",
+    "failed": "Fehlgeschlagen",
+    "pending": "Ausstehend"
+  },
+  "titles": {
+    "create-comment": "Kommentar erstellen",
+    "your-comment": "Ihr Kommentar"
+  },
+  "cols": {
+    "assignment": "Aufgabe",
+    "approval-status": "Genehmigungsstatus"
+  }
+}

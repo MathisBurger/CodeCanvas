@@ -1,0 +1,87 @@
+{
+  "invalid-group-id": "Ungültige Gruppen-ID",
+  "login-to-cc": "Login zu CodeCanvas",
+  "register-cc": "Willkommen bei CodeCanvas, bitte registrieren Sie sich",
+  "report-bug": "Fehler melden",
+  "students": "Studierende",
+  "tutors": "Tutoren",
+  "titles": {
+    "create-tutor": "Tutor erstellen",
+    "spotlight-actions": "Spotlight-Aktionen",
+    "settings": "Einstellungen",
+    "log-out": "Abmelden",
+    "create-group": "Gruppe erstellen"
+  },
+  "cols": {
+    "id": "ID",
+    "username": "Benutzername",
+    "actions": "Aktionen"
+  },
+  "fields": {
+    "username": "Benutzername",
+    "username-placeholder": "Ihr Benutzername",
+    "password": "Passwort",
+    "password-placeholder": "Ihr Passwort",
+    "title": "Titel",
+    "description": "Beschreibung",
+    "test-file": "Testdatei"
+  },
+  "actions": {
+    "approve": "Genehmigen",
+    "reject": "Ablehnen",
+    "view": "Ansehen",
+    "login": "Anmelden",
+    "sign-up": "Registrieren",
+    "submit": "Einreichen",
+    "create-tutor": "Tutor erstellen",
+    "cancel": "Abbrechen",
+    "remove": "Entfernen",
+    "save": "Speichern",
+    "create": "Erstellen",
+    "update": "Aktualisieren",
+    "copy": "Kopieren",
+    "expand-all": "Alle erweitern",
+    "collapse-all": "Alle reduzieren",
+    "navigate-back": "Zurück navigieren",
+    "delete": "Löschen"
+  },
+  "messages": {
+    "login-failed": "Anmeldung fehlgeschlagen",
+    "registration-failed": "Registrierung fehlgeschlagen",
+    "password-requirements": "Das Passwort sollte mindestens 6 Zeichen enthalten",
+    "success": "Erfolg",
+    "error": "Fehler",
+    "created-report": "Bericht erstellt",
+    "no-files-selected": "Keine Dateien ausgewählt",
+    "copied-code": "Code kopiert!",
+    "rejected-files": "Abgelehnte Dateien"
+  },
+  "errors": {
+    "title-empty": "Der Titel darf nicht leer sein",
+    "body-empty": "Der Inhalt darf nicht leer sein",
+    "description-empty": "Die Beschreibung darf nicht leer sein",
+    "username-empty": "Der Benutzername darf nicht leer sein",
+    "password-empty": "Das Passwort darf nicht leer sein",
+    "create-tutor": "Erstellung des Tutors fehlgeschlagen",
+    "folder-exists": "Ordner/Datei existiert bereits",
+    "create-group": "Fehler beim Erstellen der Gruppe"
+  },
+  "settings": {
+    "settings": "Einstellungen"
+  },
+  "dropzone": {
+    "instruction": "Ziehen Sie Textdateien hierher oder klicken Sie, um Dateien auszuwählen",
+    "limit": "Hängen Sie beliebig viele Dateien an, jede Datei sollte nicht größer als 10 MB sein"
+  },
+  "spotlight": {
+    "nothing-found": "Nichts gefunden...",
+    "search": "Suchen...",
+    "groups": "Gruppen",
+    "assignments": "Aufgaben",
+    "solutions": "Lösungen",
+    "basic-routes": "Grundlegende Routen",
+    "general-actions": "Allgemeine Aktionen",
+    "color-scheme-title": "Farbschema umschalten",
+    "color-scheme-description": "Schaltet das Farbschema um (hell/dunkel)"
+  }
+}

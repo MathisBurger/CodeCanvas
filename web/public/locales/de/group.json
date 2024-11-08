@@ -1,0 +1,23 @@
+{
+  "groups": "Gruppen",
+  "my-groups": "Meine Gruppen",
+  "tabs": {
+    "assignments": "Aufgaben",
+    "members": "Mitglieder",
+    "assignment-wishes": "Aufgabenwünsche",
+    "join-requests": "Beitrittsanfragen"
+  },
+  "cols": {
+    "title": "Titel",
+    "members-count": "Anzahl der Mitglieder",
+    "tutor": "Tutor"
+  },
+  "actions": {
+    "request-join": "Beitritt anfragen",
+    "create-group": "Gruppe erstellen"
+  },
+  "messages": {
+    "join-request-created-title": "Beitrittsanfrage erstellt",
+    "join-request-created-text": "Beitrittsanfrage für die Gruppe erstellt "
+  }
+}

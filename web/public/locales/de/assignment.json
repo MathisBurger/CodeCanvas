@@ -1,0 +1,55 @@
+{
+  "questions": "Fragen",
+  "task": "Aufgabe",
+  "code-tests": "Code-Tests",
+  "solutions": "Lösungen",
+  "completed-by": "Abgeschlossen von",
+  "runner-configuration": "Laufkonfiguration",
+  "required-files": "Erforderliche Dateien",
+  "fields": {
+    "answer": "Antwort",
+    "question": "Frage",
+    "answer-type": "Antworttyp",
+    "cpu": "CPU",
+    "memory": "Speicher (RAM)",
+    "timeout": "Zeitüberschreitung",
+    "cmd": "Befehl",
+    "title": "Titel",
+    "due-date": "Fälligkeitsdatum",
+    "language": "Sprache"
+  },
+  "titles": {
+    "create-solution": "Lösung erstellen",
+    "create-assignment": "Aufgabe erstellen",
+    "update-assignment": "Aufgabe aktualisieren",
+    "question-catalogue": "Fragenkatalog",
+    "create-wish": "Aufgabenwunsch erstellen"
+  },
+  "messages": {
+    "failed-solution-creation": "Fehler beim Erstellen der Lösung",
+    "successfully-created-assignment": "Aufgabe erfolgreich erstellt",
+    "successfully-updated-assignment": "Aufgabe erfolgreich aktualisiert"
+  },
+  "actions": {
+    "submit-solution": "Lösung einreichen",
+    "new-question": "Neue Frage",
+    "create-assignment": "Aufgabe erstellen"
+  },
+  "errors": {
+    "invalid-cpu": "Ungültige CPU-Option",
+    "invalid-memory": "Ungültige Speicheroption",
+    "invalid-timeout": "Ungültige Zeitüberschreitungsoption",
+    "empty-cmd": "Bitte geben Sie einen Ausführungsbefehl ein",
+    "code-test-creation-failed": "Erstellung der Code-Tests fehlgeschlagen",
+    "empty-title": "Titel sollte einen Wert enthalten",
+    "future-due-date": "Datum sollte in der Zukunft liegen",
+    "create-or-update": "Erstellung oder Aktualisierung der Aufgabe fehlgeschlagen",
+    "all-required-fields": "Bitte füllen Sie alle Fragenfelder aus",
+    "failed-question-cu": "Fehler beim Erstellen/Aktualisieren der Frage",
+    "missing-files": "Folgende Dateien fehlen:",
+    "assignment-wish": "Fehler beim Erstellen des Aufgabenwunsches"
+  },
+  "cols": {
+    "submitter": "Einreicher"
+  }
+}
