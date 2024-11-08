@@ -72,5 +72,9 @@
   "dropzone": {
     "instruction": "Drag text files here or click to select files",
     "limit": "Attach as many files as you like, each file should not exceed 10mb"
+  },
+  "spotlight": {
+    "nothing-found": "Nothing found...",
+    "search": "Search..."
   }
 }
