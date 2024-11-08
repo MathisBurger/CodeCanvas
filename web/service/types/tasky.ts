@@ -53,9 +53,10 @@ export interface Assignment {
   file_structure: FileStructureTree | null;
   question_catalogue: QuestionCatalogue | null;
   completed_by: TaskyUser[];
-  runner_cpu: string;
-  runner_memory: string;
-  runner_timeout: string;
+  runner_cpu: string|null;
+  runner_memory: string|null;
+  runner_timeout: string|null;
+  runner_cmd: string|null;
 }
 
 export interface AssignmentsResponse {

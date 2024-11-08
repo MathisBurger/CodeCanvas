@@ -23,8 +23,9 @@ pub fn validate_test_file_structure<'a>(
     if structure.files.is_some() {
         let folder_files = structure.files.as_mut().unwrap();
         for file in folder_files {
-            // Only search for test files in this case
-            if (test_structure && file.is_test_file) || (!test_structure && !file.is_test_file) {
+            if (test_structure && file.is_test_file && file.object_id.is_none())
+                || (!test_structure && !file.is_test_file)
+            {
                 let file_option = files.get(&file.filename);
                 if file_option.is_none() {
                     return Err(ApiError::BadRequest {
@@ -36,6 +37,7 @@ pub fn validate_test_file_structure<'a>(
                 }
 
                 let file_unwrapped = file_option.unwrap();
+                // File exists already in filename_map or exists in old file structure
                 if file_unwrapped.0 {
                     return Err(ApiError::BadRequest { message: format!("File {} exists twice in file structure. Even if the files are in different folders, they need to be named differently", file.filename) });
                 }
@@ -82,4 +84,70 @@ pub fn build_filename_map(
         );
     }
     Ok(map)
+}
+
+/// Compares existing file structures and checks object_ids of existing files in from structure
+/// and to structure.
+pub fn compare_structures(
+    from: &AssignmentFileStructure,
+    to: &AssignmentFileStructure,
+) -> Result<(), ApiError> {
+    for folder in to.folders.as_ref().unwrap_or(&default_structure_vec()) {
+        if let Some(ref from_folder) = get_folder_by_name(from, folder.current_folder_name.clone())
+        {
+            compare_structures(from_folder, folder)?;
+        }
+    }
+
+    for file in to.files.clone().unwrap_or(default_vec()) {
+        if let Some(from_file) = get_file_by_name(from, file.filename) {
+            if from_file.object_id.is_some()
+                && file.object_id.is_some()
+                && from_file.object_id.unwrap() != file.object_id.unwrap()
+            {
+                return Err(ApiError::BadRequest {
+                    message: "Invalid carry object_id".to_string(),
+                });
+            }
+        }
+    }
+
+    Ok(())
+}
+
+fn get_folder_by_name(
+    structure: &AssignmentFileStructure,
+    name_option: Option<String>,
+) -> Option<AssignmentFileStructure> {
+    if let Some(name) = name_option {
+        for folder in structure
+            .folders
+            .as_ref()
+            .unwrap_or(&default_structure_vec())
+        {
+            if let Some(ref folder_name) = folder.current_folder_name {
+                if *folder_name == name {
+                    return Some(folder.clone());
+                }
+            }
+        }
+    }
+    None
+}
+
+fn get_file_by_name(structure: &AssignmentFileStructure, name: String) -> Option<AssignmentFile> {
+    for file in structure.files.as_ref().unwrap_or(&Vec::new()) {
+        if file.filename == name {
+            return Some(file.clone());
+        }
+    }
+    None
+}
+
+fn default_vec() -> Vec<AssignmentFile> {
+    vec![]
+}
+
+fn default_structure_vec() -> Vec<AssignmentFileStructure> {
+    vec![]
 }

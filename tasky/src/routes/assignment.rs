@@ -1,4 +1,5 @@
 use super::PaginationParams;
+use crate::handler::assignment::handle_update_multipart;
 use crate::models::assignment::QuestionCatalogueElement;
 use crate::AppState;
 use actix_multipart::form::MultipartForm;
@@ -217,6 +218,36 @@ pub async fn create_assignment_test(
     Ok(HttpResponse::Ok().json(enriched))
 }
 
+#[post("/groups/{group_id}/assignments/{id}/code_test/update")]
+pub async fn update_assignment_test(
+    data: web::Data<AppState>,
+    user: web::ReqData<UserData>,
+    path: web::Path<(i32, i32)>,
+    MultipartForm(form): MultipartForm<CreateCodeTestMultipart>,
+) -> Result<HttpResponse, ApiError> {
+    let user_data = user.into_inner();
+    let path_data = path.into_inner();
+    let conn = &mut data.db.db.get().unwrap();
+
+    let (_, mut assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
+    if !assignment.is_granted(SecurityAction::Update, &user_data) {
+        return Err(ApiError::Forbidden {
+            message: "You are not allowed to create code tests".to_string(),
+        });
+    }
+
+    if assignment.language == AssignmentLanguage::QuestionBased {
+        return Err(ApiError::BadRequest {
+            message: "Cannot create code tests on question based assignment".to_string(),
+        });
+    }
+    let updated = handle_update_multipart(form, &data.mongodb, conn, assignment).await?;
+    let mut enriched =
+        AssignmentResponse::enrich(&updated, &mut data.user_api.clone(), conn).await?;
+    enriched.authorize(&user_data);
+    Ok(HttpResponse::Ok().json(enriched))
+}
+
 #[derive(Deserialize)]
 struct CodeTestQuery {
     pub object_ids: String,
@@ -272,9 +303,7 @@ pub async fn create_question_catalogue(
         });
     }
 
-    if assignment.file_structure.is_some()
-        || assignment.language != AssignmentLanguage::QuestionBased
-    {
+    if assignment.language != AssignmentLanguage::QuestionBased {
         return Err(ApiError::BadRequest {
             message: "The assigment is not question based".to_string(),
         });

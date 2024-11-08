@@ -1,26 +1,32 @@
 "use client";
 import { Button, Divider, Group, Modal, Stack } from "@mantine/core";
-import { QuestionCatalogueElement } from "@/service/types/tasky";
+import {Assignment, QuestionCatalogueElement} from "@/service/types/tasky";
 import QuestionInput from "@/components/assignments/questions/QuestionInput";
 import { notifications } from "@mantine/notifications";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
-import { useCallback, useState } from "react";
+import {useCallback, useEffect, useState} from "react";
 
 interface CreateQuestionsModalProps {
   onClose: () => void;
   groupId: number;
-  assignmentId: number;
+  assignment: Assignment;
   refetch: () => void;
 }
 
-const CreateQuestionsModal = ({
+const CreateOrUpdateQuestionsModal = ({
   onClose,
   groupId,
-  assignmentId,
+  assignment,
   refetch,
 }: CreateQuestionsModalProps) => {
   const api = useApiServiceClient();
   const [questions, setQuestions] = useState<QuestionCatalogueElement[]>([]);
+
+  useEffect(() => {
+    if (assignment.question_catalogue?.catalogue) {
+      setQuestions(Object.values(assignment.question_catalogue.catalogue));
+    }
+  }, [assignment]);
 
   const updateQuestion = useCallback(
     (index: number, value: QuestionCatalogueElement) => {
@@ -64,13 +70,13 @@ const CreateQuestionsModal = ({
       }
     }
     try {
-      await api.createQuestionCatalogue(groupId, assignmentId, questions);
+      await api.createOrUpdateQuestionCatalogue(groupId, assignment.id, questions);
       refetch();
       onClose();
     } catch (e: any) {
       notifications.show({
         title: "Error",
-        message: e?.message ?? "Failed to create question",
+        message: e?.message ?? "Failed to create/update question",
         color: "red",
       });
     }
@@ -80,7 +86,7 @@ const CreateQuestionsModal = ({
     <Modal
       opened={true}
       onClose={onClose}
-      title="Create new questions"
+      title="Questions catalogue"
       size="xl"
     >
       <Stack>
@@ -101,7 +107,7 @@ const CreateQuestionsModal = ({
       <Divider mt={10} />
       <Group mt={10}>
         <Button type="submit" onClick={onSubmit}>
-          Create questions
+          Save
         </Button>
         <Button onClick={onClose} color="gray">
           Cancel
@@ -111,4 +117,4 @@ const CreateQuestionsModal = ({
   );
 };
 
-export default CreateQuestionsModal;
+export default CreateOrUpdateQuestionsModal;

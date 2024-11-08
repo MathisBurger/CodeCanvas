@@ -195,7 +195,7 @@ class ApiService {
     return await this.post<Solution>(`/tasky/solutions/${id}/reject`, {});
   }
 
-  public async createQuestionCatalogue(
+  public async createOrUpdateQuestionCatalogue(
     groupId: number,
     assignmentId: number,
     questions: QuestionCatalogueElement[],
@@ -238,12 +238,13 @@ class ApiService {
     return await this.get(`/usernator/all-tutors?page=${page ?? 1}`);
   }
 
-  public async createCodeTests(
+  public async createOrUpdateCodeTests(
     groupId: number,
     assignmentId: number,
     fileStructure: FileStructureTree,
     files: File[],
     runnerConfig: RunnerConfig,
+    update: boolean = false
   ): Promise<Assignment> {
     try {
       const formData = new FormData();
@@ -260,7 +261,7 @@ class ApiService {
       );
 
       const resp = await fetch(
-        `${this.apiUrl}/tasky/groups/${groupId}/assignments/${assignmentId}/code_test`,
+        `${this.apiUrl}/tasky/groups/${groupId}/assignments/${assignmentId}/code_test${update ? '/update' : ''}`,
         {
           method: "POST",
           mode: "cors",

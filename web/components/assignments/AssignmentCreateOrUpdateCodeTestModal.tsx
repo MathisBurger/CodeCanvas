@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import FileStructure, { FileStructureTree } from "@/components/FileStructure";
 import { Button, Group, Modal, Select, Title, TextInput } from "@mantine/core";
 import { useSetState } from "@mantine/hooks";
@@ -8,12 +8,12 @@ import { FileWithPath } from "@mantine/dropzone";
 import { notifications } from "@mantine/notifications";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import { useForm } from "@mantine/form";
-import { RunnerConfig } from "@/service/types/tasky";
+import {Assignment, RunnerConfig} from "@/service/types/tasky";
 
 interface AssignmentCreateOrUpdateCodeTestModalProps {
   onClose: () => void;
   groupId: number;
-  assignmentId: number;
+  assignment: Assignment;
   refetch: () => void;
 }
 
@@ -24,7 +24,7 @@ const timeoutOptions = ["20s", "60s", "120s", "180s", "240s", "300s"];
 const AssignmentCreateOrUpdateCodeTestModal = ({
   onClose,
   groupId,
-  assignmentId,
+  assignment,
   refetch,
 }: AssignmentCreateOrUpdateCodeTestModalProps) => {
   const [fileStructure, setFileStructure] = useSetState<FileStructureTree>({
@@ -34,12 +34,19 @@ const AssignmentCreateOrUpdateCodeTestModal = ({
   });
   const [files, setFiles] = useState<FileWithPath[]>([]);
 
+  useEffect(() => {
+    if (assignment.file_structure) {
+      setFileStructure(assignment.file_structure);
+    }
+  }, [assignment])
+
+
   const form = useForm({
     initialValues: {
-      runner_cpu: cpuOptions[0],
-      runner_memory: memoryOptions[0],
-      runner_timeout: timeoutOptions[0],
-      runner_cmd: 'echo "Hello World!"',
+      runner_cpu: assignment.runner_cpu ?? cpuOptions[0],
+      runner_memory: assignment.runner_memory ?? memoryOptions[0],
+      runner_timeout: assignment.runner_timeout ?? timeoutOptions[0],
+      runner_cmd: assignment.runner_cmd ?? 'echo "Hello World!"',
     },
     validate: {
       runner_cpu: (v) =>
@@ -57,7 +64,7 @@ const AssignmentCreateOrUpdateCodeTestModal = ({
 
   const submit = form.onSubmit(async (values) => {
     try {
-      await api.createCodeTests(groupId, assignmentId, fileStructure, files, {
+      await api.createOrUpdateCodeTests(groupId, assignment.id, fileStructure, files, {
         ...values,
       } as RunnerConfig);
       refetch();
@@ -104,7 +111,7 @@ const AssignmentCreateOrUpdateCodeTestModal = ({
           {...form.getInputProps("runner_cmd")}
         />
         <Group mt={10}>
-          <Button type="submit">Create tests</Button>
+          <Button type="submit">Save</Button>
           <Button onClick={onClose} color="gray">
             Cancel
           </Button>
