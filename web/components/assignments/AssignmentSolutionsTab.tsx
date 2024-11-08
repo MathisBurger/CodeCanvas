@@ -31,16 +31,16 @@ const AssignmentSolutionsTab = ({
   const cols: EntityListCol[] = [
     {
       field: "id",
-      label: t('cols.id'),
+      label: t('common:cols.id'),
     },
     {
       field: "submitter",
-      label: t('cols.submitter'),
+      label: t('assignment:cols.submitter'),
       getter: (row) => row.submitter.username,
     },
     {
       field: "approval_status",
-      label: t('cols.approval-status'),
+      label: t('solution:cols.approval-status'),
       render: (value) => (
         <SolutionBadge status={value as string} />
       ),

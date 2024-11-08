@@ -72,33 +72,33 @@ const AssignmentDetailsPage = ({
         {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) &&
           assignment.language !== AssignmentLanguage.QuestionBased && (
             <Button onClick={() => setFileStructureModalOpen(true)}>
-              {t('code-tests')}
+              {t('assignment:code-tests')}
             </Button>
           )}
         {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) &&
           assignment.language === AssignmentLanguage.QuestionBased && (
             <Button onClick={() => setQuestionsModalOpen(true)}>
-              {t('questions')}
+              {t('assignment:questions')}
             </Button>
           )}
       </Group>
       <Tabs defaultValue="task">
         <Tabs.List>
-          <Tabs.Tab value="task">{t('task')}</Tabs.Tab>
+          <Tabs.Tab value="task">{t('assignment:task')}</Tabs.Tab>
           {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) &&
             assignment.file_structure !== null &&
             assignment.language !== AssignmentLanguage.QuestionBased && (
-              <Tabs.Tab value="codeTests">{t('code-tests')}</Tabs.Tab>
+              <Tabs.Tab value="codeTests">{t('assignment:code-tests')}</Tabs.Tab>
             )}
           {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) &&
             assignment.question_catalogue !== null &&
             assignment.language === AssignmentLanguage.QuestionBased && (
-              <Tabs.Tab value="questions">{t('questions')}</Tabs.Tab>
+              <Tabs.Tab value="questions">{t('assignment:questions')}</Tabs.Tab>
             )}
           {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && (
             <>
-              <Tabs.Tab value="solutions">{t('solutions')}</Tabs.Tab>
-              <Tabs.Tab value="completedBy">{t('completed-by')}</Tabs.Tab>
+              <Tabs.Tab value="solutions">{t('assignment:solutions')}</Tabs.Tab>
+              <Tabs.Tab value="completedBy">{t('assignment:completed-by')}</Tabs.Tab>
             </>
           )}
         </Tabs.List>

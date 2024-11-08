@@ -26,14 +26,14 @@ const CommentTab = ({solution}: CommentTabProps) => {
             <Stack gap={10}>
                 <Group justify="flex-end">
                     <Button onClick={() => setCreateModalOpen(true)}><IconPlus />
-                        &nbsp;{t('titles.create-comment')}</Button>
+                        &nbsp;{t('solution:titles.create-comment')}</Button>
                 </Group>
                 {(comments ?? []).map((comment) => (
                     <Card shadow="sm" padding="lg" radius="md" withBorder key={comment.id}>
                         <Group>
                             <Title order={4}>{comment.title}</Title>
                             {comment.commentor === user?.id && (
-                                <Badge color="green">{t('titles.your-comment')}</Badge>
+                                <Badge color="green">{t('solution:titles.your-comment')}</Badge>
                             )}
                         </Group>
                         <RichTextDisplay content={comment.content} fullSize={false} />

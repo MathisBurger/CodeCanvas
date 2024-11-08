@@ -113,9 +113,9 @@ const AssignmentCreateOrUpdateCodeTestModal = ({
           {...form.getInputProps("runner_cmd")}
         />
         <Group mt={10}>
-          <Button type="submit">{t('actions.save')}</Button>
+          <Button type="submit">{t('common:actions.save')}</Button>
           <Button onClick={onClose} color="gray">
-            {t('actions.cancel')}
+            {t('common:actions.cancel')}
           </Button>
         </Group>
       </form>

@@ -60,7 +60,7 @@ const QuestionInput = ({ value, setValue, remove }: QuestionInputProps) => {
       <Stack>
         <Group justify="flex-end">
           <Button onClick={remove} w={100} color="red">
-            {t('actions.remove')}
+            {t('common:actions.remove')}
           </Button>
         </Group>
         <TextInput

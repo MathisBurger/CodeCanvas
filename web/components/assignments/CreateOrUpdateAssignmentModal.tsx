@@ -118,10 +118,10 @@ const CreateOrUpdateAssignmentModal = ({
         />
         <Group mt={10}>
           <Button type="submit">
-            {action === "create" ? t('actions.create') : t('actions.update')}
+            {action === "create" ? t('common:actions.create') : t('common:actions.update')}
           </Button>
           <Button onClick={onClose} color="gray">
-            {t('actions.cancel')}
+            {t('common:actions.cancel')}
           </Button>
         </Group>
       </form>

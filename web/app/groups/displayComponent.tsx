@@ -32,15 +32,15 @@ const GroupsDisplayComponent = ({
     },
     {
       field: "title",
-      label: t('cols.title'),
+      label: t('group:cols.title'),
     },
     {
       field: "member_count",
-      label: t('cols.members-count'),
+      label: t('group:cols.members-count'),
     },
     {
       field: "tutor",
-      label: t('cols.tutor'),
+      label: t('group:cols.tutor'),
       getter: (row) => row.tutor.username,
     },
   ];

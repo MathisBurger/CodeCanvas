@@ -78,7 +78,7 @@ const CreateOrUpdateQuestionsModal = ({
     } catch (e: any) {
       notifications.show({
         title: t('messages.error'),
-        message: e?.message ?? t('errors.failed-question-cu'),
+        message: e?.message ?? t('assignment:errors.failed-question-cu'),
         color: "red",
       });
     }
@@ -88,7 +88,7 @@ const CreateOrUpdateQuestionsModal = ({
     <Modal
       opened={true}
       onClose={onClose}
-      title={t('titles.question-catalogue')}
+      title={t('assignment:titles.question-catalogue')}
       size="xl"
     >
       <Stack>
@@ -102,7 +102,7 @@ const CreateOrUpdateQuestionsModal = ({
         ))}
         <Group justify="flex-end">
           <Button onClick={addNew} w={150}>
-            {t('actions.new-question')}
+            {t('assignment:actions.new-question')}
           </Button>
         </Group>
       </Stack>

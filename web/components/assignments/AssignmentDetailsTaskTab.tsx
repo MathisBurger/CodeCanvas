@@ -32,7 +32,7 @@ const AssignmentDetailsTaskTab = ({
 
   return (
     <>
-      <Title order={3}>Task</Title>
+      <Title order={3}>{t('task')}</Title>
       <RichTextDisplay
         content={assignment?.description ?? ""}
         fullSize={true}

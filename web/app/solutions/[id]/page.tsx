@@ -97,10 +97,10 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
           ) > -1 && (
             <>
               <Button color="lime" onClick={approve}>
-                {t('actions.approve')}
+                {t('common:actions.approve')}
               </Button>
               <Button color="red" onClick={reject}>
-                {t('actions.reject')}
+                {t('common:actions.reject')}
               </Button>
             </>
           )}

@@ -13,7 +13,7 @@ const GroupsPage = () => {
   const [groups, refetch] = useClientQuery<GroupsResponse>(() =>
     api.getGroups(page),
   [page]);
-  const {t} = useTranslation('groups');
+  const {t} = useTranslation('group');
 
   return (
     <Container fluid>

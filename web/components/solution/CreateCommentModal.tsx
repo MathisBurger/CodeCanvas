@@ -38,7 +38,7 @@ const CreateCommentModal = ({solution, refetch, onClose}: CreateCommentModalProp
     });
 
     return (
-        <Modal opened onClose={onClose} title={t('titles.create-comment')} size="xl">
+        <Modal opened onClose={onClose} title={t('solution:titles.create-comment')} size="xl">
             <form onSubmit={onSubmit}>
                 <Stack gap={10}>
                     <TextInput label={t('fields.title')} key={form.key('title')} {...form.getInputProps('title')} />

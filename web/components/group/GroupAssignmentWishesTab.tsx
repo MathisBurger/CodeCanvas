@@ -58,7 +58,7 @@ const GroupAssignmentWishesTab = ({group}: GroupAssignmentWishesTabProps) => {
                 <GroupComponent justify="end" mb={20}>
                     <Button onClick={() => setCreateModalOpen(true)}>
                         <IconPlus />
-                        &nbsp;{t('titles.create-wish')}
+                        &nbsp;{t('assignment:titles.create-wish')}
                     </Button>
                 </GroupComponent>
                 <EntityList
