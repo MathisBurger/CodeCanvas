@@ -10,6 +10,7 @@ import {
   useCombobox,
   useMantineColorScheme,
 } from "@mantine/core";
+import {useTranslation} from "react-i18next";
 
 const schemes = ["light", "dark", "auto"];
 
@@ -20,6 +21,7 @@ const SettingsPage = () => {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
+  const {t} = useTranslation('common');
 
   const options = schemes.map((item) => (
     <Combobox.Option value={item} key={item}>
@@ -29,7 +31,7 @@ const SettingsPage = () => {
 
   return (
     <Container fluid>
-      <Title>Settings</Title>
+      <Title>{t('settings.settings')}</Title>
       <Combobox
         store={combobox}
         withinPortal={false}

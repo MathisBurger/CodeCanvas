@@ -5,6 +5,7 @@ import GroupsDisplayComponent from "@/app/groups/displayComponent";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import useClientQuery from "@/hooks/useClientQuery";
 import {useState} from "react";
+import {useTranslation} from "react-i18next";
 
 const GroupsPage = () => {
   const api = useApiServiceClient();
@@ -12,10 +13,11 @@ const GroupsPage = () => {
   const [groups, refetch] = useClientQuery<GroupsResponse>(() =>
     api.getGroups(page),
   [page]);
+  const {t} = useTranslation('group');
 
   return (
     <Container fluid>
-      <Title>Groups</Title>
+      <Title>{t('groups')}</Title>
       <GroupsDisplayComponent
         groups={groups?.groups ?? []}
         page="groups"

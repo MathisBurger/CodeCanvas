@@ -3,19 +3,21 @@ import useApiServiceClient from "@/hooks/useApiServiceClient";
 import {Container, Stack, Textarea, TextInput, Title, Button} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {showNotification} from "@mantine/notifications";
+import {useTranslation} from "react-i18next";
 
 
 const ReportBugPage = () => {
 
     const api = useApiServiceClient();
+    const {t} = useTranslation('common');
     const form = useForm({
         initialValues: {
             title: '',
             body: ''
         },
         validate: {
-            title: (v) => v === '' ? 'The title should not be empty' : null,
-            body: (v) => v === '' ? 'The body should not be empty' : null,
+            title: (v) => v === '' ? t('errors.title-empty') : null,
+            body: (v) => v === '' ? t('errors.body-empty') : null,
         }
     });
 
@@ -23,8 +25,8 @@ const ReportBugPage = () => {
         try {
             await api.reportBug(values.title, values.body);
             showNotification({
-                title: 'Success',
-                message: "Created report",
+                title: t('messages.success'),
+                message: t('messages.created-report'),
                 type: 'success',
             });
         } catch (e: any) {
@@ -41,20 +43,20 @@ const ReportBugPage = () => {
         <Container fluid>
             <form onSubmit={onSubmit}>
                 <Stack gap={10}>
-                    <Title order={2}>Report Bug</Title>
+                    <Title order={2}>{t('report-bug')}</Title>
                     <TextInput
-                        label="Title"
+                        label={t('fields.title')}
                         key={form.key('title')}
                         {...form.getInputProps('title')}
                     />
                     <Textarea
-                        label="Description"
+                        label={t('fields.description')}
                         key={form.key('body')}
                         autosize
                         {...form.getInputProps('body')}
                     />
                     <Button type="submit" style={{width: '15%'}}>
-                        Submit
+                        {t('actions.submit')}
                     </Button>
                 </Stack>
             </form>

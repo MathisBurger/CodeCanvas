@@ -3,6 +3,7 @@ import {Assignment, Group, Solution} from "@/service/types/tasky";
 import {SpotlightActionData, SpotlightActionGroupData} from "@mantine/spotlight";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import {useRouter} from "next/navigation";
+import {useTranslation} from "react-i18next";
 
 /**
  * User boundary type to ensure data is user account specific if user uses two different accounts in one browser
@@ -36,6 +37,7 @@ export const useStage2Actions = (): SpotlightActionGroupData[] => {
     const data = context.content;
     const {user} = useCurrentUser();
     const router = useRouter();
+    const {t} = useTranslation('common')
 
     const groups = useMemo<SpotlightActionData[]>(() => data.groups.filter((g) => g.userId === user?.id).map((g) => ({
         id: `group-${g.id}-${g.userId}`,
@@ -61,15 +63,15 @@ export const useStage2Actions = (): SpotlightActionGroupData[] => {
 
     return [
         {
-            group: "Groups",
+            group: t('spotlight.groups'),
             actions: groups
         },
         {
-            group: "Assignments",
+            group: t('spotlight.assignments'),
             actions: assignments
         },
         {
-            group: "Solutions",
+            group: t('spotlight.solutions'),
             actions: solutions
         }
     ];

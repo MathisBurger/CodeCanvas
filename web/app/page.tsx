@@ -4,22 +4,22 @@ import { Image, Container, Title, Button, Group, Text, List, ThemeIcon, rem } fr
 import { IconCheck } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import useCurrentUser from "@/hooks/useCurrentUser";
+import { useTranslation } from 'react-i18next';
 
 export default function Home() {
 
     const router = useRouter();
     const currentUser = useCurrentUser();
-
+    const { t } = useTranslation('landing-page');
   return (
       <Container size="md">
           <div className={classes.inner}>
               <div className={classes.content}>
                   <Title className={classes.title}>
-                      A <span className={classes.highlight}>modern</span> platform <br /> to practise coding
+                      {t('a')} <span className={classes.highlight}>{t('modern')}</span> {t('platform')} <br /> {t('title')}
                   </Title>
                   <Text c="dimmed" mt="md">
-                      Built to provide an universal application for tutors and students to manage coding assignments. It is an easy and
-                      practical way to practise coding and patterns for exams and tests.
+                      {t('subtitle')}
                   </Text>
 
                   <List
@@ -33,13 +33,13 @@ export default function Home() {
                       }
                   >
                       <List.Item>
-                          <b>Question assignments</b> – Besides coding assignments, you can also create assignments with questions that can be answered.
+                          <b>{t('question-assignments')}</b> – {t('questions-text')}
                       </List.Item>
                       <List.Item>
-                          <b>Free and open source</b> – The project is community driven and can be used for free. Everyone can view the source code.
+                          <b>{t('free-open-source')}</b> – {t('free-text')}
                       </List.Item>
                       <List.Item>
-                          <b>Code testing</b> – Tutors can create code tests to validate if the code works as expected.
+                          <b>{t('code-testing')}</b> – {t('test-text')}
                       </List.Item>
                   </List>
 

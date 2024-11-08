@@ -3,6 +3,7 @@ import { Card, Text } from "@mantine/core";
 import {CodeHighlightTabs} from "@mantine/code-highlight";
 import {useCallback, useEffect, useState} from "react";
 import FileIcon from "@/components/FileIcon";
+import {useTranslation} from "react-i18next";
 
 interface CodeDisplayProps {
   files: (MongoTestFile | MongoTaskFile)[];
@@ -11,6 +12,7 @@ interface CodeDisplayProps {
 const CodeDisplay = ({ files }: CodeDisplayProps) => {
 
   const [tab, setTab] = useState<number|undefined>(undefined);
+  const {t} = useTranslation('common');
 
   useEffect(() => {
     if (files.length > 0) {
@@ -35,7 +37,7 @@ const CodeDisplay = ({ files }: CodeDisplayProps) => {
   if (files.length === 0) {
     return (
       <Card>
-        <Text>No file selected</Text>
+        <Text>{t('messages.no-files-selected')}</Text>
       </Card>
     );
   }
@@ -55,8 +57,8 @@ const CodeDisplay = ({ files }: CodeDisplayProps) => {
                 expanded={false}
             />
         }))}
-        copyLabel="Copy Code"
-        copiedLabel="Copied!"
+        copyLabel={t('actions.copy')}
+        copiedLabel={t('messages.copied-code')}
       />
     </Card>
   );

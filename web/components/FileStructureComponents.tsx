@@ -10,6 +10,7 @@ import {
 import { useState } from "react";
 import FileIcon from "@/components/FileIcon";
 import { useForm } from "@mantine/form";
+import {useTranslation} from "react-i18next";
 
 interface FileStructureNewInputProps {
   label: string;
@@ -22,6 +23,7 @@ export const FileStructureNewInput = (
 ) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { addFunc: _, label: _1, fileNames: _2, ...groupProps } = props;
+  const {t} = useTranslation('common');
   const [isNew, setIsNew] = useState(false);
   const form = useForm({
     initialValues: {
@@ -30,7 +32,7 @@ export const FileStructureNewInput = (
     validate: {
       name: (value: string) =>
         props.fileNames.indexOf(value) > -1
-          ? "File/Folder already exists"
+          ? t('errors.folder-exists')
           : null,
     },
   });
@@ -80,6 +82,8 @@ export const FileStructureElement = (
     ...elementProps
   } = props;
   /* eslint-enable @typescript-eslint/no-unused-vars */
+
+  const {t} = useTranslation('common');
   return (
     <Group gap={5} {...elementProps}>
       <FileIcon
@@ -90,7 +94,7 @@ export const FileStructureElement = (
       <Text>{props.label}</Text>
       {!props.isFolder && props.editable && (
         <Checkbox
-          label="Test file"
+          label={t('fields.test-file')}
           checked={props.isTestFile}
           onChange={(e) => props.setIsTestFile(e.target.checked)}
           style={{ marginLeft: "auto" }}

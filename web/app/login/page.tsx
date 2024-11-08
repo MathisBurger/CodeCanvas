@@ -15,6 +15,7 @@ import ApiError from "@/service/types/error";
 import { useRouter } from "next/navigation";
 import { notifications } from "@mantine/notifications";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
+import {useTranslation} from "react-i18next";
 
 interface LoginInput {
   name: string;
@@ -24,6 +25,7 @@ interface LoginInput {
 const LoginPage = () => {
   const api = useApiServiceClient();
   const router = useRouter();
+  const {t} = useTranslation('common');
 
   const form = useForm({
     initialValues: {
@@ -39,7 +41,7 @@ const LoginPage = () => {
     } catch (e) {
       if (e instanceof ApiError) {
         notifications.show({
-          title: "Login failed",
+          title: t('login-failed'),
           message: e.message,
           color: "red",
         });
@@ -51,7 +53,7 @@ const LoginPage = () => {
     <Container>
       <Paper radius="md" p="xl" withBorder>
         <Text size="lg" fw={500}>
-          Login to CodeCanvas
+          {t('login-to-cc')}
         </Text>
 
         <Divider />
@@ -60,8 +62,8 @@ const LoginPage = () => {
           <Stack>
             <TextInput
               required
-              label="Username"
-              placeholder="Your username"
+              label={t('fields.username')}
+              placeholder={t('fields.username-placeholder')}
               value={form.values.name}
               onChange={(event) =>
                 form.setFieldValue("name", event.currentTarget.value)
@@ -71,8 +73,8 @@ const LoginPage = () => {
 
             <PasswordInput
               required
-              label="Password"
-              placeholder="Your password"
+              label={t('fields.password')}
+              placeholder={t('fields.password-placeholder')}
               value={form.values.password}
               onChange={(event) =>
                 form.setFieldValue("password", event.currentTarget.value)
@@ -83,7 +85,7 @@ const LoginPage = () => {
 
           <Group justify="space-between" mt="xl">
             <Button type="submit" radius="xl">
-              Login
+              {t('actions.login')}
             </Button>
           </Group>
         </form>

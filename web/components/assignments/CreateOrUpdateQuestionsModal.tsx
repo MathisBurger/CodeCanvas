@@ -5,6 +5,7 @@ import QuestionInput from "@/components/assignments/questions/QuestionInput";
 import { notifications } from "@mantine/notifications";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import {useCallback, useEffect, useState} from "react";
+import {useTranslation} from "react-i18next";
 
 interface CreateQuestionsModalProps {
   onClose: () => void;
@@ -21,6 +22,7 @@ const CreateOrUpdateQuestionsModal = ({
 }: CreateQuestionsModalProps) => {
   const api = useApiServiceClient();
   const [questions, setQuestions] = useState<QuestionCatalogueElement[]>([]);
+  const {t} = useTranslation(['common', 'assignment']);
 
   useEffect(() => {
     if (assignment.question_catalogue?.catalogue) {
@@ -62,8 +64,8 @@ const CreateOrUpdateQuestionsModal = ({
       ) {
         console.log(question);
         notifications.show({
-          title: "Error",
-          message: "Please fill all question fields",
+          title: t('messages.error'),
+          message: t('errors.all-required-fields'),
           color: "red",
         });
         return;
@@ -75,8 +77,8 @@ const CreateOrUpdateQuestionsModal = ({
       onClose();
     } catch (e: any) {
       notifications.show({
-        title: "Error",
-        message: e?.message ?? "Failed to create/update question",
+        title: t('messages.error'),
+        message: e?.message ?? t('assignment:errors.failed-question-cu'),
         color: "red",
       });
     }
@@ -86,7 +88,7 @@ const CreateOrUpdateQuestionsModal = ({
     <Modal
       opened={true}
       onClose={onClose}
-      title="Questions catalogue"
+      title={t('assignment:titles.question-catalogue')}
       size="xl"
     >
       <Stack>
@@ -100,17 +102,17 @@ const CreateOrUpdateQuestionsModal = ({
         ))}
         <Group justify="flex-end">
           <Button onClick={addNew} w={150}>
-            New question
+            {t('assignment:actions.new-question')}
           </Button>
         </Group>
       </Stack>
       <Divider mt={10} />
       <Group mt={10}>
         <Button type="submit" onClick={onSubmit}>
-          Save
+          {t('actions.save')}
         </Button>
         <Button onClick={onClose} color="gray">
-          Cancel
+          {t('actions.cancel')}
         </Button>
       </Group>
     </Modal>

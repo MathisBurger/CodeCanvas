@@ -5,6 +5,7 @@ import { useForm } from "@mantine/form";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import RichTextInput from "@/components/form/RichTextInput";
 import { notifications } from "@mantine/notifications";
+import {useTranslation} from "react-i18next";
 
 interface CreateAssignmentModalProps {
   groupId: number;
@@ -22,6 +23,7 @@ const CreateOrUpdateAssignmentModal = ({
   action,
 }: CreateAssignmentModalProps) => {
   const api = useApiServiceClient();
+  const {t} = useTranslation(['common', 'assignment']);
 
   const form = useForm({
     mode: "uncontrolled",
@@ -32,10 +34,10 @@ const CreateOrUpdateAssignmentModal = ({
       language: assignment?.language ?? AssignmentLanguage.QuestionBased,
     },
     validate: {
-      title: (v) => (v.trim() === "" ? "Title should contain a value" : null),
+      title: (v) => (v.trim() === "" ? t('assignment:errors.empty-title') : null),
       due_date: (v) =>
         v ? (new Date(v).getTime() <= new Date().getTime()
-          ? "Date should be in the future"
+          ? t('errors.future-due-date')
           : null) : null
     },
   });
@@ -51,7 +53,7 @@ const CreateOrUpdateAssignmentModal = ({
           values.language,
         );
         notifications.show({
-          message: `Successfully created assignment ${res.title}`,
+          message: `${t('messages.successfully-created-assignment')} ${res.title}`,
           color: "green",
         });
       }
@@ -64,7 +66,7 @@ const CreateOrUpdateAssignmentModal = ({
           values.description,
         );
         notifications.show({
-          message: `Successfully updated assignment ${res.title}`,
+          message: `${t('messages.successfully-updated-assignment')} ${res.title}`,
           color: "green",
         });
       }
@@ -72,7 +74,7 @@ const CreateOrUpdateAssignmentModal = ({
       onClose();
     } catch (e) {
       notifications.show({
-        message: `Failed to create or update assignment`,
+        message: t('assignment:errors.create-or-update'),
         color: "red",
       });
     }
@@ -82,18 +84,18 @@ const CreateOrUpdateAssignmentModal = ({
     <Modal
       opened
       onClose={onClose}
-      title={action === "create" ? "Create Assignment" : "Update Assignment"}
+      title={action === "create" ? t('titles.create-assignment') : t('titles.update-assignment')}
       size="xl"
     >
       <form onSubmit={onSubmit}>
         <TextInput
-          label="Title"
+          label={t('assignment:fields.title')}
           withAsterisk
           key={form.key("title")}
           {...form.getInputProps("title")}
         />
         <DateTimePicker
-          label="Due date"
+          label={t('assignment:fields.due-date')}
           clearable
           mt={10}
           mb={10}
@@ -107,7 +109,7 @@ const CreateOrUpdateAssignmentModal = ({
           setContent={form.getInputProps("description").onChange}
         />
         <Select
-          label="Language"
+          label={t('assignment:fields.language')}
           withAsterisk
           key={form.key("language")}
           data={Object.entries(AssignmentLanguage).map((e) => e[1])}
@@ -116,10 +118,10 @@ const CreateOrUpdateAssignmentModal = ({
         />
         <Group mt={10}>
           <Button type="submit">
-            {action === "create" ? "Create" : "Update"}
+            {action === "create" ? t('common:actions.create') : t('common:actions.update')}
           </Button>
           <Button onClick={onClose} color="gray">
-            Cancel
+            {t('common:actions.cancel')}
           </Button>
         </Group>
       </form>

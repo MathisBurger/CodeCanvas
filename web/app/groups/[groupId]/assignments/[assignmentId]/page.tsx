@@ -19,6 +19,7 @@ import AssignmentCompletedByTab from "@/components/assignments/AssignmentComplet
 import CreateOrUpdateQuestionsModal from "@/components/assignments/CreateOrUpdateQuestionsModal";
 import QuestionAnswersDisplay from "@/components/solution/questions/QuestionAnswersDisplay";
 import { useSpotlightStage2 } from "@/hooks/spotlight/stage2";
+import {useTranslation} from "react-i18next";
 
 const AssignmentDetailsPage = ({
   params,
@@ -36,6 +37,7 @@ const AssignmentDetailsPage = ({
     () => api.getAssignmentForGroup(groupId, assignmentId),
     [assignmentId, groupId],
   );
+  const {t} = useTranslation(['common', 'assignment']);
 
   const {addAssignment} = useSpotlightStage2();
 
@@ -48,7 +50,7 @@ const AssignmentDetailsPage = ({
   if (isNaN(groupId) || isNaN(assignmentId)) {
     return (
       <Container fluid>
-        <Title>Invalid Group ID</Title>
+        <Title>{t('invalid-group-id')}</Title>
       </Container>
     );
   }
@@ -70,33 +72,33 @@ const AssignmentDetailsPage = ({
         {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) &&
           assignment.language !== AssignmentLanguage.QuestionBased && (
             <Button onClick={() => setFileStructureModalOpen(true)}>
-              Code tests
+              {t('assignment:code-tests')}
             </Button>
           )}
         {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) &&
           assignment.language === AssignmentLanguage.QuestionBased && (
             <Button onClick={() => setQuestionsModalOpen(true)}>
-              Questions
+              {t('assignment:questions')}
             </Button>
           )}
       </Group>
       <Tabs defaultValue="task">
         <Tabs.List>
-          <Tabs.Tab value="task">Task</Tabs.Tab>
+          <Tabs.Tab value="task">{t('assignment:task')}</Tabs.Tab>
           {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) &&
             assignment.file_structure !== null &&
             assignment.language !== AssignmentLanguage.QuestionBased && (
-              <Tabs.Tab value="codeTests">Code Tests</Tabs.Tab>
+              <Tabs.Tab value="codeTests">{t('assignment:code-tests')}</Tabs.Tab>
             )}
           {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) &&
             assignment.question_catalogue !== null &&
             assignment.language === AssignmentLanguage.QuestionBased && (
-              <Tabs.Tab value="questions">Questions</Tabs.Tab>
+              <Tabs.Tab value="questions">{t('assignment:questions')}</Tabs.Tab>
             )}
           {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && (
             <>
-              <Tabs.Tab value="solutions">Solutions</Tabs.Tab>
-              <Tabs.Tab value="completedBy">Completed by</Tabs.Tab>
+              <Tabs.Tab value="solutions">{t('assignment:solutions')}</Tabs.Tab>
+              <Tabs.Tab value="completedBy">{t('assignment:completed-by')}</Tabs.Tab>
             </>
           )}
         </Tabs.List>

@@ -5,6 +5,7 @@ import { User } from "@/service/types/usernator";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
 import useCurrentUser from "@/hooks/useCurrentUser";
+import {useTranslation} from "react-i18next";
 
 interface SsrHeaderProps {
   user: User | null;
@@ -15,6 +16,7 @@ const SsrHeader: React.FC<SsrHeaderProps> = ({ user }) => {
   const [s, _, removeSession] = useCookies(["session"]);
   const { setUser } = useCurrentUser();
   const router = useRouter();
+  const {t} = useTranslation('common');
 
   const logOut = () => {
     removeSession("session");
@@ -27,10 +29,10 @@ const SsrHeader: React.FC<SsrHeaderProps> = ({ user }) => {
     return (
       <Group visibleFrom="sm">
         <Link href="/login">
-          <Button variant="default">Log in</Button>
+          <Button variant="default">{t('actions.login')}</Button>
         </Link>
         <Link href="/register">
-          <Button>Sign up</Button>
+          <Button>{t('actions.sign-up')}</Button>
         </Link>
       </Group>
     );
@@ -38,7 +40,7 @@ const SsrHeader: React.FC<SsrHeaderProps> = ({ user }) => {
   return (
     <Group>
       <Group>
-        <Text>Spotlight actions:</Text>
+        <Text>{t('titles.spotlight-actions')}:</Text>
         <div dir="ltr">
           <Kbd>CMD</Kbd> + <Kbd>K</Kbd> or <Kbd>CTRL</Kbd> + <Kbd>K</Kbd>
         </div>
@@ -49,10 +51,10 @@ const SsrHeader: React.FC<SsrHeaderProps> = ({ user }) => {
         </Menu.Target>
         <Menu.Dropdown>
           <Menu.Item onClick={() => router.push("/settings")}>
-            Settings
+            {t('titles.settings')}
           </Menu.Item>
           <Menu.Item color="red" onClick={logOut}>
-            Log out
+            {t('titles.log-out')}
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>

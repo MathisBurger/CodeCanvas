@@ -1,0 +1,23 @@
+{
+  "groups": "Groups",
+  "my-groups": "My groups",
+  "tabs": {
+    "assignments": "Assignments",
+    "members": "Members",
+    "assignment-wishes": "Assignment wishes",
+    "join-requests": "Join requests"
+  },
+  "cols": {
+    "title": "Title",
+    "members-count": "Members count",
+    "tutor": "Tutor"
+  },
+  "actions": {
+    "request-join": "Request Join",
+    "create-group": "Create group"
+  },
+  "messages": {
+    "join-request-created-title": "Join Request created",
+    "join-request-created-text": "Created join request on group "
+  }
+}

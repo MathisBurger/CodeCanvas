@@ -1,0 +1,87 @@
+{
+  "invalid-group-id": "Invalid group ID",
+  "login-to-cc": "Login to CodeCanvas",
+  "register-cc": "Welcome to CodeCanvas please sign up",
+  "report-bug": "Report bug",
+  "students": "Students",
+  "tutors": "Tutors",
+  "titles": {
+    "create-tutor": "Create Tutor",
+    "spotlight-actions": "Spotlight actions",
+    "settings": "Settings",
+    "log-out": "Log out",
+    "create-group": "Create group"
+  },
+  "cols": {
+    "id": "ID",
+    "username": "Username",
+    "actions": "Actions"
+  },
+  "fields": {
+    "username": "Username",
+    "username-placeholder": "Your username",
+    "password": "Password",
+    "password-placeholder": "Your password",
+    "title": "Title",
+    "description": "Description",
+    "test-file": "Test File"
+  },
+  "actions": {
+    "approve": "Approve",
+    "reject": "Reject",
+    "view": "View",
+    "login": "Login",
+    "sign-up": "Sign up",
+    "submit": "Submit",
+    "create-tutor": "Create tutor",
+    "cancel": "Cancel",
+    "remove": "Remove",
+    "save": "Save",
+    "create": "Create",
+    "update": "Update",
+    "copy": "Copy",
+    "expand-all": "Expand all",
+    "collapse-all": "Collapse all",
+    "navigate-back": "Navigate back",
+    "delete": "Delete"
+  },
+  "messages": {
+    "login-failed": "Login failed",
+    "registration-failed": "Registration failed",
+    "password-requirements": "Password should include at least 6 characters",
+    "success": "Success",
+    "error": "Error",
+    "created-report": "Created report",
+    "no-files-selected": "No files selected",
+    "copied-code": "Copied code!",
+    "rejected-files": "Rejected files"
+  },
+  "errors": {
+    "title-empty": "The title should not be empty",
+    "body-empty": "The body should not be empty",
+    "description-empty": "The description should not be empty",
+    "username-empty": "Username should not be empty",
+    "password-empty": "The password should not be empty",
+    "create-tutor": "Failed to create tutor",
+    "folder-exists": "Folder/File already exists",
+    "create-group": "Error creating group"
+  },
+  "settings": {
+    "settings": "Settings"
+  },
+  "dropzone": {
+    "instruction": "Drag text files here or click to select files",
+    "limit": "Attach as many files as you like, each file should not exceed 10mb"
+  },
+  "spotlight": {
+    "nothing-found": "Nothing found...",
+    "search": "Search...",
+    "groups": "Groups",
+    "assignments": "Assignments",
+    "solutions": "Solutions",
+    "basic-routes": "Basic routes",
+    "general-actions": "General actions",
+    "color-scheme-title": "Toggle color scheme",
+    "color-scheme-description": "Toggles the color scheme (light/dark)"
+  }
+}

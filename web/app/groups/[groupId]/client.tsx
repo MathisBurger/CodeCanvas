@@ -17,16 +17,20 @@ import GroupAssignmentsTab from "@/components/assignments/GroupAssignmentsTab";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { isGranted } from "@/service/auth";
 import GroupAssignmentWishesTab from "@/components/group/GroupAssignmentWishesTab";
+import {useTranslation} from "react-i18next";
 
 const MembersComponent: React.FC<{ members: TaskyUser[] }> = ({ members }) => {
+
+  const {t} = useTranslation('common');
+
   const cols: EntityListCol[] = [
     {
       field: "id",
-      label: "ID",
+      label: t('cols.id'),
     },
     {
       field: "username",
-      label: "Username",
+      label: t('cols.username'),
     },
   ];
 
@@ -43,22 +47,23 @@ export const JoinRequestsComponent: React.FC<{
     () => api.getGroupJoinRequests(group?.id ?? -1, page),
     [group?.id, page],
   );
+  const {t} = useTranslation('common');
 
   const cols: EntityListCol[] = [
     {
       field: "id",
-      label: "ID",
+      label: t('cols.id'),
     },
     {
       field: "username",
-      label: "Username",
+      label: t('cols.username'),
       getter: (row) => row.requestor.username,
     },
   ];
 
   const actions: EntityListRowAction[] = [
     {
-      name: "Approve",
+      name: t('actions.approve'),
       color: "green",
       onClick: (row) =>
         api.approveGroupJoinRequest(row.group_id, row.id).then(() => {
@@ -68,7 +73,7 @@ export const JoinRequestsComponent: React.FC<{
       auth: [UserRoles.Tutor, UserRoles.Admin],
     },
     {
-      name: "Reject",
+      name: t('actions.reject'),
       color: "red",
       onClick: (row) =>
         api.rejectGroupJoinRequest(row.group_id, row.id).then(() => {
@@ -96,13 +101,14 @@ export const TabsComponent: React.FC<{
   refetch: () => void;
 }> = ({ group, refetch }) => {
   const { user } = useCurrentUser();
+  const {t} = useTranslation('group');
 
   return (
     <Tabs defaultValue="assignments" style={{ marginTop: "2em" }}>
       <Tabs.List>
-        <Tabs.Tab value="assignments">Assignments</Tabs.Tab>
-        <Tabs.Tab value="members">Members</Tabs.Tab>
-        <Tabs.Tab value="assignmentWishes">Assignment Wishes</Tabs.Tab>
+        <Tabs.Tab value="assignments">{t('tabs.assignments')}</Tabs.Tab>
+        <Tabs.Tab value="members">{t('tabs.members')}</Tabs.Tab>
+        <Tabs.Tab value="assignmentWishes">{t('tabs.assignment-wishes')}</Tabs.Tab>
         {isGranted(user, [UserRoles.Admin, UserRoles.Tutor]) && (
           <Tabs.Tab
             value="joinRequests"
@@ -112,7 +118,7 @@ export const TabsComponent: React.FC<{
               ) : null
             }
           >
-            Join Requests
+            {t('tabs.join-requests')}
           </Tabs.Tab>
         )}
       </Tabs.List>

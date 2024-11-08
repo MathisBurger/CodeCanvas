@@ -4,6 +4,7 @@ import { UserRoles } from "@/service/types/usernator";
 import { useMemo } from "react";
 import { isGranted } from "@/service/auth";
 import useCurrentUser from "@/hooks/useCurrentUser";
+import {useTranslation} from "react-i18next";
 
 export interface EntityListCol {
   label: string;
@@ -28,6 +29,7 @@ interface EntityListProps {
 
 const EntityList: React.FC<EntityListProps> = ({ cols, rows, rowActions }) => {
   const { user } = useCurrentUser();
+  const {t} = useTranslation('common');
   const filteredRowActions = useMemo<undefined | EntityListRowAction[]>(() => {
     if (rowActions) {
       return rowActions.filter((a) =>
@@ -48,7 +50,7 @@ const EntityList: React.FC<EntityListProps> = ({ cols, rows, rowActions }) => {
         {cols.map((col) => (
           <Table.Th key={col.label}>{col.label}</Table.Th>
         ))}
-        {filteredRowActions && <Table.Th>Actions</Table.Th>}
+        {filteredRowActions && <Table.Th>{t('cols.actions')}</Table.Th>}
       </Table.Thead>
       <Table.Tbody>
         {rows.map((row) => (

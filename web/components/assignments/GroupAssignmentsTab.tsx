@@ -14,6 +14,7 @@ import { useState } from "react";
 import CreateOrUpdateAssignmentModal from "@/components/assignments/CreateOrUpdateAssignmentModal";
 import useClientQuery from "@/hooks/useClientQuery";
 import AssignmentCard from "@/components/assignments/AssignmentCard";
+import {useTranslation} from "react-i18next";
 
 interface GroupAssignmentsTabProps {
   group: TaskyGroup | null;
@@ -35,6 +36,7 @@ const GroupAssignmentsTab = ({ group }: GroupAssignmentsTabProps) => {
     () => api.getAssignmentsForGroup(group?.id ?? -1, page),
     [group?.id, page],
   );
+  const {t} = useTranslation('assignment');
 
   const { user } = useCurrentUser();
 
@@ -46,7 +48,7 @@ const GroupAssignmentsTab = ({ group }: GroupAssignmentsTabProps) => {
           user.groups.map((g) => g.id).indexOf(group?.id ?? -1) > -1 && (
             <Button onClick={() => setCreateModalOpen(true)}>
               <IconPlus />
-              &nbsp;Create Assignment
+              &nbsp;{t('actions.create-assignment')}
             </Button>
           )}
       </Group>

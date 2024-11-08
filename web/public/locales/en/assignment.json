@@ -1,0 +1,55 @@
+{
+  "questions": "Questions",
+  "task": "Task",
+  "code-tests": "Code tests",
+  "solutions": "Solutions",
+  "completed-by": "Completed by",
+  "runner-configuration": "Runner configuration",
+  "required-files": "Required files",
+  "fields": {
+    "answer": "Answer",
+    "question": "Question",
+    "answer-type": "Answer type",
+    "cpu": "CPU",
+    "memory": "Memory (RAM)",
+    "timeout": "Timeout",
+    "cmd": "CMD",
+    "title": "Title",
+    "due-date": "Due date",
+    "language": "Language"
+  },
+  "titles": {
+    "create-solution": "Create solution",
+    "create-assignment": "Create assignment",
+    "update-assignment": "Update assignment",
+    "question-catalogue": "Question catalogue",
+    "create-wish": "Create assignment wish"
+  },
+  "messages": {
+    "failed-solution-creation": "Error creating solution",
+    "successfully-created-assignment": "Successfully created assignment",
+    "successfully-updated-assignment": "Successfully updated assignment"
+  },
+  "actions": {
+    "submit-solution": "Submit solution",
+    "new-question": "New question",
+    "create-assignment": "Create assignment"
+  },
+  "errors": {
+    "invalid-cpu": "Invalid CPU option",
+    "invalid-memory": "Invalid memory option",
+    "invalid-timeout": "Invalid timeout option",
+    "empty-cmd": "Please enter a execution cmd",
+    "code-test-creation-failed": "Failed to create code tests",
+    "empty-title": "Title should contain a value",
+    "future-due-date": "Date should be in the future",
+    "create-or-update": "Failed to create or update assignment",
+    "all-required-fields": "Please fill all question fields",
+    "failed-question-cu": "Failed to create/update question",
+    "missing-files": "Following files are missing:",
+    "assignment-wish": "Error creating assignment wish"
+  },
+  "cols": {
+    "submitter": "Submitter"
+  }
+}

@@ -2,14 +2,16 @@ import useActionsFactory from "@/hooks/spotlight/useActionsFactory";
 import { rem } from "@mantine/core";
 import { Spotlight } from "@mantine/spotlight";
 import { IconSearch } from "@tabler/icons-react";
+import {useTranslation} from "react-i18next";
 
 const SpotlightWrapper = () => {
   const actions = useActionsFactory();
+  const {t} = useTranslation('common')
 
   return (
     <Spotlight
       actions={actions}
-      nothingFound="Nothing found..."
+      nothingFound={t('spotlight.nothing-found')}
       highlightQuery
       limit={20}
       searchProps={{
@@ -19,7 +21,7 @@ const SpotlightWrapper = () => {
             stroke={1.5}
           />
         ),
-        placeholder: "Search...",
+        placeholder: t('spotlight.search'),
       }}
     />
   );
