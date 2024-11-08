@@ -42,14 +42,15 @@ const DashboardPage = () => {
                     padding="xl"
                     mt={20}
                 >
-                    <Title order={2}>Release v0.1.5</Title>
+                    <Title order={2}>Release v0.2.0</Title>
                     <Text>
                         We had some groundbreaking changes within our app for the current release:<br />
-                        - Comments on solutions by the tutor <br/>
-                        - Stage2 spotlight search <br/>
-                        - Bug reporting feature <br/>
-                        - Assignment wishes within the group <br/>
-                        - Assignments without due date
+                        - German translation <br/>
+                        - Login attempt limit <br/>
+                        - Some minor bug fixes <br/>
+                        - Pagination <br/>
+                        - Code View tabs <br/>
+                        - Some administrative & performance updates
                     </Text>
                 </Card>
             </Grid.Col>
