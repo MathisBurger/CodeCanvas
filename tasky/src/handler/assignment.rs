@@ -137,6 +137,7 @@ pub async fn handle_update_multipart(
 /// Creates files and updates the correlated object_ids
 /// Also updates files in file_structure, because the actual_files are referenced from the file structure
 async fn create_files_and_update_ids(
+    #[allow(clippy::ptr_arg)]
     actual_files: &mut Vec<&mut AssignmentFile>,
     mongodb: &Database,
     filename_map: HashMap<String, (bool, &TempFile)>,
