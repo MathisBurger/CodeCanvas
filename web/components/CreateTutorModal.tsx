@@ -2,6 +2,7 @@ import {Button, Group, Modal, PasswordInput, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import {showNotification} from "@mantine/notifications";
+import { useTranslation } from "react-i18next";
 
 interface CreateTutorModalProps {
     onClose: () => void;
@@ -9,6 +10,8 @@ interface CreateTutorModalProps {
 }
 
 const CreateTutorModal = ({onClose, refetch}: CreateTutorModalProps) => {
+
+    const {t} = useTranslation(['common', 'assignment']);
 
 
     const api = useApiServiceClient();
@@ -18,8 +21,8 @@ const CreateTutorModal = ({onClose, refetch}: CreateTutorModalProps) => {
             password: ''
         },
         validate: {
-            username: (val) => val.trim() == '' ? 'Username should not be empty' : null,
-            password: (v) => v === '' ? 'The password should not be empty' : null,
+            username: (val) => val.trim() == '' ? t('errors.username-empty') : null,
+            password: (v) => v === '' ? t('errors.password-empty') : null,
         }
     });
 
@@ -32,20 +35,20 @@ const CreateTutorModal = ({onClose, refetch}: CreateTutorModalProps) => {
             console.error(e);
             showNotification({
                 title: 'Error',
-                message: e?.message ?? "Failed to create tutor",
+                message: e?.message ?? t('errors.create-tutor'),
             });
         }
     })
 
     return (
-        <Modal opened onClose={onClose} title="Create Tutor">
+        <Modal opened onClose={onClose} title={t('titles.create-tutor')}>
             <form onSubmit={submit}>
-                <TextInput label="Username" key={form.key('username')} {...form.getInputProps('username')} />
-                <PasswordInput label="Password" key={form.key('password')} {...form.getInputProps('password')} />
+                <TextInput label={t('fields.username')} key={form.key('username')} {...form.getInputProps('username')} />
+                <PasswordInput label={t('fields.password')} key={form.key('password')} {...form.getInputProps('password')} />
                 <Group mt={10}>
-                    <Button type="submit">Create tutor</Button>
+                    <Button type="submit">{t('actions.create')}</Button>
                     <Button onClick={onClose} color="gray">
-                        Cancel
+                        {t('actions.cancel')}
                     </Button>
                 </Group>
             </form>

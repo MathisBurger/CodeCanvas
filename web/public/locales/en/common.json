@@ -5,9 +5,16 @@
   "report-bug": "Report bug",
   "students": "Students",
   "tutors": "Tutors",
+  "titles": {
+    "create-tutor": "Create Tutor",
+    "spotlight-actions": "Spotlight actions",
+    "settings": "Settings",
+    "log-out": "Log out"
+  },
   "cols": {
     "id": "ID",
-    "username": "Username"
+    "username": "Username",
+    "actions": "Actions"
   },
   "fields": {
     "username": "Username",
@@ -15,7 +22,8 @@
     "password": "Password",
     "password-placeholder": "Your password",
     "title": "Title",
-    "description": "Description"
+    "description": "Description",
+    "test-file": "Test File"
   },
   "actions": {
     "approve": "Approve",
@@ -29,7 +37,11 @@
     "remove": "Remove",
     "save": "Save",
     "create": "Create",
-    "update": "Update"
+    "update": "Update",
+    "copy": "Copy",
+    "expand-all": "Expand all",
+    "collapse-all": "Collapse all",
+    "navigate-back": "Navigate back"
   },
   "messages": {
     "login-failed": "Login failed",
@@ -37,13 +49,24 @@
     "password-requirements": "Password should include at least 6 characters",
     "success": "Success",
     "error": "Error",
-    "created-report": "Created report"
+    "created-report": "Created report",
+    "no-files-selected": "No files selected",
+    "copied-code": "Copied code!",
+    "rejected-files": "Rejected files"
   },
   "errors": {
     "title-empty": "The title should not be empty",
-    "body-empty": "The body should not be empty"
+    "body-empty": "The body should not be empty",
+    "username-empty": "Username should not be empty",
+    "password-empty": "The password should not be empty",
+    "create-tutor": "Failed to create tutor",
+    "folder-exists": "Folder/File already exists"
   },
   "settings": {
     "settings": "Settings"
+  },
+  "dropzone": {
+    "instruction": "Drag text files here or click to select files",
+    "limit": "Attach as many files as you like, each file should not exceed 10mb"
   }
 }

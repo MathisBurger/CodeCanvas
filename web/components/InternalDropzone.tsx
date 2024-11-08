@@ -2,6 +2,7 @@ import { Dropzone, FileWithPath } from "@mantine/dropzone";
 import { Group, Paper, rem, SimpleGrid, Text } from "@mantine/core";
 import { IconFile, IconUpload, IconX } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
+import {useTranslation} from "react-i18next";
 
 const ALLOWED_TEXT_EXTENSIONS = [
   ".java",
@@ -24,15 +25,17 @@ interface InternalDropzoneProps {
 }
 
 const InternalDropzone = ({ files, setFiles }: InternalDropzoneProps) => {
+    const {t} = useTranslation('common');
+
   return (
     <>
       <Dropzone
         onDrop={(f) => setFiles([...files, ...f])}
         onReject={(f) =>
           notifications.show({
-            title: "Rejected files",
+            title: t('messages.rejected-files'),
             color: "red",
-            message: `Rejected files: ${f.map((file) => file.file.name).join(", ")}`,
+            message: `${t('messages.rejected-files')}: ${f.map((file) => file.file.name).join(", ")}`,
           })
         }
         maxSize={10 * 1024 ** 2}
@@ -77,10 +80,10 @@ const InternalDropzone = ({ files, setFiles }: InternalDropzoneProps) => {
 
           <div>
             <Text size="xl" inline>
-              Drag text files here or click to select files
+                {t('dropzone.instruction')}
             </Text>
             <Text size="sm" c="dimmed" inline mt={7}>
-              Attach as many files as you like, each file should not exceed 10mb
+                {t('dropzone.limit')}
             </Text>
           </div>
         </Group>
