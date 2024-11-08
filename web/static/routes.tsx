@@ -12,34 +12,34 @@ export interface Route {
 export const routes: Route[] = [
   {
     path: "/dashboard",
-    name: "Dashboard",
+    name: "dashboard",
     description: "The local dashboard",
     icon: <IconDashboard />,
   },
   {
     path: "/students",
-    name: "Students",
+    name: "students",
     description: "All students in the system",
     icon: <IconSchool />,
     authRoles: [UserRoles.Tutor, UserRoles.Admin],
   },
   {
     path: "/tutors",
-    name: "Tutors",
+    name: "tutors",
     description: "All tutors in the system",
     icon: <IconSchool />,
     authRoles: [UserRoles.Admin],
   },
   {
     path: "/my-groups",
-    name: "My Groups",
+    name: "my-groups",
     description: "All groups you are a member of",
     icon: <IconUsersGroup />,
     authRoles: [UserRoles.Tutor, UserRoles.Student],
   },
   {
     path: "/groups",
-    name: "Groups",
+    name: "groups",
     description:
       "All groups you are not a member of that you can join or access",
     icon: <IconUsersGroup />,
@@ -47,7 +47,7 @@ export const routes: Route[] = [
   },
   {
     path: "/solutions",
-    name: "Solutions",
+    name: "solutions",
     description: "All your personal solutions",
     icon: <IconFile />,
     authRoles: [UserRoles.Student],

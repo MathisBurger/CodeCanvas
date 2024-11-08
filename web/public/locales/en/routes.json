@@ -1,5 +1,11 @@
 {
   "impress": "Impress",
   "privacy": "Privacy",
-  "report-bug": "Report bug"
+  "report-bug": "Report bug",
+  "dashboard": "Dashboard",
+  "students": "Students",
+  "tutors": "Tutors",
+  "my-groups": "My Groups",
+  "groups": "Groups",
+  "solutions": "Solutions"
 }

@@ -75,6 +75,13 @@
   },
   "spotlight": {
     "nothing-found": "Nothing found...",
-    "search": "Search..."
+    "search": "Search...",
+    "groups": "Groups",
+    "assignments": "Assignments",
+    "solutions": "Solutions",
+    "basic-routes": "Basic routes",
+    "general-actions": "General actions",
+    "color-scheme-title": "Toggle color scheme",
+    "color-scheme-description": "Toggles the color scheme (light/dark)"
   }
 }
