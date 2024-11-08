@@ -4,6 +4,7 @@ import {useForm} from "@mantine/form";
 import RichTextInput from "@/components/form/RichTextInput";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import {notifications} from "@mantine/notifications";
+import {useTranslation} from "react-i18next";
 
 
 interface CreateCommentModalProps {
@@ -21,6 +22,7 @@ const CreateCommentModal = ({solution, refetch, onClose}: CreateCommentModalProp
         }
     });
     const api = useApiServiceClient();
+    const {t} = useTranslation(['common', 'solution']);
 
     const onSubmit = form.onSubmit(async (values) => {
         try {
@@ -29,17 +31,17 @@ const CreateCommentModal = ({solution, refetch, onClose}: CreateCommentModalProp
             onClose();
         } catch (e: any) {
             notifications.show({
-                title: 'Error',
-                message: e?.message ?? "Failed to create comment",
+                title: t('messages.error'),
+                message: e?.message ?? "",
             })
         }
     });
 
     return (
-        <Modal opened onClose={onClose} title="Create code comment" size="xl">
+        <Modal opened onClose={onClose} title={t('titles.create-comment')} size="xl">
             <form onSubmit={onSubmit}>
                 <Stack gap={10}>
-                    <TextInput label="Title" key={form.key('title')} {...form.getInputProps('title')} />
+                    <TextInput label={t('fields.title')} key={form.key('title')} {...form.getInputProps('title')} />
                     <RichTextInput
                         key={form.key('content')}
                         content={form.getInputProps('content').value}
@@ -49,10 +51,10 @@ const CreateCommentModal = ({solution, refetch, onClose}: CreateCommentModalProp
                 <Divider mt={10} />
                 <Group mt={10}>
                     <Button type="submit">
-                        Create questions
+                        {t('actions.create')}
                     </Button>
                     <Button onClick={onClose} color="gray">
-                        Cancel
+                        {t('actions.cancel')}
                     </Button>
                 </Group>
             </form>

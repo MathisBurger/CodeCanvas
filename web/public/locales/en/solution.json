@@ -14,6 +14,10 @@
     "failed": "Failed",
     "pending": "Pending"
   },
+  "titles": {
+    "create-comment": "Create comment",
+    "your-comment": "Your comment"
+  },
   "cols": {
     "assignment": "Assignment",
     "approval-status": "Approval status"
