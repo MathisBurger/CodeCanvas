@@ -1,20 +1,20 @@
-FROM node:20-alpine AS base
+FROM oven/bun:1-alpine AS base
 
 FROM base AS deps
 
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY package-lock.json ./package-lock.json
+COPY bun.lockb ./bun.lockb
 COPY package.json ./package.json
-RUN npm ci
+RUN bun install --frozen-lockfile --production
 
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN npm run build
+RUN bun run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -38,4 +38,4 @@ EXPOSE 3000
 
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
-CMD ["node", "server.js"]
+CMD ["bun", "server.js"]
