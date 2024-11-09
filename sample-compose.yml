@@ -9,6 +9,8 @@ services:
       - POSTGRES_USER=<PG_ROOT_PASSWORD>
   mongodb:
     image: mongodb/mongodb-community-server:latest
+    volumes:
+      - mongodb_data:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=<MONGODB_ROOT_USERNAME>
       - MONGO_INITDB_ROOT_PASSWORD=<MONGODB_ROOT_PASSWORD>
@@ -85,3 +87,4 @@ services:
       - executor
 volumes:
   db_data:
+  mongodb_data:
