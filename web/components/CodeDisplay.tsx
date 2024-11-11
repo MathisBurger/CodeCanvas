@@ -47,16 +47,16 @@ const CodeDisplay = ({ files }: CodeDisplayProps) => {
       <CodeHighlightTabs
           activeTab={tab}
           onTabChange={setTab}
-        code={files.map((file: MongoTestFile|MongoTaskFile) => ({
-          fileName: file.file_name,
-            language: language(file),
-            code: file.content ?? "",
-            icon: <FileIcon
-                name={file.file_name}
-                isFolder={false}
-                expanded={false}
-            />
-        }))}
+          code={files.map((file: MongoTestFile|MongoTaskFile) => ({
+            fileName: file.file_name,
+              language: language(file),
+              code: file.content ?? "",
+              icon: <FileIcon
+                  name={file.file_name}
+                  isFolder={false}
+                  expanded={false}
+              />
+          }))}
           withExpandButton
         copyLabel={t('actions.copy')}
         copiedLabel={t('messages.copied-code')}
