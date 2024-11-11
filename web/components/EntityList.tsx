@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import { isGranted } from "@/service/auth";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import {useTranslation} from "react-i18next";
+import CryptoJS from "crypto-js";
 
 export interface EntityListCol {
   label: string;
@@ -44,19 +45,26 @@ const EntityList: React.FC<EntityListProps> = ({ cols, rows, rowActions }) => {
     return col.render ? col.render(value, row) : value;
   };
 
+  const hashObj = (obj: object): string => {
+    const jsonString = JSON.stringify(obj);
+    return CryptoJS.SHA256(jsonString).toString(CryptoJS.enc.Hex);
+  }
+
   return (
     <Table stickyHeader>
       <Table.Thead>
-        {cols.map((col) => (
-          <Table.Th key={col.label}>{col.label}</Table.Th>
-        ))}
-        {filteredRowActions && <Table.Th>{t('cols.actions')}</Table.Th>}
+        <Table.Tr>
+          {cols.map((col) => (
+              <Table.Th key={col.label}>{col.label}</Table.Th>
+          ))}
+          {filteredRowActions && <Table.Th>{t('cols.actions')}</Table.Th>}
+        </Table.Tr>
       </Table.Thead>
       <Table.Tbody>
         {rows.map((row) => (
-          <Table.Tr key={`${row}`}>
+          <Table.Tr key={`${hashObj(row)}`}>
             {cols.map((col) => (
-              <Table.Td key={`${row}_${col}`}>
+              <Table.Td key={`${hashObj(row)}_${col.field}`}>
                 {getCellValue(row, col)}
               </Table.Td>
             ))}

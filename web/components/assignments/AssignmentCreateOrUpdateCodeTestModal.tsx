@@ -40,7 +40,7 @@ const AssignmentCreateOrUpdateCodeTestModal = ({
     if (assignment.file_structure) {
       setFileStructure(assignment.file_structure);
     }
-  }, [assignment])
+  }, [assignment]);
 
 
   const form = useForm({

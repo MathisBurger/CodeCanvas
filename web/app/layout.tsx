@@ -46,9 +46,9 @@ export default function RootLayout({
       try {
         const json: Stage2Type = JSON.parse(data);
         const now = new Date().getTime();
-        json.groups = json.groups.filter((g) => g.die?.getTime() < now);
-        json.assignments = json.assignments.filter((g) => g.die?.getTime() < now);
-        json.solutions = json.solutions.filter((g) => g.die?.getTime() < now);
+        json.groups = json.groups.filter((g) => g.die ? new Date(g.die).getTime() < now : true);
+        json.assignments = json.assignments.filter((g) => g.die ? new Date(g.die).getTime() < now : true);
+        json.solutions = json.solutions.filter((g) => g.die ? new Date(g.die).getTime() < now : true);
         localStorage.setItem("spotlight-stage2", JSON.stringify(json));
       } catch (e) {
         console.error(e);
@@ -68,7 +68,7 @@ export default function RootLayout({
 
       <ColorSchemeScript/>
     </head>
-    <body>
+    <body suppressHydrationWarning={true}>
     <CurrentUserContext.Provider value={{ user, setUser }}>
           <MantineProvider theme={{}}>
             <DatesProvider settings={{ timezone: null }}>
