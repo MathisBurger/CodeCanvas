@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { Button, Group } from "@mantine/core";
 import {useTranslation} from "react-i18next";
+import {IconArrowLeft} from "@tabler/icons-react";
 
 const NavigateBack = () => {
   const router = useRouter();
@@ -10,7 +11,7 @@ const NavigateBack = () => {
   return (
     <Group justify="start" mt={30}>
       <Button color="blue" onClick={() => router.back()}>
-          {t('actions.navigate-back')}
+          <IconArrowLeft />&nbsp;{t('actions.navigate-back')}
       </Button>
     </Group>
   );
