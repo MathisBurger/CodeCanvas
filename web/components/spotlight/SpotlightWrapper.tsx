@@ -3,9 +3,11 @@ import { rem } from "@mantine/core";
 import { Spotlight } from "@mantine/spotlight";
 import { IconSearch } from "@tabler/icons-react";
 import {useTranslation} from "react-i18next";
+import {useState} from "react";
 
 const SpotlightWrapper = () => {
-  const actions = useActionsFactory();
+  const [search, setSearch] = useState<string>("");
+  const actions = useActionsFactory(search);
   const {t} = useTranslation('common')
 
   return (
@@ -21,6 +23,8 @@ const SpotlightWrapper = () => {
             stroke={1.5}
           />
         ),
+          value: search,
+          onChange: (e) => setSearch(e.target.value),
         placeholder: t('spotlight.search'),
       }}
     />

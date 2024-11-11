@@ -18,6 +18,7 @@ import {
   AssignmentWish, CodeComment, AssignmentWishesResponse
 } from "@/service/types/tasky";
 import { FileStructureTree } from "@/components/FileStructure";
+import {Spotlight3Response} from "@/service/types/spotlight";
 
 export interface GenericMessage {
   message: string;
@@ -236,6 +237,10 @@ class ApiService {
 
   public async getTutors(page?: number): Promise<{tutors: User[], total: number}> {
     return await this.get(`/usernator/all-tutors?page=${page ?? 1}`);
+  }
+
+  public async getSpotlightResult(search: string): Promise<Spotlight3Response> {
+    return await this.get(`/tasky/spotlight?search=${search}`);
   }
 
   public async createOrUpdateCodeTests(
