@@ -28,7 +28,8 @@
   "messages": {
     "failed-solution-creation": "Error creating solution",
     "successfully-created-assignment": "Successfully created assignment",
-    "successfully-updated-assignment": "Successfully updated assignment"
+    "successfully-updated-assignment": "Successfully updated assignment",
+    "completed": "Completed"
   },
   "actions": {
     "submit-solution": "Submit solution",

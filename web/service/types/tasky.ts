@@ -57,6 +57,7 @@ export interface Assignment {
   runner_memory: string|null;
   runner_timeout: string|null;
   runner_cmd: string|null;
+  completed: boolean|null;
 }
 
 export interface AssignmentsResponse {
