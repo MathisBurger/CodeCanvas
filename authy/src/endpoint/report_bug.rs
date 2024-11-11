@@ -40,6 +40,8 @@ pub async fn report_bug(
     )
     .unwrap();
 
+    let new_body = format!("THIS BUG IS SUBMITTED BY ITEGRATED CODECANVAS BUG REPORT FEATURE\nWe do not assume liability for content.\n\n{}", body.body.clone());
+
     github
         .issues()
         .create(
@@ -48,7 +50,7 @@ pub async fn report_bug(
             &IssuesCreateRequest {
                 assignee: "MathisBurger".to_string(),
                 assignees: vec![],
-                body: body.body.clone(),
+                body: new_body,
                 labels: vec![IssuesCreateRequestLabelsOneOf::String("bug".to_string())],
                 milestone: None,
                 title: octorust::types::TitleOneOf::String(body.title.clone()),
