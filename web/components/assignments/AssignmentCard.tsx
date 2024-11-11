@@ -5,6 +5,7 @@ import RichTextDisplay from "@/components/display/RichTextDisplay";
 import AssignmentDateDisplay from "@/components/assignments/AssignmentDateDisplay";
 import { useRouter } from "next/navigation";
 import {useTranslation} from "react-i18next";
+import styles from "./AssignmentCard.module.scss";
 
 interface AssignmentCardProps {
   assignment: Assignment;
@@ -19,7 +20,7 @@ const AssignmentCard = ({ assignment, groupId }: AssignmentCardProps) => {
     router.push(`/groups/${groupId}/assignments/${assignment.id}`);
 
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder onClick={navigateTo}>
+    <Card padding="lg" radius="md" withBorder onClick={navigateTo} className={styles.elevateHover}>
       <Group>
         <Title order={4}>{assignment.title}</Title>
         <Badge color="indigo">{assignment.language}</Badge>
