@@ -53,7 +53,7 @@ const CreateOrUpdateAssignmentModal = ({
           values.language,
         );
         notifications.show({
-          message: `${t('messages.successfully-created-assignment')} ${res.title}`,
+          message: `${t('assignment:messages.successfully-created-assignment')} ${res.title}`,
           color: "green",
         });
       }

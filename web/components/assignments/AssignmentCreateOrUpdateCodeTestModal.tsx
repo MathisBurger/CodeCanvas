@@ -10,6 +10,7 @@ import useApiServiceClient from "@/hooks/useApiServiceClient";
 import { useForm } from "@mantine/form";
 import {Assignment, RunnerConfig} from "@/service/types/tasky";
 import {useTranslation} from "react-i18next";
+import {removeObjectIds} from "@/utils/FileStructure";
 
 interface AssignmentCreateOrUpdateCodeTestModalProps {
   onClose: () => void;
@@ -66,9 +67,11 @@ const AssignmentCreateOrUpdateCodeTestModal = ({
 
   const submit = form.onSubmit(async (values) => {
     try {
-      await api.createOrUpdateCodeTests(groupId, assignment.id, fileStructure, files, {
+      const fileNames = files.map((file) => file.name);
+      const withoutUpdatedFilesObjectIds = removeObjectIds(fileStructure, fileNames);
+      await api.createOrUpdateCodeTests(groupId, assignment.id, withoutUpdatedFilesObjectIds, files, {
         ...values,
-      } as RunnerConfig);
+      } as RunnerConfig, assignment.file_structure !== null);
       refetch();
       onClose();
     } catch (e: any) {

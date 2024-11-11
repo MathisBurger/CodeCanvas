@@ -17,7 +17,7 @@ use crate::{
 use super::{group::MinifiedGroupResponse, shared::User, Enrich};
 
 /// An file on an assignment
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct AssignmentFile {
     pub filename: String,
     pub object_id: Option<String>,
@@ -26,7 +26,7 @@ pub struct AssignmentFile {
 }
 
 /// File structure of an assignment / solution
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct AssignmentFileStructure {
     pub files: Option<Vec<AssignmentFile>>,
     pub folders: Option<Vec<AssignmentFileStructure>>,
