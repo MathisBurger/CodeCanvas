@@ -57,6 +57,7 @@ const CodeDisplay = ({ files }: CodeDisplayProps) => {
                 expanded={false}
             />
         }))}
+          withExpandButton
         copyLabel={t('actions.copy')}
         copiedLabel={t('messages.copied-code')}
       />
