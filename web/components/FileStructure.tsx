@@ -131,6 +131,8 @@ const FileStructure = ({
                   isFolder={hasChildren}
                   expanded={expanded}
                   isTestFile={node?.nodeProps?.is_test_file ?? false}
+                  fileStructure={structure}
+                  setFileStructure={setStructure ? setStructure : () => {}}
                   setIsTestFile={(s) =>
                     setStructure
                       ? setStructure(

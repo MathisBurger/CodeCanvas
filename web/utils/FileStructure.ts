@@ -273,3 +273,29 @@ export const removeObjectIds = (structure: FileStructureTree, fileNames: string[
   });
   return structure;
 }
+
+/**
+ * Removes a file from the file structure
+ *
+ * @param structure The file structure
+ * @param fileName The name of the file
+ * @param isFolder If the file to delete is a folder
+ */
+export const removeFile = (structure: FileStructureTree, fileName: string, isFolder: boolean): FileStructureTree => {
+  if (isFolder) {
+    const beforeSize = (structure.folders ?? []).length;
+    structure.folders = (structure.folders ?? []).filter((f) => f.current_folder_name !== fileName);
+
+    // Early return to prevent tree from being further searched
+    if (structure.folders.length != beforeSize) return structure;
+  } else {
+    const beforeSize = structure.files.length;
+    structure.files = structure.files.filter((f) => f.filename !== fileName);
+
+    // Early return to prevent tree from being further searched
+    if (structure.files.length != beforeSize) return structure;
+  }
+
+  structure.folders = (structure.folders ?? []).map((folder) => removeFile(folder, fileName, isFolder));
+  return structure;
+}
