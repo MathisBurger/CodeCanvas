@@ -4,6 +4,7 @@ import {
   FileStructureFile,
   FileStructureTree,
 } from "@/components/FileStructure";
+import {FileWithPath} from "@mantine/dropzone";
 
 /**
  * Builds the mantine tree data from structure
@@ -253,3 +254,22 @@ export const extractFilesFromFileStructure = (
   }
   return files;
 };
+
+/**
+ * Removes all object IDs from the files listed in the second parameter.
+ * This is required for the backend to notice new files.
+ *
+ * @param structure The file structure
+ * @param fileNames All new uploaded files
+ */
+export const removeObjectIds = (structure: FileStructureTree, fileNames: string[]): FileStructureTree => {
+
+  structure.folders = (structure.folders ?? []).map((folder) => removeObjectIds(folder, fileNames));
+  structure.files = structure.files.map((file) => {
+    if (fileNames.indexOf(file.filename) > -1) {
+      return {...file, object_id: null};
+    }
+    return file;
+  });
+  return structure;
+}
