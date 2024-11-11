@@ -49,6 +49,7 @@ pub struct AssignmentResponse {
     pub runner_memory: String,
     pub runner_timeout: String,
     pub runnner_cmd: String,
+    pub completed: Option<bool>,
 }
 
 /// Minified response returned for list views
@@ -59,6 +60,7 @@ pub struct MinifiedAssignmentResponse {
     pub due_date: Option<NaiveDateTime>,
     pub description: String,
     pub language: AssignmentLanguage,
+    pub completed: Option<bool>,
 }
 
 /// A vec of assignments
@@ -80,7 +82,17 @@ impl Enrich<Assignment> for MinifiedAssignmentResponse {
             due_date: from.due_date,
             description: from.description.clone(),
             language: from.language.clone(),
+            completed: None,
         })
+    }
+}
+
+impl MinifiedAssignmentResponse {
+    /// Determines whether current user has completed assignment
+    pub fn determine_completed(&mut self, user: &UserData, source: &Assignment) {
+        if StaticSecurity::is_granted(StaticSecurityAction::IsStudent, user) {
+            self.completed = Some(source.completed_by.contains(&Some(user.user_id)));
+        }
     }
 }
 
@@ -101,6 +113,17 @@ impl Enrich<PaginatedModel<Assignment>> for AssignmentsResponse {
             assignments: resp,
             total: from.total,
         })
+    }
+}
+
+impl AssignmentsResponse {
+    /// Determines whether current user has completed the assignments
+    pub fn determine_completed(&mut self, user: &UserData, source: &PaginatedModel<Assignment>) {
+        let reference: &mut Vec<MinifiedAssignmentResponse> = self.assignments.as_mut();
+        for i in 0..reference.len() {
+            let partial_response = reference.get_mut(i).unwrap();
+            partial_response.determine_completed(user, source.results.get(i).unwrap());
+        }
     }
 }
 
@@ -161,6 +184,7 @@ impl Enrich<Assignment> for AssignmentResponse {
             runner_memory: from.runner_memory.clone(),
             runner_timeout: from.runner_timeout.clone(),
             runnner_cmd: from.runner_cmd.clone(),
+            completed: None,
         })
     }
 }
@@ -176,6 +200,13 @@ impl AssignmentResponse {
                     value.answer = serde_json::Value::Null;
                 }
             }
+        }
+    }
+
+    /// Determines whether current user has completed the assignment
+    pub fn determine_completed(&mut self, user: &UserData, source: &Assignment) {
+        if StaticSecurity::is_granted(StaticSecurityAction::IsStudent, user) {
+            self.completed = Some(source.completed_by.contains(&Some(user.user_id)));
         }
     }
 }
