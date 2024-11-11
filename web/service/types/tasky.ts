@@ -107,6 +107,7 @@ export interface Solution {
   file_structure: FileStructureTree | null;
   question_results: ValidatedQuestionSolution[] | null;
   job: Job | null;
+  group_id: number;
 }
 
 export interface SolutionsResponse {

@@ -14,6 +14,9 @@
     "failed": "Fehlgeschlagen",
     "pending": "Ausstehend"
   },
+  "actions": {
+    "open-assignment": "Aufgabe öffnen"
+  },
   "titles": {
     "create-comment": "Kommentar erstellen",
     "your-comment": "Ihr Kommentar"

@@ -14,6 +14,9 @@
     "failed": "Failed",
     "pending": "Pending"
   },
+  "actions": {
+    "open-assignment": "Open assignment"
+  },
   "titles": {
     "create-comment": "Create comment",
     "your-comment": "Your comment"

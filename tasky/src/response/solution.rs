@@ -28,6 +28,7 @@ pub struct SolutionResponse {
     pub file_structure: Option<AssignmentFileStructure>,
     pub job: Option<Job>,
     pub question_results: Option<Vec<QuestionResult>>,
+    pub group_id: i32,
 }
 
 /// Solution response for list views
@@ -129,6 +130,7 @@ impl Enrich<Solution> for SolutionResponse {
             submitter: submitter.into_inner().into(),
             assignment: assigment_response,
             approval_status: from.approval_status.clone(),
+            group_id: from.group_id.unwrap_or(-1),
             file_structure,
             job,
             question_results,
