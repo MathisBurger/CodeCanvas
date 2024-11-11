@@ -825,6 +825,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "diesel_full_text_search"
+version = "2.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e28f8f872592a5283c3876a85c230dab8ddcc093c83660b96830c272257d03c9"
+dependencies = [
+ "diesel",
+]
+
+[[package]]
 name = "diesel_table_macro_syntax"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2533,6 +2542,7 @@ dependencies = [
  "chrono",
  "diesel",
  "diesel-derive-enum",
+ "diesel_full_text_search",
  "figment",
  "futures",
  "log",
