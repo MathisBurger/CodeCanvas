@@ -65,6 +65,9 @@ const AssignmentDetailsPage = ({
       <Group>
         <Title order={1}>{assignment?.title}</Title>
         <Badge color="indigo">{assignment?.language}</Badge>
+        {assignment.completed && (
+            <Badge color="green">{t('assignment:messages.completed')}</Badge>
+        )}
         <AssignmentDateDisplay date={assignment?.due_date ?? null} />
         {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && (
           <Button onClick={() => setUpdateModalOpen(true)}>Edit</Button>

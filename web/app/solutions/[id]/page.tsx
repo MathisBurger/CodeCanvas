@@ -17,6 +17,7 @@ import QuestionAnswersDisplay from "@/components/solution/questions/QuestionAnsw
 import {useSpotlightStage2} from "@/hooks/spotlight/stage2";
 import CommentTab from "@/components/solution/CommentTab";
 import {useTranslation} from "react-i18next";
+import {useRouter} from "next/navigation";
 
 // Every 30s
 const REFETCH_INTERVAL = 1000 * 30;
@@ -25,6 +26,7 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
   const id = parseInt(`${params.id}`, 10);
   const api = useApiServiceClient();
   const { user } = useCurrentUser();
+  const router = useRouter();
   const [executorModalOpen, setExecutorModalOpen] = useState(false);
   const [solution, refetch] = useClientQuery<Solution>(() =>
     api.getSolution(id),
@@ -104,6 +106,7 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
               </Button>
             </>
           )}
+        <Button color="indigo" onClick={() => router.push(`/groups/${solution?.group_id}/assignments/${solution?.assignment.id}`)}>{t('solution:actions.open-assignment')}</Button>
       </Group>
       <Tabs
         mt={20}

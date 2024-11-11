@@ -57,6 +57,7 @@ export interface Assignment {
   runner_memory: string|null;
   runner_timeout: string|null;
   runner_cmd: string|null;
+  completed: boolean|null;
 }
 
 export interface AssignmentsResponse {
@@ -106,6 +107,7 @@ export interface Solution {
   file_structure: FileStructureTree | null;
   question_results: ValidatedQuestionSolution[] | null;
   job: Job | null;
+  group_id: number;
 }
 
 export interface SolutionsResponse {

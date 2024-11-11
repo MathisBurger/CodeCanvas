@@ -37,6 +37,7 @@
     "@tiptap/extension-underline": "^2.7.4",
     "@tiptap/react": "^2.6.6",
     "@tiptap/starter-kit": "^2.6.6",
+    "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
     "embla-carousel-react": "^8.3.0",
     "i18next": "^23.16.4",
@@ -52,6 +53,7 @@
     "sass": "^1.79.4"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

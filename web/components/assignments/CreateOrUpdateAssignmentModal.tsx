@@ -66,7 +66,7 @@ const CreateOrUpdateAssignmentModal = ({
           values.description,
         );
         notifications.show({
-          message: `${t('messages.successfully-updated-assignment')} ${res.title}`,
+          message: `${t('assignment:messages.successfully-updated-assignment')}: ${res.title}`,
           color: "green",
         });
       }
@@ -84,7 +84,7 @@ const CreateOrUpdateAssignmentModal = ({
     <Modal
       opened
       onClose={onClose}
-      title={action === "create" ? t('titles.create-assignment') : t('titles.update-assignment')}
+      title={action === "create" ? t('assignment:titles.create-assignment') : t('assignment:titles.update-assignment')}
       size="xl"
     >
       <form onSubmit={onSubmit}>

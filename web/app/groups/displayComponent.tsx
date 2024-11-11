@@ -50,7 +50,7 @@ const GroupsDisplayComponent = ({
   const actions: EntityListRowAction[] = [
     {
       color: "blue",
-      name: t('actions.view'),
+      name: t('common:actions.view'),
       onClick: (row) => router.push(`/groups/${row.id}`),
       auth: [UserRoles.Admin, UserRoles.Tutor, UserRoles.Student],
       authFunc: (row) =>
@@ -60,7 +60,7 @@ const GroupsDisplayComponent = ({
     },
     {
       color: "blue",
-      name: t('actions.request-join'),
+      name: t('group:actions.request-join'),
       onClick: (row) =>
         api.createGroupJoinRequest(row.id).then(() => {
           notifications.show({
