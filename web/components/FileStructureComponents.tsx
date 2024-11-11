@@ -1,16 +1,18 @@
-import { IconPlus } from "@tabler/icons-react";
+import {IconPlus, IconTrash} from "@tabler/icons-react";
 import {
   Checkbox,
   FocusTrap,
   Group,
   GroupProps,
   TextInput,
-  Text,
+  Text, ActionIcon,
 } from "@mantine/core";
 import { useState } from "react";
 import FileIcon from "@/components/FileIcon";
 import { useForm } from "@mantine/form";
 import {useTranslation} from "react-i18next";
+import {FileStructureTree} from "@/components/FileStructure";
+import {removeFile} from "@/utils/FileStructure";
 
 interface FileStructureNewInputProps {
   label: string;
@@ -65,6 +67,8 @@ interface FileStructureElementProps {
   isFolder: boolean;
   expanded: boolean;
   setIsTestFile: (is: boolean) => void;
+  fileStructure: FileStructureTree;
+  setFileStructure: (structure: FileStructureTree) => void;
   editable: boolean;
 }
 
@@ -79,6 +83,8 @@ export const FileStructureElement = (
     isTestFile: _3,
     setIsTestFile: _4,
     editable: _5,
+    setFileStructure: _6,
+    fileStructure: _7,
     ...elementProps
   } = props;
   /* eslint-enable @typescript-eslint/no-unused-vars */
@@ -92,14 +98,26 @@ export const FileStructureElement = (
         expanded={props.expanded}
       />
       <Text>{props.label}</Text>
-      {!props.isFolder && props.editable && (
-        <Checkbox
-          label={t('fields.test-file')}
-          checked={props.isTestFile}
-          onChange={(e) => props.setIsTestFile(e.target.checked)}
-          style={{ marginLeft: "auto" }}
-        />
-      )}
+      <Group style={{marginLeft: "auto"}}>
+        {!props.isFolder && props.editable && (
+            <Checkbox
+                label={t('fields.test-file')}
+                checked={props.isTestFile}
+                onChange={(e) => props.setIsTestFile(e.target.checked)}
+
+            />
+        )}
+        {props.editable && (
+            <ActionIcon
+                variant="light"
+                color="red"
+                style={{ marginLeft: "auto" }}
+                onClick={() => props.setFileStructure(removeFile(props.fileStructure, props.label, props.isFolder))}
+            >
+              <IconTrash />
+            </ActionIcon>
+        )}
+      </Group>
     </Group>
   );
 };
