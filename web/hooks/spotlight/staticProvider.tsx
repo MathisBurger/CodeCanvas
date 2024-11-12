@@ -7,7 +7,7 @@ import { Route } from "@/static/routes";
 import { useRouter } from "next/navigation";
 import { IconColorFilter } from "@tabler/icons-react";
 import { useMantineColorScheme } from "@mantine/core";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 export const useStaticRoutesActions = (): (
   | SpotlightActionGroupData
@@ -15,10 +15,10 @@ export const useStaticRoutesActions = (): (
 )[] => {
   const routes = useRoutes();
   const router = useRouter();
-  const {t} = useTranslation(['common', 'routes']);
+  const { t } = useTranslation(["common", "routes"]);
   return [
     {
-      group: t('spotlight.basic-routes'),
+      group: t("spotlight.basic-routes"),
       actions: routes.map((route: Route) => ({
         id: `static-route-${route.path}`,
         label: t(`routes:${route.name}`),
@@ -37,7 +37,7 @@ export const useStaticGeneralActions = (): (
   const { colorScheme, setColorScheme } = useMantineColorScheme({
     keepTransitions: true,
   });
-  const {t} = useTranslation('common')
+  const { t } = useTranslation("common");
 
   const toggleColorScheme = () => {
     switch (colorScheme) {
@@ -56,12 +56,12 @@ export const useStaticGeneralActions = (): (
 
   return [
     {
-      group: t('spotlight.general-actions'),
+      group: t("spotlight.general-actions"),
       actions: [
         {
           id: "general-switch-color-scheme",
-          label: t('spotlight.color-scheme-title'),
-          description: t('spotlight.color-scheme-description'),
+          label: t("spotlight.color-scheme-title"),
+          description: t("spotlight.color-scheme-description"),
           leftSection: <IconColorFilter />,
           onClick: toggleColorScheme,
         },

@@ -4,7 +4,7 @@ import { UserRoles } from "@/service/types/usernator";
 import { useMemo } from "react";
 import { isGranted } from "@/service/auth";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 import CryptoJS from "crypto-js";
 
 export interface EntityListCol {
@@ -30,7 +30,7 @@ interface EntityListProps {
 
 const EntityList: React.FC<EntityListProps> = ({ cols, rows, rowActions }) => {
   const { user } = useCurrentUser();
-  const {t} = useTranslation('common');
+  const { t } = useTranslation("common");
   const filteredRowActions = useMemo<undefined | EntityListRowAction[]>(() => {
     if (rowActions) {
       return rowActions.filter((a) =>
@@ -48,16 +48,16 @@ const EntityList: React.FC<EntityListProps> = ({ cols, rows, rowActions }) => {
   const hashObj = (obj: object): string => {
     const jsonString = JSON.stringify(obj);
     return CryptoJS.SHA256(jsonString).toString(CryptoJS.enc.Hex);
-  }
+  };
 
   return (
     <Table stickyHeader>
       <Table.Thead>
         <Table.Tr>
           {cols.map((col) => (
-              <Table.Th key={col.label}>{col.label}</Table.Th>
+            <Table.Th key={col.label}>{col.label}</Table.Th>
           ))}
-          {filteredRowActions && <Table.Th>{t('cols.actions')}</Table.Th>}
+          {filteredRowActions && <Table.Th>{t("cols.actions")}</Table.Th>}
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>

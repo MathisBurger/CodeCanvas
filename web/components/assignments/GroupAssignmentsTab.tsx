@@ -5,7 +5,7 @@ import {
   Group as TaskyGroup,
 } from "@/service/types/tasky";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
-import {Button, Container, Flex, Group, Pagination} from "@mantine/core";
+import { Button, Container, Flex, Group, Pagination } from "@mantine/core";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { isGranted } from "@/service/auth";
 import { UserRoles } from "@/service/types/usernator";
@@ -14,7 +14,7 @@ import { useState } from "react";
 import CreateOrUpdateAssignmentModal from "@/components/assignments/CreateOrUpdateAssignmentModal";
 import useClientQuery from "@/hooks/useClientQuery";
 import AssignmentCard from "@/components/assignments/AssignmentCard";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 interface GroupAssignmentsTabProps {
   group: TaskyGroup | null;
@@ -36,7 +36,7 @@ const GroupAssignmentsTab = ({ group }: GroupAssignmentsTabProps) => {
     () => api.getAssignmentsForGroup(group?.id ?? -1, page),
     [group?.id, page],
   );
-  const {t} = useTranslation('assignment');
+  const { t } = useTranslation("assignment");
 
   const { user } = useCurrentUser();
 
@@ -48,7 +48,7 @@ const GroupAssignmentsTab = ({ group }: GroupAssignmentsTabProps) => {
           user.groups.map((g) => g.id).indexOf(group?.id ?? -1) > -1 && (
             <Button onClick={() => setCreateModalOpen(true)}>
               <IconPlus />
-              &nbsp;{t('actions.create-assignment')}
+              &nbsp;{t("actions.create-assignment")}
             </Button>
           )}
       </Group>
@@ -64,7 +64,11 @@ const GroupAssignmentsTab = ({ group }: GroupAssignmentsTabProps) => {
         {(assignments?.assignments ?? []).sort(assignmentSort).map((a) => (
           <AssignmentCard assignment={a} groupId={group?.id ?? -1} key={a.id} />
         ))}
-        <Pagination total={Math.ceil((assignments?.total ?? 0) / 50)} value={page} onChange={setPage} />
+        <Pagination
+          total={Math.ceil((assignments?.total ?? 0) / 50)}
+          value={page}
+          onChange={setPage}
+        />
       </Flex>
     </Container>
   );

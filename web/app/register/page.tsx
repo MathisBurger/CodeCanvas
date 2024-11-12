@@ -15,7 +15,7 @@ import ApiError from "@/service/types/error";
 import { useRouter } from "next/navigation";
 import { notifications } from "@mantine/notifications";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 interface RegisterInput {
   name: string;
@@ -25,7 +25,7 @@ interface RegisterInput {
 const RegisterPage = () => {
   const api = useApiServiceClient();
   const router = useRouter();
-  const {t} = useTranslation('common');
+  const { t } = useTranslation("common");
 
   const form = useForm({
     initialValues: {
@@ -35,9 +35,7 @@ const RegisterPage = () => {
 
     validate: {
       password: (val) =>
-        val.length <= 6
-          ? t('messages.password-requirements')
-          : null,
+        val.length <= 6 ? t("messages.password-requirements") : null,
     },
   });
 
@@ -48,7 +46,7 @@ const RegisterPage = () => {
     } catch (e) {
       if (e instanceof ApiError) {
         notifications.show({
-          title: t('messages.registration-failed'),
+          title: t("messages.registration-failed"),
           message: e.message,
           color: "red",
         });
@@ -60,7 +58,7 @@ const RegisterPage = () => {
     <Container>
       <Paper radius="md" p="xl" withBorder>
         <Text size="lg" fw={500}>
-          {t('register-cc')}
+          {t("register-cc")}
         </Text>
 
         <Divider />
@@ -69,8 +67,8 @@ const RegisterPage = () => {
           <Stack>
             <TextInput
               required
-              label={t('fields.username')}
-              placeholder={t('fields.username-placeholder')}
+              label={t("fields.username")}
+              placeholder={t("fields.username-placeholder")}
               value={form.values.name}
               onChange={(event) =>
                 form.setFieldValue("name", event.currentTarget.value)
@@ -80,15 +78,14 @@ const RegisterPage = () => {
 
             <PasswordInput
               required
-              label={t('fields.password')}
-              placeholder={t('fields.password-placeholder')}
+              label={t("fields.password")}
+              placeholder={t("fields.password-placeholder")}
               value={form.values.password}
               onChange={(event) =>
                 form.setFieldValue("password", event.currentTarget.value)
               }
               error={
-                form.errors.password &&
-                  t('messages.password-requirements')
+                form.errors.password && t("messages.password-requirements")
               }
               radius="md"
             />
@@ -96,7 +93,7 @@ const RegisterPage = () => {
 
           <Group justify="space-between" mt="xl">
             <Button type="submit" radius="xl">
-              {t('actions.sign-up')}
+              {t("actions.sign-up")}
             </Button>
           </Group>
         </form>

@@ -6,7 +6,7 @@ import { AssignmentLanguage, Solution } from "@/service/types/tasky";
 import CentralLoading from "@/components/CentralLoading";
 import JobResultDisplay from "@/components/JobResultDisplay";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { isGranted } from "@/service/auth";
 import { UserRoles } from "@/service/types/usernator";
 import ExecutorUIDisplay from "@/components/solution/ExecutorUIDisplay";
@@ -14,10 +14,10 @@ import SolutionBadge from "@/components/solution/SolutionBadge";
 import NavigateBack from "@/components/NavigateBack";
 import FileStructureDisplay from "@/components/FileStructureDisplay";
 import QuestionAnswersDisplay from "@/components/solution/questions/QuestionAnswersDisplay";
-import {useSpotlightStage2} from "@/hooks/spotlight/stage2";
+import { useSpotlightStage2 } from "@/hooks/spotlight/stage2";
 import CommentTab from "@/components/solution/CommentTab";
-import {useTranslation} from "react-i18next";
-import {useRouter} from "next/navigation";
+import { useTranslation } from "react-i18next";
+import { useRouter } from "next/navigation";
 
 // Every 30s
 const REFETCH_INTERVAL = 1000 * 30;
@@ -31,20 +31,24 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
   const [solution, refetch] = useClientQuery<Solution>(() =>
     api.getSolution(id),
   );
-  const {t} = useTranslation(['solution', 'common']);
+  const { t } = useTranslation(["solution", "common"]);
 
-  const {addSolution} = useSpotlightStage2();
+  const { addSolution } = useSpotlightStage2();
   useEffect(() => {
-      if (solution) {
-        addSolution(solution);
-      }
+    if (solution) {
+      addSolution(solution);
+    }
   }, [addSolution, solution]);
 
   useEffect(() => {
     const fetcher = async () => {
       if (solution?.job && solution.job.execution.length > 0) {
         const exec = solution.job.execution[0];
-        if (exec.error === null && exec.result === null && exec.state === "RUNNING") {
+        if (
+          exec.error === null &&
+          exec.result === null &&
+          exec.state === "RUNNING"
+        ) {
           setTimeout(() => {
             refetch();
             fetcher();
@@ -68,7 +72,7 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
   if (isNaN(id)) {
     return (
       <Container fluid>
-        <Title>{t('invalid-solution-id')}</Title>
+        <Title>{t("invalid-solution-id")}</Title>
       </Container>
     );
   }
@@ -85,9 +89,7 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
           {solution.assignment.title} - {solution.id}
         </Title>
         <Badge color="indigo">{solution.submitter.username}</Badge>
-        <SolutionBadge
-          status={solution.approval_status}
-        />
+        <SolutionBadge status={solution.approval_status} />
         {isGranted(user, [UserRoles.Admin]) && (
           <Button onClick={() => setExecutorModalOpen(true)}>
             Executor UI
@@ -99,14 +101,23 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
           ) > -1 && (
             <>
               <Button color="lime" onClick={approve}>
-                {t('common:actions.approve')}
+                {t("common:actions.approve")}
               </Button>
               <Button color="red" onClick={reject}>
-                {t('common:actions.reject')}
+                {t("common:actions.reject")}
               </Button>
             </>
           )}
-        <Button color="indigo" onClick={() => router.push(`/groups/${solution?.group_id}/assignments/${solution?.assignment.id}`)}>{t('solution:actions.open-assignment')}</Button>
+        <Button
+          color="indigo"
+          onClick={() =>
+            router.push(
+              `/groups/${solution?.group_id}/assignments/${solution?.assignment.id}`,
+            )
+          }
+        >
+          {t("solution:actions.open-assignment")}
+        </Button>
       </Group>
       <Tabs
         mt={20}
@@ -118,14 +129,14 @@ const SolutionDetailsPage = ({ params }: { params: { id: string } }) => {
       >
         <Tabs.List>
           {solution.assignment.language === AssignmentLanguage.QuestionBased ? (
-            <Tabs.Tab value="answers">{t('tabs.answers')}</Tabs.Tab>
+            <Tabs.Tab value="answers">{t("tabs.answers")}</Tabs.Tab>
           ) : (
             <>
-              <Tabs.Tab value="log">{t('tabs.log')}</Tabs.Tab>
-              <Tabs.Tab value="code">{t('tabs.code')}</Tabs.Tab>
+              <Tabs.Tab value="log">{t("tabs.log")}</Tabs.Tab>
+              <Tabs.Tab value="code">{t("tabs.code")}</Tabs.Tab>
             </>
           )}
-          <Tabs.Tab value="comments">{t('tabs.comments')}</Tabs.Tab>
+          <Tabs.Tab value="comments">{t("tabs.comments")}</Tabs.Tab>
         </Tabs.List>
 
         {solution.assignment.language === AssignmentLanguage.QuestionBased ? (

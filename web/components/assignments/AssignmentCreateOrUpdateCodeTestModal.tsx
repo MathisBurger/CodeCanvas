@@ -1,5 +1,5 @@
 "use client";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import FileStructure, { FileStructureTree } from "@/components/FileStructure";
 import { Button, Group, Modal, Select, Title, TextInput } from "@mantine/core";
 import { useSetState } from "@mantine/hooks";
@@ -8,9 +8,9 @@ import { FileWithPath } from "@mantine/dropzone";
 import { notifications } from "@mantine/notifications";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import { useForm } from "@mantine/form";
-import {Assignment, RunnerConfig} from "@/service/types/tasky";
-import {useTranslation} from "react-i18next";
-import {removeObjectIds} from "@/utils/FileStructure";
+import { Assignment, RunnerConfig } from "@/service/types/tasky";
+import { useTranslation } from "react-i18next";
+import { removeObjectIds } from "@/utils/FileStructure";
 
 interface AssignmentCreateOrUpdateCodeTestModalProps {
   onClose: () => void;
@@ -35,14 +35,13 @@ const AssignmentCreateOrUpdateCodeTestModal = ({
     current_folder_name: null,
   });
   const [files, setFiles] = useState<FileWithPath[]>([]);
-  const {t} = useTranslation(['assignment', 'common']);
+  const { t } = useTranslation(["assignment", "common"]);
 
   useEffect(() => {
     if (assignment.file_structure) {
       setFileStructure(assignment.file_structure);
     }
   }, [assignment]);
-
 
   const form = useForm({
     initialValues: {
@@ -53,13 +52,12 @@ const AssignmentCreateOrUpdateCodeTestModal = ({
     },
     validate: {
       runner_cpu: (v) =>
-        cpuOptions.indexOf(v) === -1 ? t('errors.invalid-cpu') : null,
+        cpuOptions.indexOf(v) === -1 ? t("errors.invalid-cpu") : null,
       runner_memory: (v) =>
-        memoryOptions.indexOf(v) === -1 ? t('errors.invalid-memory') : null,
+        memoryOptions.indexOf(v) === -1 ? t("errors.invalid-memory") : null,
       runner_timeout: (v) =>
-        timeoutOptions.indexOf(v) === -1 ? t('errors.invalid-timeout') : null,
-      runner_cmd: (v) =>
-        v.trim() === "" ? t('errors.empty-cmd') : null,
+        timeoutOptions.indexOf(v) === -1 ? t("errors.invalid-timeout") : null,
+      runner_cmd: (v) => (v.trim() === "" ? t("errors.empty-cmd") : null),
     },
   });
 
@@ -68,15 +66,25 @@ const AssignmentCreateOrUpdateCodeTestModal = ({
   const submit = form.onSubmit(async (values) => {
     try {
       const fileNames = files.map((file) => file.name);
-      const withoutUpdatedFilesObjectIds = removeObjectIds(fileStructure, fileNames);
-      await api.createOrUpdateCodeTests(groupId, assignment.id, withoutUpdatedFilesObjectIds, files, {
-        ...values,
-      } as RunnerConfig, assignment.file_structure !== null);
+      const withoutUpdatedFilesObjectIds = removeObjectIds(
+        fileStructure,
+        fileNames,
+      );
+      await api.createOrUpdateCodeTests(
+        groupId,
+        assignment.id,
+        withoutUpdatedFilesObjectIds,
+        files,
+        {
+          ...values,
+        } as RunnerConfig,
+        assignment.file_structure !== null,
+      );
       refetch();
       onClose();
     } catch (e: any) {
       notifications.show({
-        message: e?.message ?? t('errors.code-test-creation-failed'),
+        message: e?.message ?? t("errors.code-test-creation-failed"),
         color: "red",
       });
     }
@@ -91,34 +99,34 @@ const AssignmentCreateOrUpdateCodeTestModal = ({
       />
       <InternalDropzone files={files} setFiles={setFiles} />
       <form onSubmit={submit}>
-        <Title order={3}>{t('runner-configuration')}</Title>
+        <Title order={3}>{t("runner-configuration")}</Title>
         <Select
           key={form.key("runner_cpu")}
-          label={t('fields.cpu')}
+          label={t("fields.cpu")}
           {...form.getInputProps("runner_cpu")}
           data={cpuOptions}
         />
         <Select
           key={form.key("runner_memory")}
-          label={t('fields.memory')}
+          label={t("fields.memory")}
           {...form.getInputProps("runner_memory")}
           data={memoryOptions}
         />
         <Select
           key={form.key("runner_timeout")}
-          label={t('fields.timeout')}
+          label={t("fields.timeout")}
           {...form.getInputProps("runner_timeout")}
           data={timeoutOptions}
         />
         <TextInput
           key={form.key("runner_cmd")}
-          label={t('fields.cmd')}
+          label={t("fields.cmd")}
           {...form.getInputProps("runner_cmd")}
         />
         <Group mt={10}>
-          <Button type="submit">{t('common:actions.save')}</Button>
+          <Button type="submit">{t("common:actions.save")}</Button>
           <Button onClick={onClose} color="gray">
-            {t('common:actions.cancel')}
+            {t("common:actions.cancel")}
           </Button>
         </Group>
       </form>

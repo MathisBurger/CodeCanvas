@@ -4,7 +4,7 @@ import {
   FileStructureFile,
   FileStructureTree,
 } from "@/components/FileStructure";
-import {FileWithPath} from "@mantine/dropzone";
+import { FileWithPath } from "@mantine/dropzone";
 
 /**
  * Builds the mantine tree data from structure
@@ -262,17 +262,21 @@ export const extractFilesFromFileStructure = (
  * @param structure The file structure
  * @param fileNames All new uploaded files
  */
-export const removeObjectIds = (structure: FileStructureTree, fileNames: string[]): FileStructureTree => {
-
-  structure.folders = (structure.folders ?? []).map((folder) => removeObjectIds(folder, fileNames));
+export const removeObjectIds = (
+  structure: FileStructureTree,
+  fileNames: string[],
+): FileStructureTree => {
+  structure.folders = (structure.folders ?? []).map((folder) =>
+    removeObjectIds(folder, fileNames),
+  );
   structure.files = structure.files.map((file) => {
     if (fileNames.indexOf(file.filename) > -1) {
-      return {...file, object_id: null};
+      return { ...file, object_id: null };
     }
     return file;
   });
   return structure;
-}
+};
 
 /**
  * Removes a file from the file structure
@@ -281,10 +285,16 @@ export const removeObjectIds = (structure: FileStructureTree, fileNames: string[
  * @param fileName The name of the file
  * @param isFolder If the file to delete is a folder
  */
-export const removeFile = (structure: FileStructureTree, fileName: string, isFolder: boolean): FileStructureTree => {
+export const removeFile = (
+  structure: FileStructureTree,
+  fileName: string,
+  isFolder: boolean,
+): FileStructureTree => {
   if (isFolder) {
     const beforeSize = (structure.folders ?? []).length;
-    structure.folders = (structure.folders ?? []).filter((f) => f.current_folder_name !== fileName);
+    structure.folders = (structure.folders ?? []).filter(
+      (f) => f.current_folder_name !== fileName,
+    );
 
     // Early return to prevent tree from being further searched
     if (structure.folders.length != beforeSize) return structure;
@@ -296,6 +306,8 @@ export const removeFile = (structure: FileStructureTree, fileName: string, isFol
     if (structure.files.length != beforeSize) return structure;
   }
 
-  structure.folders = (structure.folders ?? []).map((folder) => removeFile(folder, fileName, isFolder));
+  structure.folders = (structure.folders ?? []).map((folder) =>
+    removeFile(folder, fileName, isFolder),
+  );
   return structure;
-}
+};

@@ -1,6 +1,6 @@
 import { TaskyUser } from "@/service/types/tasky";
 import EntityList, { EntityListCol } from "@/components/EntityList";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 interface AssignmentCompletedByTabProps {
   completedBy: TaskyUser[];
@@ -9,17 +9,16 @@ interface AssignmentCompletedByTabProps {
 const AssignmentCompletedByTab = ({
   completedBy,
 }: AssignmentCompletedByTabProps) => {
-
-  const {t} = useTranslation('common');
+  const { t } = useTranslation("common");
 
   const cols: EntityListCol[] = [
     {
       field: "id",
-      label: t('cols.id'),
+      label: t("cols.id"),
     },
     {
       field: "username",
-      label: t('cols.username'),
+      label: t("cols.username"),
     },
   ];
 

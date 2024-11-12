@@ -1,11 +1,11 @@
 "use client";
 import { Button, Divider, Group, Modal, Stack } from "@mantine/core";
-import {Assignment, QuestionCatalogueElement} from "@/service/types/tasky";
+import { Assignment, QuestionCatalogueElement } from "@/service/types/tasky";
 import QuestionInput from "@/components/assignments/questions/QuestionInput";
 import { notifications } from "@mantine/notifications";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
-import {useCallback, useEffect, useState} from "react";
-import {useTranslation} from "react-i18next";
+import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface CreateQuestionsModalProps {
   onClose: () => void;
@@ -22,7 +22,7 @@ const CreateOrUpdateQuestionsModal = ({
 }: CreateQuestionsModalProps) => {
   const api = useApiServiceClient();
   const [questions, setQuestions] = useState<QuestionCatalogueElement[]>([]);
-  const {t} = useTranslation(['common', 'assignment']);
+  const { t } = useTranslation(["common", "assignment"]);
 
   useEffect(() => {
     if (assignment.question_catalogue?.catalogue) {
@@ -64,21 +64,25 @@ const CreateOrUpdateQuestionsModal = ({
       ) {
         console.log(question);
         notifications.show({
-          title: t('messages.error'),
-          message: t('errors.all-required-fields'),
+          title: t("messages.error"),
+          message: t("errors.all-required-fields"),
           color: "red",
         });
         return;
       }
     }
     try {
-      await api.createOrUpdateQuestionCatalogue(groupId, assignment.id, questions);
+      await api.createOrUpdateQuestionCatalogue(
+        groupId,
+        assignment.id,
+        questions,
+      );
       refetch();
       onClose();
     } catch (e: any) {
       notifications.show({
-        title: t('messages.error'),
-        message: e?.message ?? t('assignment:errors.failed-question-cu'),
+        title: t("messages.error"),
+        message: e?.message ?? t("assignment:errors.failed-question-cu"),
         color: "red",
       });
     }
@@ -88,7 +92,7 @@ const CreateOrUpdateQuestionsModal = ({
     <Modal
       opened={true}
       onClose={onClose}
-      title={t('assignment:titles.question-catalogue')}
+      title={t("assignment:titles.question-catalogue")}
       size="xl"
     >
       <Stack>
@@ -102,17 +106,17 @@ const CreateOrUpdateQuestionsModal = ({
         ))}
         <Group justify="flex-end">
           <Button onClick={addNew} w={150}>
-            {t('assignment:actions.new-question')}
+            {t("assignment:actions.new-question")}
           </Button>
         </Group>
       </Stack>
       <Divider mt={10} />
       <Group mt={10}>
         <Button type="submit" onClick={onSubmit}>
-          {t('actions.save')}
+          {t("actions.save")}
         </Button>
         <Button onClick={onClose} color="gray">
-          {t('actions.cancel')}
+          {t("actions.cancel")}
         </Button>
       </Group>
     </Modal>

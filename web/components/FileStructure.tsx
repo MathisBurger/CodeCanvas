@@ -14,7 +14,7 @@ import {
   findObjectIdInStructure,
   updateTestFileState,
 } from "@/utils/FileStructure";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 export interface FileStructureFile {
   filename: string;
@@ -48,8 +48,7 @@ const FileStructure = ({
   displayMode = "all",
   solutionMode,
 }: FileStructureProps) => {
-
-  const {t} = useTranslation('common');
+  const { t } = useTranslation("common");
 
   const [fileNames, treeData] = useMemo(
     () =>
@@ -84,10 +83,10 @@ const FileStructure = ({
     <Paper withBorder>
       <Button.Group>
         <Button variant="default" onClick={() => tree.expandAllNodes()}>
-          {t('actions.expand-all')}
+          {t("actions.expand-all")}
         </Button>
         <Button variant="default" onClick={() => tree.collapseAllNodes()}>
-          {t('actions.collapse-all')}
+          {t("actions.collapse-all")}
         </Button>
       </Button.Group>
       <Tree
