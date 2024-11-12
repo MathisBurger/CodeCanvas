@@ -8,26 +8,6 @@ use crate::{
     AppState,
 };
 
-/// Endpoint to create a new notification
-#[post("/notifications")]
-pub async fn create_notification(
-    data: web::Data<AppState>,
-    user: web::ReqData<UserData>,
-    req: web::Json<CreateNotification>,
-) -> Result<HttpResponse, ApiError> {
-    let user_data = user.into_inner();
-    let db = &mut data.db.db.get().unwrap();
-
-    if !StaticSecurity::is_granted(StaticSecurityAction::IsAdminOrTutor, &user_data) {
-        return Err(ApiError::Forbidden {
-            message: "You are not allowed to create a notification".to_string(),
-        });
-    }
-
-    let notification = NotificationRepository::create_notification(&req, db);
-    Ok(HttpResponse::Ok().json(notification))
-}
-
 /// Gets all notifications
 #[get("/notifications")]
 pub async fn get_notifiations(

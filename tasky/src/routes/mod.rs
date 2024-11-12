@@ -45,7 +45,6 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(assignment_wish::delete_wish)
         .service(code_comment::get_code_comments)
         .service(code_comment::create_code_comment)
-        .service(notifications::create_notification)
         .service(notifications::get_notifiations)
         .service(notifications::remove_user_from_notification)
         .service(notifications::remove_user_from_all_notifications);
