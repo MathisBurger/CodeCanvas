@@ -5,6 +5,7 @@ use diesel::sql_query;
 use diesel::sql_types::Integer;
 use serde::{Deserialize, Serialize};
 
+use super::group::GroupRepository;
 use super::DB;
 
 /// notification entry type
@@ -24,7 +25,7 @@ pub struct Notification {
 pub struct CreateNotification {
     pub title: String,
     pub content: String,
-    pub targeted_users: Vec<i32>,
+    pub targeted_users: Vec<Option<i32>>,
 }
 
 pub struct NotificationRepository;
@@ -37,6 +38,23 @@ impl NotificationRepository {
             .returning(Notification::as_returning())
             .get_result::<Notification>(conn)
             .expect("Cannot create new notification")
+    }
+
+    /// Creates a notification for a group
+    pub fn create_notification_for_group(
+        title: String,
+        content: String,
+        group_id: i32,
+        conn: &mut DB,
+    ) -> Notification {
+        Self::create_notification(
+            &CreateNotification {
+                title,
+                content,
+                targeted_users: GroupRepository::get_by_id(group_id, conn).unwrap().members,
+            },
+            conn,
+        )
     }
 
     /// Gets all notifications for a user

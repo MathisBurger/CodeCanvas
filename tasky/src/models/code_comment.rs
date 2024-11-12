@@ -1,3 +1,7 @@
+use super::group::GroupRepository;
+use super::notification::CreateNotification;
+use super::notification::NotificationRepository;
+use super::solution::SolutionRepository;
 use super::DB;
 use crate::schema::code_comments::dsl;
 use diesel::associations::HasTable;
@@ -34,6 +38,20 @@ pub struct CodeCommentRepository;
 impl CodeCommentRepository {
     /// Creates a new code comment
     pub fn create_comment(create: &CreateCodeComment, conn: &mut DB) -> CodeComment {
+        let solution = SolutionRepository::get_solution_by_id(create.solution_id, conn).unwrap();
+        let group = GroupRepository::get_by_id(create.group_id, conn).unwrap();
+        let targeted_users = match solution.submitter_id == create.commentor {
+            true => vec![Some(group.tutor)],
+            false => vec![Some(solution.submitter_id)],
+        };
+        NotificationRepository::create_notification(
+            &CreateNotification {
+                title: "New code comment".to_string(),
+                content: format!("You got a new code comment for solution {}", solution.id),
+                targeted_users,
+            },
+            conn,
+        );
         diesel::insert_into(dsl::code_comments::table())
             .values(create)
             .returning(CodeComment::as_returning())
