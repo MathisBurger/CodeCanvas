@@ -2,7 +2,6 @@ use diesel::dsl::sql;
 use diesel::sql_types::Text;
 use diesel::BoolExpressionMethods;
 use diesel::ExpressionMethods;
-use diesel::JoinOnDsl;
 use diesel::QueryDsl;
 use diesel::RunQueryDsl;
 use diesel_full_text_search::{to_tsquery, to_tsvector, TsVectorExtensions};
@@ -32,9 +31,7 @@ pub struct SpotlightAssignment {
 pub fn groups(search: &String, user_data: &UserData, conn: &mut DB) -> Vec<SpotlightGroup> {
     let admin_precicate = to_tsvector(groups::title).matches(to_tsquery(search));
 
-    let default_predicate = admin_precicate
-        .clone()
-        .and(groups::id.eq_any(user_data.groups.clone()));
+    let default_predicate = admin_precicate.and(groups::id.eq_any(user_data.groups.clone()));
 
     let results =
         match StaticSecurity::is_granted(crate::security::StaticSecurityAction::IsAdmin, user_data)
