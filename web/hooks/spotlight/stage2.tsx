@@ -40,21 +40,21 @@ export const useStage2Actions = (): SpotlightActionGroupData[] => {
     const {t} = useTranslation('common')
 
     const groups = useMemo<SpotlightActionData[]>(() => data.groups.filter((g) => g.userId === user?.id).map((g) => ({
-        id: `group-${g.id}-${g.userId}`,
+        id: `group-${g.id}`,
         label: g.title,
         description: "",
         onClick: () => router.push(`/groups/${g.id}`),
     })), [data, router, user?.id]);
 
     const assignments = useMemo<SpotlightActionData[]>(() => data.assignments.filter((a) => a.userId === user?.id).map((a) => ({
-        id: `assignment-${a.id}-${a.userId}`,
+        id: `assignment-${a.id}`,
         label: a.title,
         description: "",
         onClick: () => router.push(`/groups/${a.groupId}/assignments/${a.id}`),
     })), [data, router, user?.id]);
 
     const solutions = useMemo<SpotlightActionData[]>(() => data.solutions.filter((s) => s.userId === user?.id).map((s) => ({
-        id: `assignment-${s.id}-${s.userId}`,
+        id: `solution-${s.id}`,
         label: `${s.submitter.username} - ${s.assignment.title}`,
         description: "",
         onClick: () => router.push(`/solutions/${s.id}`),

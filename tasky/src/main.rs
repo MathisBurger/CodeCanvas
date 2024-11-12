@@ -7,6 +7,7 @@ use log::info;
 use std::net::SocketAddr;
 use tasky::auth_middleware::Auth;
 use tasky::routes::init_services;
+use tasky::spotlight;
 use tasky::tasky_grpc::tasky_api_server::TaskyApiServer;
 use tonic::transport::Server;
 
@@ -36,6 +37,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Auth::new())
             .app_data(Data::new(state.clone()))
             .configure(init_services)
+            .service(spotlight::routes::spotlight)
     })
     .bind("0.0.0.0:3000")
     .expect("Already in use")

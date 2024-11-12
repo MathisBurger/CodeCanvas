@@ -23,6 +23,7 @@ pub mod response;
 pub mod routes;
 pub mod schema;
 pub mod security;
+pub mod spotlight;
 mod test_impls;
 pub mod util;
 
