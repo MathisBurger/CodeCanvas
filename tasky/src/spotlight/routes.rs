@@ -27,9 +27,12 @@ pub async fn spotlight(
     let db = &mut data.db.db.get().unwrap();
     let search = query.search.clone();
 
+    let search_terms: Vec<&str> = search.split_whitespace().collect();
+    let formatted_query = search_terms.join("&");
+
     let response = Response {
-        groups: groups(&search, &user_data, db),
-        assignments: assignments(&search, &user_data, db),
+        groups: groups(&formatted_query, &user_data, db),
+        assignments: assignments(&formatted_query, &user_data, db),
     };
     HttpResponse::Ok().json(response)
 }

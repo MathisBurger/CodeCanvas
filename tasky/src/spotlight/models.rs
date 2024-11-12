@@ -2,6 +2,7 @@ use diesel::BoolExpressionMethods;
 use diesel::ExpressionMethods;
 use diesel::QueryDsl;
 use diesel::RunQueryDsl;
+use diesel_full_text_search::plainto_tsquery;
 use diesel_full_text_search::{to_tsquery, to_tsvector, TsVectorExtensions};
 use serde::Serialize;
 
