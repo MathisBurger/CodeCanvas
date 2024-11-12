@@ -71,7 +71,7 @@ const SsrHeader: React.FC<SsrHeaderProps> = ({ user }) => {
                     <Kbd>CMD</Kbd> + <Kbd>K</Kbd> or <Kbd>CTRL</Kbd> + <Kbd>K</Kbd>
                 </div>
             </Group>
-            <Indicator inline label={notifications?.length ?? ""} display={notifications?.length ? "block" : "none"}>
+            <Indicator inline label={notifications?.length ?? ""} display={notifications?.length ? "block" : "none"} size={16}>
                 <ActionIcon variant="transparent" color={colorScheme === "light" ? "dark" : "white"} onClick={() => setNotificationDrawerShown(true)}>
                     <IconMessage />
                 </ActionIcon>
