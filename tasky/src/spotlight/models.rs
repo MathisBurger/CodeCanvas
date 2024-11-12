@@ -1,8 +1,10 @@
+use diesel::dsl::sql;
+use diesel::sql_types::Text;
 use diesel::BoolExpressionMethods;
 use diesel::ExpressionMethods;
+use diesel::JoinOnDsl;
 use diesel::QueryDsl;
 use diesel::RunQueryDsl;
-use diesel_full_text_search::plainto_tsquery;
 use diesel_full_text_search::{to_tsquery, to_tsvector, TsVectorExtensions};
 use serde::Serialize;
 
@@ -65,7 +67,10 @@ pub fn assignments(
 ) -> Vec<SpotlightAssignment> {
     let admin_predicate = to_tsvector(assignments::description)
         .matches(to_tsquery(search))
-        .or(to_tsvector(assignments::title).matches(to_tsquery(search)));
+        .or(to_tsvector(assignments::title).matches(to_tsquery(search)))
+        .or(to_tsvector(sql::<Text>("language::TEXT")).matches(to_tsquery(search)))
+        .or(to_tsvector(sql::<Text>("file_structure::TEXT")).matches(to_tsquery(search)))
+        .or(to_tsvector(sql::<Text>("question_catalogue::TEXT")).matches(to_tsquery(search)));
 
     let default_predicate = assignments::group_id
         .eq_any(user_data.groups.clone())
