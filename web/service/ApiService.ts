@@ -15,7 +15,7 @@ import {
   Solution,
   SolutionFilesResponse,
   SolutionsResponse,
-  AssignmentWish, CodeComment, AssignmentWishesResponse
+  AssignmentWish, CodeComment, AssignmentWishesResponse, Notification
 } from "@/service/types/tasky";
 import { FileStructureTree } from "@/components/FileStructure";
 import {Spotlight3Response} from "@/service/types/spotlight";
@@ -241,6 +241,18 @@ class ApiService {
 
   public async getSpotlightResult(search: string): Promise<Spotlight3Response> {
     return await this.get(`/tasky/spotlight?search=${search}`);
+  }
+
+  public async getNotifications(): Promise<Notification[]> {
+    return await this.get<Notification[]>(`/tasky/notifications`);
+  }
+
+  public async removeNotificationForUser(id: number): Promise<void> {
+    await this.delete<any>(`/tasky/notifications/${id}`);
+  }
+
+  public async removeAllNotificationsForUser(): Promise<void> {
+    await this.delete<any>('/tasky/notifications');
   }
 
   public async createOrUpdateCodeTests(

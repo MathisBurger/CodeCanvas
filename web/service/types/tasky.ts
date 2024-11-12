@@ -164,3 +164,9 @@ export interface CodeComment {
   content: string;
   commentor: number;
 }
+
+export interface Notification {
+  id: number;
+  title: string;
+  content: string;
+}

@@ -10,7 +10,8 @@
     "spotlight-actions": "Spotlight actions",
     "settings": "Settings",
     "log-out": "Log out",
-    "create-group": "Create group"
+    "create-group": "Create group",
+    "notifications": "Notifications"
   },
   "cols": {
     "id": "ID",
@@ -43,7 +44,8 @@
     "expand-all": "Expand all",
     "collapse-all": "Collapse all",
     "navigate-back": "Navigate back",
-    "delete": "Delete"
+    "delete": "Delete",
+    "clear-all": "Clear all"
   },
   "messages": {
     "login-failed": "Login failed",

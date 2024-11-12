@@ -72,7 +72,7 @@ impl NotificationRepository {
             .bind::<Integer, _>(id)
             .execute(conn)
             .expect("Cannot remove user from notification");
-        sql_query("DELETE FROM notification WHERE array_length(targeted_users, 1) IS NULL OR array_length(targeted_users, 1) = 0;").execute(conn).expect("Cannot remove pending notifications");
+        sql_query("DELETE FROM notifications WHERE array_length(targeted_users, 1) IS NULL OR array_length(targeted_users, 1) = 0;").execute(conn).expect("Cannot remove pending notifications");
     }
 
     /// Removes user from all notifiations
@@ -81,6 +81,6 @@ impl NotificationRepository {
             .bind::<Integer, _>(user_id)
             .execute(conn)
             .expect("Cannot remove user from notification");
-        sql_query("DELETE FROM notification WHERE array_length(targeted_users, 1) IS NULL OR array_length(targeted_users, 1) = 0;").execute(conn).expect("Cannot remove pending notifications");
+        sql_query("DELETE FROM notifications WHERE array_length(targeted_users, 1) IS NULL OR array_length(targeted_users, 1) = 0;").execute(conn).expect("Cannot remove pending notifications");
     }
 }
