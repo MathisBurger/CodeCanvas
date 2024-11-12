@@ -2,7 +2,7 @@ FROM oven/bun:1-alpine AS base
 
 FROM base AS deps
 
-RUN apk add --no-cache libc6-compat
+#RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY bun.lockb ./bun.lockb
