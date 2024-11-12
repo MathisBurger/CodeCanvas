@@ -35,6 +35,7 @@ We do not recommend to host the application yourself, altough you can do it. If 
 
 This project is completely community driven. Therefore, everyone can contribute to this project and help to improve the project.
 If you want to give some monetary compensation for the work we are doing, feel free to do so. There is currently no option to do that.
+Maybe also check [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Roadmap
 
