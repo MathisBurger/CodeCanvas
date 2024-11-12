@@ -44,7 +44,9 @@ const FileStructureDisplay = ({
   }
   const { user } = useCurrentUser();
   const api = useApiServiceClient();
-  const [selectedFiles, setSelectedFiles] = useState<(MongoTaskFile|MongoTestFile)[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<
+    (MongoTaskFile | MongoTestFile)[]
+  >([]);
 
   const filesFlattened = useMemo<FileStructureFile[]>(
     () => flattenStructureToFiles(structure),
@@ -68,18 +70,15 @@ const FileStructureDisplay = ({
     () => [...testObjectIds, ...taskObjectIds],
     [testObjectIds, taskObjectIds],
   );
-  const cumulatedSize = useMemo<number>(
-    () => {
-      if (filesFlattened.length === 0) {
-        return 0;
-      }
-      return filesFlattened.reduce((a, b) => ({
-        ...a,
-        file_size: (a.file_size ?? 0) + (b.file_size ?? 0),
-      })).file_size!
-    },
-    [filesFlattened],
-  );
+  const cumulatedSize = useMemo<number>(() => {
+    if (filesFlattened.length === 0) {
+      return 0;
+    }
+    return filesFlattened.reduce((a, b) => ({
+      ...a,
+      file_size: (a.file_size ?? 0) + (b.file_size ?? 0),
+    })).file_size!;
+  }, [filesFlattened]);
   const loadAll = useMemo<boolean>(
     () => cumulatedSize <= 5 * 1014 ** 2,
     [cumulatedSize],
@@ -169,7 +168,6 @@ const FileStructureDisplay = ({
       if (newFile && selectedFiles.indexOf(newFile) === -1) {
         setSelectedFiles([...selectedFiles, newFile]);
       }
-
     }
   }, [getSelectedValue, selected]);
 
@@ -195,8 +193,14 @@ const FileStructureDisplay = ({
         setContents(map);
       });
     }
-  }, [getApiCall, loadAll, objectIds, solutionId, taskObjectIds, testObjectIds]);
-
+  }, [
+    getApiCall,
+    loadAll,
+    objectIds,
+    solutionId,
+    taskObjectIds,
+    testObjectIds,
+  ]);
 
   return (
     <Grid>
@@ -216,11 +220,7 @@ const FileStructureDisplay = ({
         />
       </Grid.Col>
       <Grid.Col span={9}>
-        {loading ? (
-          <CentralLoading />
-        ) : (
-          <CodeDisplay files={selectedFiles} />
-        )}
+        {loading ? <CentralLoading /> : <CodeDisplay files={selectedFiles} />}
       </Grid.Col>
     </Grid>
   );

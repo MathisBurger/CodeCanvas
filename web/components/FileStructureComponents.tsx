@@ -1,18 +1,19 @@
-import {IconPlus, IconTrash} from "@tabler/icons-react";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
 import {
   Checkbox,
   FocusTrap,
   Group,
   GroupProps,
   TextInput,
-  Text, ActionIcon,
+  Text,
+  ActionIcon,
 } from "@mantine/core";
 import { useState } from "react";
 import FileIcon from "@/components/FileIcon";
 import { useForm } from "@mantine/form";
-import {useTranslation} from "react-i18next";
-import {FileStructureTree} from "@/components/FileStructure";
-import {removeFile} from "@/utils/FileStructure";
+import { useTranslation } from "react-i18next";
+import { FileStructureTree } from "@/components/FileStructure";
+import { removeFile } from "@/utils/FileStructure";
 
 interface FileStructureNewInputProps {
   label: string;
@@ -25,7 +26,7 @@ export const FileStructureNewInput = (
 ) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { addFunc: _, label: _1, fileNames: _2, ...groupProps } = props;
-  const {t} = useTranslation('common');
+  const { t } = useTranslation("common");
   const [isNew, setIsNew] = useState(false);
   const form = useForm({
     initialValues: {
@@ -33,9 +34,7 @@ export const FileStructureNewInput = (
     },
     validate: {
       name: (value: string) =>
-        props.fileNames.indexOf(value) > -1
-          ? t('errors.folder-exists')
-          : null,
+        props.fileNames.indexOf(value) > -1 ? t("errors.folder-exists") : null,
     },
   });
 
@@ -89,7 +88,7 @@ export const FileStructureElement = (
   } = props;
   /* eslint-enable @typescript-eslint/no-unused-vars */
 
-  const {t} = useTranslation('common');
+  const { t } = useTranslation("common");
   return (
     <Group gap={5} {...elementProps}>
       <FileIcon
@@ -98,24 +97,27 @@ export const FileStructureElement = (
         expanded={props.expanded}
       />
       <Text>{props.label}</Text>
-      <Group style={{marginLeft: "auto"}}>
+      <Group style={{ marginLeft: "auto" }}>
         {!props.isFolder && props.editable && (
-            <Checkbox
-                label={t('fields.test-file')}
-                checked={props.isTestFile}
-                onChange={(e) => props.setIsTestFile(e.target.checked)}
-
-            />
+          <Checkbox
+            label={t("fields.test-file")}
+            checked={props.isTestFile}
+            onChange={(e) => props.setIsTestFile(e.target.checked)}
+          />
         )}
         {props.editable && (
-            <ActionIcon
-                variant="light"
-                color="red"
-                style={{ marginLeft: "auto" }}
-                onClick={() => props.setFileStructure(removeFile(props.fileStructure, props.label, props.isFolder))}
-            >
-              <IconTrash />
-            </ActionIcon>
+          <ActionIcon
+            variant="light"
+            color="red"
+            style={{ marginLeft: "auto" }}
+            onClick={() =>
+              props.setFileStructure(
+                removeFile(props.fileStructure, props.label, props.isFolder),
+              )
+            }
+          >
+            <IconTrash />
+          </ActionIcon>
         )}
       </Group>
     </Group>

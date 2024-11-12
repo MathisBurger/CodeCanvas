@@ -7,7 +7,7 @@ import NavigateBack from "@/components/NavigateBack";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { isGranted } from "@/service/auth";
 import { UserRoles } from "@/service/types/usernator";
-import {useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CreateOrUpdateAssignmentModal from "@/components/assignments/CreateOrUpdateAssignmentModal";
 import CentralLoading from "@/components/CentralLoading";
 import AssignmentCreateOrUpdateCodeTestModal from "@/components/assignments/AssignmentCreateOrUpdateCodeTestModal";
@@ -19,7 +19,7 @@ import AssignmentCompletedByTab from "@/components/assignments/AssignmentComplet
 import CreateOrUpdateQuestionsModal from "@/components/assignments/CreateOrUpdateQuestionsModal";
 import QuestionAnswersDisplay from "@/components/solution/questions/QuestionAnswersDisplay";
 import { useSpotlightStage2 } from "@/hooks/spotlight/stage2";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const AssignmentDetailsPage = ({
   params,
@@ -37,20 +37,20 @@ const AssignmentDetailsPage = ({
     () => api.getAssignmentForGroup(groupId, assignmentId),
     [assignmentId, groupId],
   );
-  const {t} = useTranslation(['common', 'assignment']);
+  const { t } = useTranslation(["common", "assignment"]);
 
-  const {addAssignment} = useSpotlightStage2();
+  const { addAssignment } = useSpotlightStage2();
 
   useEffect(() => {
-      if (assignment && groupId) {
-        addAssignment(assignment, groupId);
-      }
-  }, [addAssignment, assignment, groupId])
+    if (assignment && groupId) {
+      addAssignment(assignment, groupId);
+    }
+  }, [addAssignment, assignment, groupId]);
 
   if (isNaN(groupId) || isNaN(assignmentId)) {
     return (
       <Container fluid>
-        <Title>{t('invalid-group-id')}</Title>
+        <Title>{t("invalid-group-id")}</Title>
       </Container>
     );
   }
@@ -66,7 +66,7 @@ const AssignmentDetailsPage = ({
         <Title order={1}>{assignment?.title}</Title>
         <Badge color="indigo">{assignment?.language}</Badge>
         {assignment.completed && (
-            <Badge color="green">{t('assignment:messages.completed')}</Badge>
+          <Badge color="green">{t("assignment:messages.completed")}</Badge>
         )}
         <AssignmentDateDisplay date={assignment?.due_date ?? null} />
         {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && (
@@ -75,40 +75,42 @@ const AssignmentDetailsPage = ({
         {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) &&
           assignment.language !== AssignmentLanguage.QuestionBased && (
             <Button onClick={() => setFileStructureModalOpen(true)}>
-              {t('assignment:code-tests')}
+              {t("assignment:code-tests")}
             </Button>
           )}
         {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) &&
           assignment.language === AssignmentLanguage.QuestionBased && (
             <Button onClick={() => setQuestionsModalOpen(true)}>
-              {t('assignment:questions')}
+              {t("assignment:questions")}
             </Button>
           )}
       </Group>
       <Tabs defaultValue="task">
         <Tabs.List>
-          <Tabs.Tab value="task">{t('assignment:task')}</Tabs.Tab>
+          <Tabs.Tab value="task">{t("assignment:task")}</Tabs.Tab>
           {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) &&
             assignment.file_structure !== null &&
             assignment.language !== AssignmentLanguage.QuestionBased && (
-              <Tabs.Tab value="codeTests">{t('assignment:code-tests')}</Tabs.Tab>
+              <Tabs.Tab value="codeTests">
+                {t("assignment:code-tests")}
+              </Tabs.Tab>
             )}
           {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) &&
             assignment.question_catalogue !== null &&
             assignment.language === AssignmentLanguage.QuestionBased && (
-              <Tabs.Tab value="questions">{t('assignment:questions')}</Tabs.Tab>
+              <Tabs.Tab value="questions">{t("assignment:questions")}</Tabs.Tab>
             )}
           {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && (
             <>
-              <Tabs.Tab value="solutions">{t('assignment:solutions')}</Tabs.Tab>
-              <Tabs.Tab value="completedBy">{t('assignment:completed-by')}</Tabs.Tab>
+              <Tabs.Tab value="solutions">{t("assignment:solutions")}</Tabs.Tab>
+              <Tabs.Tab value="completedBy">
+                {t("assignment:completed-by")}
+              </Tabs.Tab>
             </>
           )}
         </Tabs.List>
         <Tabs.Panel mt={20} value="task">
-          <AssignmentDetailsTaskTab
-              assignment={structuredClone(assignment)}
-          />
+          <AssignmentDetailsTaskTab assignment={structuredClone(assignment)} />
         </Tabs.Panel>
         {assignment.file_structure !== null &&
           isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && (
@@ -150,12 +152,12 @@ const AssignmentDetailsPage = ({
         />
       )}
       {fileStructureModalOpen && assignment && (
-          <AssignmentCreateOrUpdateCodeTestModal
-              onClose={() => setFileStructureModalOpen(false)}
-              groupId={groupId}
-              assignment={structuredClone(assignment)}
-              refetch={refetch}
-          />
+        <AssignmentCreateOrUpdateCodeTestModal
+          onClose={() => setFileStructureModalOpen(false)}
+          groupId={groupId}
+          assignment={structuredClone(assignment)}
+          refetch={refetch}
+        />
       )}
       {questionsModalOpen && assignment && (
         <CreateOrUpdateQuestionsModal

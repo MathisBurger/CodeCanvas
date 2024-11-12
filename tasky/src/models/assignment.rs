@@ -1,3 +1,4 @@
+use super::notification::NotificationRepository;
 use super::{Paginate, PaginatedModel, DB};
 use crate::schema::assignments::dsl;
 use chrono::NaiveDateTime;
@@ -82,6 +83,12 @@ pub struct AssignmentRepository;
 impl AssignmentRepository {
     /// Creates a new assignment
     pub fn create_assignment(assignment: &CreateAssignment, conn: &mut DB) -> Assignment {
+        NotificationRepository::create_notification_for_group(
+            "Created assignment".to_string(),
+            format!("Created assignment {}", assignment.title.clone()),
+            assignment.group_id,
+            conn,
+        );
         diesel::insert_into(dsl::assignments::table())
             .values(assignment)
             .returning(Assignment::as_returning())
@@ -126,6 +133,12 @@ impl AssignmentRepository {
 
     /// Updates an assignment
     pub fn update_assignment(assignment: Assignment, conn: &mut DB) {
+        NotificationRepository::create_notification_for_group(
+            "Updated assignment".to_string(),
+            format!("Updated assignment {}", assignment.title.clone()),
+            assignment.group_id,
+            conn,
+        );
         diesel::update(dsl::assignments.filter(dsl::id.eq(assignment.id)))
             .set::<Assignment>(assignment)
             .execute(conn)

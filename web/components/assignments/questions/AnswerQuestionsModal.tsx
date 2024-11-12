@@ -9,7 +9,7 @@ import useApiServiceClient from "@/hooks/useApiServiceClient";
 import { useRouter } from "next/navigation";
 import { notifications } from "@mantine/notifications";
 import { useSetState } from "@mantine/hooks";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 type StateType = { map: Map<string, QuestionSolution> };
 
@@ -62,7 +62,7 @@ const AnswerQuestionsModal = ({
   });
   const api = useApiServiceClient();
   const router = useRouter();
-  const {t} = useTranslation(['assignment', 'common']);
+  const { t } = useTranslation(["assignment", "common"]);
 
   const updateSolution = (hash: string, answer: any) => {
     setAnswers({ map: answers.map.set(hash, { answer }) });
@@ -74,14 +74,14 @@ const AnswerQuestionsModal = ({
       router.push(`/solutions/${res.id}`);
     } catch (e: any) {
       notifications.show({
-        title: t('messages.error'),
-        message: e?.message ?? t('messages.failed-solution-creation'),
+        title: t("messages.error"),
+        message: e?.message ?? t("messages.failed-solution-creation"),
       });
     }
   };
 
   return (
-    <Modal opened onClose={onClose} title={t('titles.create-solution')}>
+    <Modal opened onClose={onClose} title={t("titles.create-solution")}>
       <Stack>
         {Array.from(answers.map.entries()).map(([hash, answer]) => (
           <AnswerInput
@@ -97,10 +97,10 @@ const AnswerQuestionsModal = ({
       </Stack>
       <Group mt={10}>
         <Button type="submit" onClick={onSubmit}>
-          {t('actions.submit-solution')}
+          {t("actions.submit-solution")}
         </Button>
         <Button onClick={onClose} color="gray">
-          {t('actions.cancel')}
+          {t("actions.cancel")}
         </Button>
       </Group>
     </Modal>

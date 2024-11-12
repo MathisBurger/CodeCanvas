@@ -6,6 +6,7 @@ pub mod assignment_wish;
 pub mod code_comment;
 pub mod group;
 pub mod group_join_request;
+pub mod notifications;
 pub mod solution;
 
 #[derive(Deserialize)]
@@ -43,5 +44,8 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(assignment_wish::get_wish)
         .service(assignment_wish::delete_wish)
         .service(code_comment::get_code_comments)
-        .service(code_comment::create_code_comment);
+        .service(code_comment::create_code_comment)
+        .service(notifications::get_notifiations)
+        .service(notifications::remove_user_from_notification)
+        .service(notifications::remove_user_from_all_notifications);
 }

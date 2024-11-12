@@ -1,5 +1,10 @@
-import {UserRoles} from "@/service/types/usernator";
-import {IconDashboard, IconFile, IconSchool, IconUsersGroup,} from "@tabler/icons-react";
+import { UserRoles } from "@/service/types/usernator";
+import {
+  IconDashboard,
+  IconFile,
+  IconSchool,
+  IconUsersGroup,
+} from "@tabler/icons-react";
 
 export interface Route {
   path: string;
@@ -54,4 +59,10 @@ export const routes: Route[] = [
   },
 ];
 
-export const publicRoutes = ["/login", "/register", "/", "/impress", "/privacy"];
+export const publicRoutes = [
+  "/login",
+  "/register",
+  "/",
+  "/impress",
+  "/privacy",
+];

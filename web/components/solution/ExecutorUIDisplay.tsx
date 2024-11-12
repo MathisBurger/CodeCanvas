@@ -6,7 +6,10 @@ export interface ExecutorUIDisplayProps {
 }
 
 const ExecutorUIDisplay = ({ jobId, onClose }: ExecutorUIDisplayProps) => {
-  const apiUrl = process.env.NODE_ENV === "production" ? "https://executor.code-canvas.app" : "http://localhost:3007";
+  const apiUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://executor.code-canvas.app"
+      : "http://localhost:3007";
 
   return (
     <Modal opened onClose={onClose} size="100%">

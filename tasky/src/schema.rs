@@ -71,6 +71,16 @@ diesel::table! {
 }
 
 diesel::table! {
+    notifications (id) {
+        id -> Int4,
+        #[max_length = 255]
+        title -> Varchar,
+        content -> Text,
+        targeted_users -> Array<Nullable<Int4>>,
+    }
+}
+
+diesel::table! {
     solutions (id) {
         id -> Int4,
         submitter_id -> Int4,
@@ -99,5 +109,6 @@ diesel::allow_tables_to_appear_in_same_query!(
     code_comments,
     group_join_requests,
     groups,
+    notifications,
     solutions,
 );

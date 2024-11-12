@@ -2,7 +2,7 @@ import { Dropzone, FileWithPath } from "@mantine/dropzone";
 import { Group, Paper, rem, SimpleGrid, Text } from "@mantine/core";
 import { IconFile, IconUpload, IconX } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const ALLOWED_TEXT_EXTENSIONS = [
   ".java",
@@ -25,7 +25,7 @@ interface InternalDropzoneProps {
 }
 
 const InternalDropzone = ({ files, setFiles }: InternalDropzoneProps) => {
-    const {t} = useTranslation('common');
+  const { t } = useTranslation("common");
 
   return (
     <>
@@ -33,9 +33,9 @@ const InternalDropzone = ({ files, setFiles }: InternalDropzoneProps) => {
         onDrop={(f) => setFiles([...files, ...f])}
         onReject={(f) =>
           notifications.show({
-            title: t('messages.rejected-files'),
+            title: t("messages.rejected-files"),
             color: "red",
-            message: `${t('messages.rejected-files')}: ${f.map((file) => file.file.name).join(", ")}`,
+            message: `${t("messages.rejected-files")}: ${f.map((file) => file.file.name).join(", ")}`,
           })
         }
         maxSize={10 * 1024 ** 2}
@@ -80,10 +80,10 @@ const InternalDropzone = ({ files, setFiles }: InternalDropzoneProps) => {
 
           <div>
             <Text size="xl" inline>
-                {t('dropzone.instruction')}
+              {t("dropzone.instruction")}
             </Text>
             <Text size="sm" c="dimmed" inline mt={7}>
-                {t('dropzone.limit')}
+              {t("dropzone.limit")}
             </Text>
           </div>
         </Group>

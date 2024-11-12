@@ -1,6 +1,6 @@
 "use client";
-import {Badge, Pagination, Tabs} from "@mantine/core";
-import React, {useState} from "react";
+import { Badge, Pagination, Tabs } from "@mantine/core";
+import React, { useState } from "react";
 import {
   Group,
   GroupJoinRequestResponse,
@@ -17,20 +17,19 @@ import GroupAssignmentsTab from "@/components/assignments/GroupAssignmentsTab";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { isGranted } from "@/service/auth";
 import GroupAssignmentWishesTab from "@/components/group/GroupAssignmentWishesTab";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const MembersComponent: React.FC<{ members: TaskyUser[] }> = ({ members }) => {
-
-  const {t} = useTranslation('common');
+  const { t } = useTranslation("common");
 
   const cols: EntityListCol[] = [
     {
       field: "id",
-      label: t('cols.id'),
+      label: t("cols.id"),
     },
     {
       field: "username",
-      label: t('cols.username'),
+      label: t("cols.username"),
     },
   ];
 
@@ -47,23 +46,23 @@ export const JoinRequestsComponent: React.FC<{
     () => api.getGroupJoinRequests(group?.id ?? -1, page),
     [group?.id, page],
   );
-  const {t} = useTranslation('common');
+  const { t } = useTranslation("common");
 
   const cols: EntityListCol[] = [
     {
       field: "id",
-      label: t('cols.id'),
+      label: t("cols.id"),
     },
     {
       field: "username",
-      label: t('cols.username'),
+      label: t("cols.username"),
       getter: (row) => row.requestor.username,
     },
   ];
 
   const actions: EntityListRowAction[] = [
     {
-      name: t('actions.approve'),
+      name: t("actions.approve"),
       color: "green",
       onClick: (row) =>
         api.approveGroupJoinRequest(row.group_id, row.id).then(() => {
@@ -73,7 +72,7 @@ export const JoinRequestsComponent: React.FC<{
       auth: [UserRoles.Tutor, UserRoles.Admin],
     },
     {
-      name: t('actions.reject'),
+      name: t("actions.reject"),
       color: "red",
       onClick: (row) =>
         api.rejectGroupJoinRequest(row.group_id, row.id).then(() => {
@@ -87,11 +86,15 @@ export const JoinRequestsComponent: React.FC<{
   return (
     <>
       <EntityList
-          cols={cols}
-          rows={requests ? (requests as GroupJoinRequestResponse).requests : []}
-          rowActions={actions}
+        cols={cols}
+        rows={requests ? (requests as GroupJoinRequestResponse).requests : []}
+        rowActions={actions}
       />
-      <Pagination total={Math.ceil((requests?.total ?? 0) / 50)} value={page} onChange={setPage} />
+      <Pagination
+        total={Math.ceil((requests?.total ?? 0) / 50)}
+        value={page}
+        onChange={setPage}
+      />
     </>
   );
 };
@@ -101,14 +104,16 @@ export const TabsComponent: React.FC<{
   refetch: () => void;
 }> = ({ group, refetch }) => {
   const { user } = useCurrentUser();
-  const {t} = useTranslation('group');
+  const { t } = useTranslation("group");
 
   return (
     <Tabs defaultValue="assignments" style={{ marginTop: "2em" }}>
       <Tabs.List>
-        <Tabs.Tab value="assignments">{t('tabs.assignments')}</Tabs.Tab>
-        <Tabs.Tab value="members">{t('tabs.members')}</Tabs.Tab>
-        <Tabs.Tab value="assignmentWishes">{t('tabs.assignment-wishes')}</Tabs.Tab>
+        <Tabs.Tab value="assignments">{t("tabs.assignments")}</Tabs.Tab>
+        <Tabs.Tab value="members">{t("tabs.members")}</Tabs.Tab>
+        <Tabs.Tab value="assignmentWishes">
+          {t("tabs.assignment-wishes")}
+        </Tabs.Tab>
         {isGranted(user, [UserRoles.Admin, UserRoles.Tutor]) && (
           <Tabs.Tab
             value="joinRequests"
@@ -118,7 +123,7 @@ export const TabsComponent: React.FC<{
               ) : null
             }
           >
-            {t('tabs.join-requests')}
+            {t("tabs.join-requests")}
           </Tabs.Tab>
         )}
       </Tabs.List>
@@ -130,9 +135,7 @@ export const TabsComponent: React.FC<{
           <MembersComponent members={group?.members ?? []} />
         </Tabs.Panel>
         <Tabs.Panel value="assignmentWishes">
-          {group !== null && (
-              <GroupAssignmentWishesTab group={group} />
-          )}
+          {group !== null && <GroupAssignmentWishesTab group={group} />}
         </Tabs.Panel>
         {isGranted(user, [UserRoles.Admin, UserRoles.Tutor]) && (
           <Tabs.Panel value="joinRequests">

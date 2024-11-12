@@ -1,7 +1,7 @@
 import { Checkbox, NumberInput, Stack, Text, TextInput } from "@mantine/core";
 import { AnswerType } from "@/service/types/tasky";
 import { useMemo } from "react";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 interface AnswerInputProps {
   value: any;
@@ -16,8 +16,7 @@ const AnswerInput = ({
   answerType,
   question,
 }: AnswerInputProps) => {
-
-  const {t} = useTranslation('assignment');
+  const { t } = useTranslation("assignment");
   const answerInput = useMemo<JSX.Element | null>(() => {
     switch (answerType) {
       case AnswerType.String:
@@ -26,7 +25,7 @@ const AnswerInput = ({
           <TextInput
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            label={t('fields.answer')}
+            label={t("fields.answer")}
           />
         );
       case AnswerType.Number:
@@ -34,7 +33,7 @@ const AnswerInput = ({
           <NumberInput
             value={value}
             onChange={(val) => setValue(val)}
-            label={t('fields.answer')}
+            label={t("fields.answer")}
           />
         );
       case AnswerType.Boolean:
@@ -42,7 +41,7 @@ const AnswerInput = ({
           <Checkbox
             checked={value}
             onChange={(e) => setValue(e.target.checked)}
-            label={t('fields.answer')}
+            label={t("fields.answer")}
           />
         );
       default:

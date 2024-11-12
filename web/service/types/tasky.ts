@@ -47,17 +47,17 @@ export enum AssignmentLanguage {
 export interface Assignment {
   id: number;
   title: string;
-  due_date: string|null;
+  due_date: string | null;
   description: string;
   language: AssignmentLanguage;
   file_structure: FileStructureTree | null;
   question_catalogue: QuestionCatalogue | null;
   completed_by: TaskyUser[];
-  runner_cpu: string|null;
-  runner_memory: string|null;
-  runner_timeout: string|null;
-  runner_cmd: string|null;
-  completed: boolean|null;
+  runner_cpu: string | null;
+  runner_memory: string | null;
+  runner_timeout: string | null;
+  runner_cmd: string | null;
+  completed: boolean | null;
 }
 
 export interface AssignmentsResponse {
@@ -111,7 +111,7 @@ export interface Solution {
 }
 
 export interface SolutionsResponse {
-  solutions: Omit<Solution, 'job'>[];
+  solutions: Omit<Solution, "job">[];
   total: number;
 }
 
@@ -155,7 +155,7 @@ export interface AssignmentWish {
 
 export interface AssignmentWishesResponse {
   results: AssignmentWish[];
-  total: number
+  total: number;
 }
 
 export interface CodeComment {
@@ -163,4 +163,10 @@ export interface CodeComment {
   title: string;
   content: string;
   commentor: number;
+}
+
+export interface Notification {
+  id: number;
+  title: string;
+  content: string;
 }

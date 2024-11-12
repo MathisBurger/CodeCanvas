@@ -3,17 +3,17 @@ import dayjs from "dayjs";
 import { Text } from "@mantine/core";
 
 interface AssignmentDateDisplayProps {
-  date: string|null;
+  date: string | null;
 }
 
 const AssignmentDateDisplay = ({ date }: AssignmentDateDisplayProps) => {
-  const dueDate = useMemo(() => date ? new Date(date) : null, [date]);
+  const dueDate = useMemo(() => (date ? new Date(date) : null), [date]);
   const dueDateIsOver = useMemo(
-    () => dueDate ? dueDate.getTime() < new Date().getTime() : null,
+    () => (dueDate ? dueDate.getTime() < new Date().getTime() : null),
     [dueDate],
   );
   const formattedDueDate = useMemo(
-    () => dueDate ? dayjs(dueDate).format("DD/MM/YYYY hh:mm") : null,
+    () => (dueDate ? dayjs(dueDate).format("DD/MM/YYYY hh:mm") : null),
     [dueDate],
   );
 

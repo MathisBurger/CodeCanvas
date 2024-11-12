@@ -3,7 +3,10 @@ use diesel::associations::HasTable;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use super::{Paginate, PaginatedModel, DB};
+use super::{
+    notification::{CreateNotification, NotificationRepository},
+    Paginate, PaginatedModel, DB,
+};
 
 /// Approval status of a request
 pub enum ApprovalStatus {
@@ -114,6 +117,14 @@ impl SolutionRepository {
 
     /// Updates an solution
     pub fn update_solution(solution: Solution, conn: &mut DB) {
+        NotificationRepository::create_notification(
+            &CreateNotification {
+                title: "Solution updated".to_string(),
+                content: format!("Your solution {} has been updated", solution.id),
+                targeted_users: vec![Some(solution.submitter_id)],
+            },
+            conn,
+        );
         diesel::update(dsl::solutions.filter(dsl::id.eq(solution.id)))
             .set::<Solution>(solution)
             .execute(conn)

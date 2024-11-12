@@ -1,5 +1,5 @@
 "use client";
-import React, {useEffect, useMemo, useState} from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { AppShell, ColorSchemeScript, MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import Header from "@/components/Header";
@@ -20,8 +20,8 @@ import SpotlightWrapper from "@/components/spotlight/SpotlightWrapper";
 import Footer from "@/components/Footer";
 import { publicRoutes } from "@/static/routes";
 import Stage2SpotlightContextWrapper from "@/components/spotlight/Stage2SpotlightContextWrapper";
-import {Stage2Type} from "@/hooks/spotlight/stage2";
-import i18n from "../i18n"
+import { Stage2Type } from "@/hooks/spotlight/stage2";
+import i18n from "../i18n";
 import CentralLoading from "@/components/CentralLoading";
 
 export default function RootLayout({
@@ -46,9 +46,15 @@ export default function RootLayout({
       try {
         const json: Stage2Type = JSON.parse(data);
         const now = new Date().getTime();
-        json.groups = json.groups.filter((g) => g.die ? new Date(g.die).getTime() < now : true);
-        json.assignments = json.assignments.filter((g) => g.die ? new Date(g.die).getTime() < now : true);
-        json.solutions = json.solutions.filter((g) => g.die ? new Date(g.die).getTime() < now : true);
+        json.groups = json.groups.filter((g) =>
+          g.die ? new Date(g.die).getTime() < now : true,
+        );
+        json.assignments = json.assignments.filter((g) =>
+          g.die ? new Date(g.die).getTime() < now : true,
+        );
+        json.solutions = json.solutions.filter((g) =>
+          g.die ? new Date(g.die).getTime() < now : true,
+        );
         localStorage.setItem("spotlight-stage2", JSON.stringify(json));
       } catch (e) {
         console.error(e);
@@ -60,40 +66,44 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-    <head>
-      <meta charSet="UTF-8"/>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
-      <title>CodeCanvas</title>
+      <head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <title>CodeCanvas</title>
 
-      <ColorSchemeScript/>
-    </head>
-    <body suppressHydrationWarning={true}>
-    <CurrentUserContext.Provider value={{ user, setUser }}>
+        <ColorSchemeScript />
+      </head>
+      <body suppressHydrationWarning={true}>
+        <CurrentUserContext.Provider value={{ user, setUser }}>
           <MantineProvider theme={{}}>
             <DatesProvider settings={{ timezone: null }}>
               {loading ? (
-                  <CentralLoading />
+                <CentralLoading />
               ) : (
-                  <Stage2SpotlightContextWrapper>
-                    <Notifications />
-                    <AppShell
-                        header={{ height: 100 }}
-                        navbar={showNavbar ? { width: 250, breakpoint: "" } : undefined}
-                    >
-                      <AppShell.Header>
-                        <Header />
-                      </AppShell.Header>
-                      {showNavbar && (
-                          <AppShell.Navbar>
-                            <Navbar />
-                          </AppShell.Navbar>
-                      )}
-                      <AppShell.Main mb={100}>{children}</AppShell.Main>
-                      <AppShell.Footer><Footer /></AppShell.Footer>
-                    </AppShell>
-                    <SpotlightWrapper />
-                  </Stage2SpotlightContextWrapper>
+                <Stage2SpotlightContextWrapper>
+                  <Notifications />
+                  <AppShell
+                    header={{ height: 100 }}
+                    navbar={
+                      showNavbar ? { width: 250, breakpoint: "" } : undefined
+                    }
+                  >
+                    <AppShell.Header>
+                      <Header />
+                    </AppShell.Header>
+                    {showNavbar && (
+                      <AppShell.Navbar>
+                        <Navbar />
+                      </AppShell.Navbar>
+                    )}
+                    <AppShell.Main mb={100}>{children}</AppShell.Main>
+                    <AppShell.Footer>
+                      <Footer />
+                    </AppShell.Footer>
+                  </AppShell>
+                  <SpotlightWrapper />
+                </Stage2SpotlightContextWrapper>
               )}
             </DatesProvider>
           </MantineProvider>

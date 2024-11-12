@@ -16,6 +16,7 @@ pub mod database;
 pub mod group;
 pub mod group_join_request;
 pub mod solution;
+pub mod notification;
 
 pub type DB = PooledConnection<ConnectionManager<PgConnection>>;
 

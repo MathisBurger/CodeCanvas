@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import { User } from "@/service/types/usernator";
 import { useEffect } from "react";
-import {publicRoutes} from "@/static/routes";
+import { publicRoutes } from "@/static/routes";
 
 const Header = () => {
   const api = useApiServiceClient();
@@ -22,9 +22,7 @@ const Header = () => {
       })
       .catch(() => {
         setUser(null);
-        if (
-          publicRoutes.indexOf(pathname) === -1
-        ) {
+        if (publicRoutes.indexOf(pathname) === -1) {
           router.push("/login");
         }
       });
