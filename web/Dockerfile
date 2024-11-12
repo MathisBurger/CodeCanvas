@@ -5,15 +5,8 @@ FROM base AS deps
 #RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY bun.lockb ./bun.lockb
-COPY package.json ./package.json
-RUN bun install --frozen-lockfile --production
-
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
+RUN bun install --frozen-lockfile --production
 RUN bun run build
 
 # Production image, copy all the files and run next
