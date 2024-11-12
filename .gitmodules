@@ -1,0 +1,3 @@
+[submodule "cc-images"]
+	path = cc-images
+	url = https://github.com/MathisBurger/cc-images
