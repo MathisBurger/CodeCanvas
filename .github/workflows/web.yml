@@ -21,4 +21,4 @@ jobs:
         with:
           context: ./web
           push: false
-          tags: web
+          tags: ghcr.io/mathisburger/codecanvas-web:test
