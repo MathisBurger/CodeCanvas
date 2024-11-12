@@ -1,12 +1,6 @@
-use actix_web::{delete, get, post, web, HttpResponse};
+use actix_web::{delete, get, web, HttpResponse};
 
-use crate::{
-    auth_middleware::UserData,
-    error::ApiError,
-    models::notification::{CreateNotification, NotificationRepository},
-    security::{StaticSecurity, StaticSecurityAction},
-    AppState,
-};
+use crate::{auth_middleware::UserData, models::notification::NotificationRepository, AppState};
 
 /// Gets all notifications
 #[get("/notifications")]
