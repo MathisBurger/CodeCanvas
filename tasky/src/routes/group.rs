@@ -147,10 +147,9 @@ pub async fn get_enlistable_users(
         .into_iter()
         .map(|x| x.into())
         .collect();
-
     let filtered_users: Vec<&User> = users
         .iter()
-        .filter(|u| group.members.contains(&Some(i32::try_from(u.id).unwrap())))
+        .filter(|u| !group.members.contains(&Some(i32::try_from(u.id).unwrap())))
         .collect();
     Ok(HttpResponse::Ok().json(filtered_users))
 }

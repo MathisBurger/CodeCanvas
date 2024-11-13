@@ -2,7 +2,7 @@ use crate::api::UserResponse;
 use serde::Serialize;
 
 /// The external user from usernator grpc server
-#[derive(Clone, Serialize)]
+#[derive(Clone, Serialize, Debug)]
 pub struct User {
     pub id: u64,
     pub username: String,
