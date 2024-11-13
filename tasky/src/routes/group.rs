@@ -1,7 +1,7 @@
 use super::PaginationParams;
 use crate::auth_middleware::UserData;
 use crate::error::ApiError;
-use crate::models::group::{CreateGroup, GroupRepository};
+use crate::models::group::{CreateGroup, GroupRepository, JoinRequestPolicy};
 use crate::response::group::{GroupResponse, GroupsResponse};
 use crate::response::Enrich;
 use crate::security::{IsGranted, SecurityAction};
@@ -13,6 +13,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Deserialize, Serialize)]
 pub struct CreateGroupRequest {
     pub title: String,
+    pub join_policy: JoinRequestPolicy,
 }
 
 /// Endpoint to create a new group
@@ -33,6 +34,7 @@ pub async fn create_group(
         title: (req.title).clone(),
         tutor: user.user_id,
         members: vec![],
+        join_policy: req.join_policy.clone(),
     };
     if !new_group.is_granted(SecurityAction::Create, &user) {
         return Err(ApiError::Forbidden {

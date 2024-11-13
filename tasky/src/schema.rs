@@ -4,6 +4,10 @@ pub mod sql_types {
     #[derive(diesel::query_builder::QueryId, serde::Deserialize, diesel::sql_types::SqlType)]
     #[diesel(postgres_type(name = "assignment_language"))]
     pub struct AssignmentLanguage;
+
+    #[derive(diesel::query_builder::QueryId, serde::Deserialize, diesel::sql_types::SqlType)]
+    #[diesel(postgres_type(name = "join_request_policy"))]
+    pub struct JoinRequestPolicy;
 }
 
 diesel::table! {
@@ -62,11 +66,15 @@ diesel::table! {
 }
 
 diesel::table! {
+    use diesel::sql_types::*;
+    use super::sql_types::JoinRequestPolicy;
+
     groups (id) {
         id -> Int4,
         title -> Varchar,
         members -> Array<Nullable<Int4>>,
         tutor -> Int4,
+        join_policy -> JoinRequestPolicy,
     }
 }
 
