@@ -38,7 +38,7 @@ for service in $services; do
       docker image prune -f
       docker pull ghcr.io/mathisburger/cc-images-java:latest
       docker pull golang:1.19
-      cd web && docker-compose up -d --force-recreate
+      cd web && docker-compose pull && docker-compose up -d --force-recreate
       exit 0
     else
       echo "$image is up to date."
