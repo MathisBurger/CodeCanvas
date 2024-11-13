@@ -29,4 +29,4 @@ jobs:
         with:
           context: ./web    
           push: false
-          tags: ghcr.io/${{ github.actor }}/codecanvas-web:test
+          tags: ghcr.io/mathisburger/codecanvas-web:test
