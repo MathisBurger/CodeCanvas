@@ -6,7 +6,7 @@ FROM base AS builder
 WORKDIR /app
 
 COPY . .
-RUN bun install --production
+RUN bun install
 RUN bun run build
 
 # Production image, copy all the files and run next
