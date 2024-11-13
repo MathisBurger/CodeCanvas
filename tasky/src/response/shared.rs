@@ -4,9 +4,9 @@ use serde::Serialize;
 /// The external user from usernator grpc server
 #[derive(Clone, Serialize)]
 pub struct User {
-    id: u64,
-    username: String,
-    email: String,
+    pub id: u64,
+    pub username: String,
+    pub email: String,
 }
 
 /// Converts from user into user response
