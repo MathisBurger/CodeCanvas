@@ -4,6 +4,8 @@ use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
 use super::{
+    assignment::AssignmentRepository,
+    group::GroupRepository,
     notification::{CreateNotification, NotificationRepository},
     Paginate, PaginatedModel, DB,
 };
@@ -133,6 +135,23 @@ impl SolutionRepository {
 
     /// Creates an new solution
     pub fn create_solution(new: NewSolution, conn: &mut DB) -> Solution {
+        NotificationRepository::create_notification(
+            &CreateNotification {
+                title: "Solution created".to_string(),
+                content: format!(
+                    "New solution has been submitted for assignment {}",
+                    AssignmentRepository::get_assignment_by_id(new.assignment_id, conn)
+                        .unwrap()
+                        .title
+                ),
+                targeted_users: vec![Some(
+                    GroupRepository::get_by_id(new.group_id, conn)
+                        .unwrap()
+                        .tutor,
+                )],
+            },
+            conn,
+        );
         diesel::insert_into(dsl::solutions::table())
             .values(new)
             .returning(Solution::as_returning())
