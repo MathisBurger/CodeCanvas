@@ -190,5 +190,5 @@ pub async fn enlist_user(
     }
     group.members.push(Some(path_data.1));
     GroupRepository::update_group(group, conn);
-    return Ok(HttpResponse::Ok().finish());
+    Ok(HttpResponse::Ok().finish())
 }
