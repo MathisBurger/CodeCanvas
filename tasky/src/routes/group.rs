@@ -10,6 +10,7 @@ use crate::response::shared::User;
 use crate::response::Enrich;
 use crate::security::{IsGranted, SecurityAction};
 use crate::AppState;
+use actix_web::delete;
 use actix_web::{get, post, web, HttpResponse};
 use serde::{Deserialize, Serialize};
 use tonic::transport::Channel;
@@ -189,6 +190,36 @@ pub async fn enlist_user(
         });
     }
     group.members.push(Some(path_data.1));
+    GroupRepository::update_group(group, conn);
+    Ok(HttpResponse::Ok().finish())
+}
+
+/// Endpoint to remove user from group
+#[delete("/groups/{id}/member/{member_id}")]
+pub async fn remove_user(
+    data: web::Data<AppState>,
+    user: web::ReqData<UserData>,
+    path: web::Path<(i32, i32)>,
+) -> Result<HttpResponse, ApiError> {
+    let conn = &mut data.db.db.get().unwrap();
+    let path_data = path.into_inner();
+
+    let mut group = GroupRepository::get_by_id(path_data.0, conn).ok_or(ApiError::BadRequest {
+        message: "No access to group".to_string(),
+    })?;
+
+    if !group.is_granted(SecurityAction::Update, &user) {
+        return Err(ApiError::Forbidden {
+            message: "You are not allowed to remove user from the group".to_string(),
+        });
+    }
+
+    group.members = group
+        .members
+        .iter()
+        .filter(|m| m.is_some() && m.unwrap() != path_data.1)
+        .map(|m| m.clone())
+        .collect();
     GroupRepository::update_group(group, conn);
     Ok(HttpResponse::Ok().finish())
 }
