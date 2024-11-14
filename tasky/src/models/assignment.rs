@@ -65,6 +65,8 @@ pub struct Assignment {
     pub runner_timeout: String,
     pub runner_cmd: String,
     pub question_catalogue: Option<serde_json::Value>,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 /// Used to create a new assignment

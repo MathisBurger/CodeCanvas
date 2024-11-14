@@ -4,6 +4,7 @@ use super::notification::NotificationRepository;
 use super::solution::SolutionRepository;
 use super::DB;
 use crate::schema::code_comments::dsl;
+use chrono::NaiveDateTime;
 use diesel::associations::HasTable;
 use diesel::prelude::*;
 use diesel::Selectable;
@@ -20,6 +21,8 @@ pub struct CodeComment {
     pub commentor: i32,
     pub group_id: i32,
     pub solution_id: i32,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 /// Create comment struct to create a code comment

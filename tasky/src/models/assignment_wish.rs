@@ -2,6 +2,7 @@ use super::Paginate;
 use super::PaginatedModel;
 use super::DB;
 use crate::schema::assignment_wishes::dsl;
+use chrono::NaiveDateTime;
 use diesel::associations::HasTable;
 use diesel::prelude::*;
 use diesel::Selectable;
@@ -16,6 +17,8 @@ pub struct AssignmentWish {
     pub title: String,
     pub description: String,
     pub group_id: i32,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 /// Assignment wish insertion type

@@ -2,6 +2,7 @@ use super::{Paginate, PaginatedModel, DB};
 use crate::models::group::Group;
 use crate::schema::group_join_requests;
 use crate::schema::group_join_requests::dsl;
+use chrono::NaiveDateTime;
 use diesel::associations::HasTable;
 use diesel::prelude::*;
 
@@ -13,6 +14,8 @@ pub struct GroupJoinRequest {
     pub id: i32,
     pub requestor: i32,
     pub group_id: i32,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 /// Used to create a group join request
