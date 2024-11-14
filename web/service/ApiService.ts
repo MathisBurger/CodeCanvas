@@ -313,6 +313,10 @@ class ApiService {
     await this.post<any>(`/tasky/groups/${groupId}/enlist/${userId}`, {});
   }
 
+  public async switchToTutorAccount(): Promise<void> {
+    await this.post<any>("/usernator/switch_tutor", {});
+  }
+
   public async createOrUpdateCodeTests(
     groupId: number,
     assignmentId: number,

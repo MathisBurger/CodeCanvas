@@ -12,7 +12,8 @@
     "log-out": "Log out",
     "create-group": "Create group",
     "update-group": "Update group",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "switch-to-tutor": "Switch to tutor account"
   },
   "cols": {
     "id": "ID",
@@ -57,7 +58,8 @@
     "created-report": "Created report",
     "no-files-selected": "No files selected",
     "copied-code": "Copied code!",
-    "rejected-files": "Rejected files"
+    "rejected-files": "Rejected files",
+    "switch-to-tutor-text": "Are you sure you want to switch to a tutor account? This means you will no longer be able to work on tasks. For that, you would need a separate account. As a tutor, you can only create and manage tasks within your own groups. Please be sure of your decision."
   },
   "errors": {
     "title-empty": "The title should not be empty",
