@@ -195,7 +195,7 @@ pub async fn enlist_user(
 }
 
 /// Endpoint to remove user from group
-#[delete("/groups/{id}/member/{member_id}")]
+#[delete("/groups/{id}/members/{member_id}")]
 pub async fn remove_user(
     data: web::Data<AppState>,
     user: web::ReqData<UserData>,
