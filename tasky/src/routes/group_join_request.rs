@@ -3,6 +3,7 @@ use crate::auth_middleware::UserData;
 use crate::error::ApiError;
 use crate::models::group::{GroupRepository, JoinRequestPolicy};
 use crate::models::group_join_request::{CreateGroupJoinRequest, GroupJoinRequestRepository};
+use crate::models::notification::{CreateNotification, NotificationRepository};
 use crate::response::group::GroupResponse;
 use crate::response::group_join_request::{GroupJoinRequestResponse, GroupJoinRequestsResponse};
 use crate::response::Enrich;
@@ -54,6 +55,15 @@ pub async fn create_join_request(
         CreateGroupJoinRequest {
             requestor: user.user_id,
             group_id: group.id,
+        },
+        conn,
+    );
+
+    NotificationRepository::create_notification(
+        &CreateNotification {
+            title: "New join request".to_string(),
+            content: format!("New join request in group {}", group.title.clone()),
+            targeted_users: vec![Some(group.tutor)],
         },
         conn,
     );

@@ -1,3 +1,4 @@
+use super::notification::{CreateNotification, NotificationRepository};
 use super::{Paginate, PaginatedModel, DB};
 use crate::models::group::Group;
 use crate::schema::group_join_requests;
@@ -6,7 +7,7 @@ use diesel::associations::HasTable;
 use diesel::prelude::*;
 
 /// The group join request in the database
-#[derive(Queryable, Selectable, Identifiable, Associations)]
+#[derive(Queryable, Selectable, Identifiable, Associations, Clone)]
 #[diesel(belongs_to(Group))]
 #[diesel(table_name = group_join_requests)]
 pub struct GroupJoinRequest {
@@ -53,6 +54,14 @@ impl GroupJoinRequestRepository {
             .expect("Cannot get count") as i32
     }
 
+    /// Gets all join requests for a user
+    pub fn get_group_requests_no_pagination(group_id: i32, conn: &mut DB) -> Vec<GroupJoinRequest> {
+        dsl::group_join_requests
+            .filter(dsl::group_id.eq(group_id))
+            .get_results::<GroupJoinRequest>(conn)
+            .expect("Cannot load all join requests for group")
+    }
+
     /// Checks if a request exists
     pub fn request_exists(group_id: i32, user_id: i32, conn: &mut DB) -> bool {
         dsl::group_join_requests
@@ -86,6 +95,14 @@ impl GroupJoinRequestRepository {
 
     /// Deletes a request
     pub fn delete_request(req: GroupJoinRequest, conn: &mut DB) {
+        NotificationRepository::create_notification(
+            &CreateNotification {
+                title: "Join request rejected".to_string(),
+                content: "One of your join requests has been rejected".to_string(),
+                targeted_users: vec![Some(req.requestor)],
+            },
+            conn,
+        );
         diesel::delete(dsl::group_join_requests.filter(dsl::id.eq(req.id)))
             .execute(conn)
             .expect("Cannot delete request");
