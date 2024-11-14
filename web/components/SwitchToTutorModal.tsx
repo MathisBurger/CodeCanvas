@@ -15,7 +15,7 @@ const SwitchToTutorModal = ({onClose}: SwitchToTutorModalProps) => {
     const switchAccount = async () => {
         try {
             await api.switchToTutorAccount();
-            document.cookie = '';
+            document.cookie = 'session=""';
             window.location.reload();
         } catch (e: any) {
             showNotification({
