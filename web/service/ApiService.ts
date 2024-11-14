@@ -18,7 +18,7 @@ import {
   AssignmentWish,
   CodeComment,
   AssignmentWishesResponse,
-  Notification, TaskyUser,
+  Notification, GroupJoinRequestPolicy, TaskyUser,
 } from "@/service/types/tasky";
 import { FileStructureTree } from "@/components/FileStructure";
 import { Spotlight3Response } from "@/service/types/spotlight";
@@ -61,8 +61,12 @@ class ApiService {
     );
   }
 
-  public async createGroup(title: string): Promise<Group> {
-    return await this.post<Group>(`/tasky/create_group`, { title });
+  public async createGroup(title: string, join_policy: GroupJoinRequestPolicy): Promise<Group> {
+    return await this.post<Group>(`/tasky/create_group`, { title, join_policy });
+  }
+
+  public async updateGroup(groupId: number, title: string, join_policy: GroupJoinRequestPolicy): Promise<Group> {
+    return await this.post<Group>(`/tasky/groups/${groupId}`, { title, join_policy });
   }
 
   public async getGroups(page?: number): Promise<GroupsResponse> {
@@ -111,6 +115,10 @@ class ApiService {
       `/tasky/groups/${groupId}/join_requests/${id}/reject`,
       {},
     );
+  }
+
+  public async removeUserFromGroup(groupId: number, memberId: number): Promise<void> {
+    await this.delete<any>(`/tasky/groups/${groupId}/members/${memberId}`);
   }
 
   public async createAssignment(

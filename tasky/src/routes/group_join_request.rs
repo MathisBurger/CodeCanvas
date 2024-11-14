@@ -1,8 +1,9 @@
 use super::PaginationParams;
 use crate::auth_middleware::UserData;
 use crate::error::ApiError;
-use crate::models::group::GroupRepository;
+use crate::models::group::{GroupRepository, JoinRequestPolicy};
 use crate::models::group_join_request::{CreateGroupJoinRequest, GroupJoinRequestRepository};
+use crate::models::notification::{CreateNotification, NotificationRepository};
 use crate::response::group::GroupResponse;
 use crate::response::group_join_request::{GroupJoinRequestResponse, GroupJoinRequestsResponse};
 use crate::response::Enrich;
@@ -19,16 +20,29 @@ pub async fn create_join_request(
 ) -> Result<HttpResponse, ApiError> {
     let conn = &mut data.db.db.get().unwrap();
 
-    let group =
+    let mut group =
         GroupRepository::get_by_id(path.into_inner().0, conn).ok_or(ApiError::BadRequest {
             message: "Group does not exist".to_string(),
         })?;
+
+    if group.join_policy == JoinRequestPolicy::Closed {
+        return Err(ApiError::Forbidden {
+            message: "Join requests are not allowed for this group".to_string(),
+        });
+    }
+
     if !StaticSecurity::is_granted(StaticSecurityAction::IsStudent, &user)
         || group.members.contains(&Some(user.user_id))
     {
         return Err(ApiError::Forbidden {
             message: "The user is already member or not a student".to_string(),
         });
+    }
+
+    if group.join_policy == JoinRequestPolicy::Open {
+        group.members.push(Some(user.user_id));
+        GroupRepository::update_group(group, conn);
+        return Ok(HttpResponse::Ok().finish());
     }
 
     if GroupJoinRequestRepository::request_exists(group.id, user.user_id, conn) {
@@ -41,6 +55,15 @@ pub async fn create_join_request(
         CreateGroupJoinRequest {
             requestor: user.user_id,
             group_id: group.id,
+        },
+        conn,
+    );
+
+    NotificationRepository::create_notification(
+        &CreateNotification {
+            title: "New join request".to_string(),
+            content: format!("New join request in group {}", group.title.clone()),
+            targeted_users: vec![Some(group.tutor)],
         },
         conn,
     );

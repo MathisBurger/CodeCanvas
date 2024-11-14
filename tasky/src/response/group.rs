@@ -1,5 +1,6 @@
 use crate::api::usernator_api_client::UsernatorApiClient;
 use crate::error::ApiError;
+use crate::models::group::JoinRequestPolicy;
 use crate::models::group_join_request::GroupJoinRequestRepository;
 use crate::models::PaginatedModel;
 use crate::{api::UserRequest, api::UsersRequest, models::group::Group, response::shared::User};
@@ -16,6 +17,7 @@ pub struct GroupResponse {
     pub members: Vec<User>,
     pub tutor: User,
     pub request_count: i32,
+    pub join_policy: JoinRequestPolicy,
 }
 
 /// The minified group response
@@ -25,6 +27,7 @@ pub struct MinifiedGroupResponse {
     pub title: String,
     pub member_count: i32,
     pub tutor: User,
+    pub join_policy: JoinRequestPolicy,
 }
 
 /// The groups response
@@ -52,6 +55,7 @@ impl Enrich<Group> for MinifiedGroupResponse {
             title: from.title.clone(),
             member_count: from.members.len() as i32,
             tutor: tut.into_inner().into(),
+            join_policy: from.join_policy.clone(),
         })
     }
 }
@@ -109,6 +113,7 @@ impl Enrich<Group> for GroupResponse {
                 .map(|x| x.into())
                 .collect(),
             tutor: tut.into_inner().into(),
+            join_policy: from.join_policy.clone(),
             request_count,
         })
     }

@@ -1,19 +1,26 @@
 "use client";
-import { Badge, Container, Group, Title } from "@mantine/core";
+import {Badge, Button, Container, Group, Title} from "@mantine/core";
 import { Group as GroupType } from "@/service/types/tasky";
 import { TabsComponent } from "./client";
 import useClientQuery from "@/hooks/useClientQuery";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import CentralLoading from "@/components/CentralLoading";
 import { useSpotlightStage2 } from "@/hooks/spotlight/stage2";
-import { useEffect } from "react";
+import {useEffect, useState} from "react";
 import { useTranslation } from "react-i18next";
+import GroupJoinPolicyBadge from "@/components/group/GroupJoinPolicyBadge";
+import UpdateGroupModal from "@/components/group/UpdateGroupModal";
+import useCurrentUser from "@/hooks/useCurrentUser";
+import {isGranted} from "@/service/auth";
+import {UserRoles} from "@/service/types/usernator";
 
 const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
   const id = parseInt(`${params.groupId}`, 10);
   const api = useApiServiceClient();
+  const {user} = useCurrentUser();
   const [group, refetch] = useClientQuery<GroupType>(() => api.getGroup(id));
   const { addGroup } = useSpotlightStage2();
+  const [updateModalOpen, setUpdateModalOpen] = useState<boolean>(false);
   const { t } = useTranslation("common");
 
   useEffect(() => {
@@ -35,11 +42,24 @@ const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
       <Group>
         <Title>{group?.title ?? "Loading"}</Title>
         <Badge>{group?.tutor?.username ?? "Loading"}</Badge>
+        {group?.join_policy && (
+            <GroupJoinPolicyBadge policy={group.join_policy} />
+        )}
+        {(isGranted(user, [UserRoles.Admin]) || group?.tutor.id === user?.id) && (
+          <Button onClick={() => setUpdateModalOpen(true)}>{t('common:titles.update-group')}</Button>
+        )}
       </Group>
       {group === null ? (
         <CentralLoading />
       ) : (
         <TabsComponent group={group} refetch={refetch} />
+      )}
+      {updateModalOpen && group !== null && (
+          <UpdateGroupModal
+              group={group}
+              onClose={() => setUpdateModalOpen(false)}
+              refetch={refetch}
+          />
       )}
     </Container>
   );

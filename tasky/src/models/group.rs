@@ -7,6 +7,17 @@ use diesel::prelude::*;
 use diesel::{associations::HasTable, dsl::not};
 use serde::{Deserialize, Serialize};
 
+#[derive(diesel_derive_enum::DbEnum, Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[ExistingTypePath = "crate::schema::sql_types::JoinRequestPolicy"]
+pub enum JoinRequestPolicy {
+    #[serde(rename = "open")]
+    Open,
+    #[serde(rename = "request")]
+    Request,
+    #[serde(rename = "closed")]
+    Closed,
+}
+
 /// Group entity in the database
 #[derive(Queryable, Selectable, AsChangeset, Serialize, Deserialize, Clone)]
 #[diesel(table_name = crate::schema::groups)]
@@ -16,6 +27,7 @@ pub struct Group {
     pub title: String,
     pub members: Vec<Option<i32>>,
     pub tutor: i32,
+    pub join_policy: JoinRequestPolicy,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
 }
@@ -27,6 +39,7 @@ pub struct CreateGroup {
     pub title: String,
     pub tutor: i32,
     pub members: Vec<i32>,
+    pub join_policy: JoinRequestPolicy,
 }
 
 pub struct GroupRepository;

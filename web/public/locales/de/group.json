@@ -10,7 +10,13 @@
   "cols": {
     "title": "Titel",
     "members-count": "Anzahl der Mitglieder",
-    "tutor": "Tutor"
+    "tutor": "Tutor",
+    "join-policy": "Betrittsrestriktionen"
+  },
+  "join-policy": {
+    "request": "Anfrage",
+    "open": "Offen",
+    "closed": "Geschlossen"
   },
   "actions": {
     "request-join": "Beitritt anfragen",
@@ -21,6 +27,8 @@
   "messages": {
     "join-request-created-title": "Beitrittsanfrage erstellt",
     "join-request-created-text": "Beitrittsanfrage für die Gruppe erstellt ",
-    "unknown-user": "Unbekannter Nutzer"
+    "unknown-user": "Unbekannter Nutzer",
+    "enlisted-title": "Eingeschrieben",
+    "enlisted-text": "Du wurdest erfolgreich eingeschrieben "
   }
 }
