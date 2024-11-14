@@ -165,7 +165,7 @@ pub async fn update_group(
     GroupRepository::update_group(group.clone(), conn);
 
     let enriched = GroupResponse::enrich(&group, &mut data.user_api.clone(), conn).await?;
-    return Ok(HttpResponse::Ok().json(enriched));
+    Ok(HttpResponse::Ok().json(enriched))
 }
 
 #[derive(Deserialize)]
