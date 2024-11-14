@@ -218,7 +218,8 @@ pub async fn remove_user(
         .members
         .iter()
         .filter(|m| m.is_some() && m.unwrap() != path_data.1)
-        .copied();
+        .copied()
+        .collect();
     GroupRepository::update_group(group, conn);
     Ok(HttpResponse::Ok().finish())
 }
