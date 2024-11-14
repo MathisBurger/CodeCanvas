@@ -11,6 +11,7 @@
     "settings": "Settings",
     "log-out": "Log out",
     "create-group": "Create group",
+    "update-group": "Update group",
     "notifications": "Notifications"
   },
   "cols": {
@@ -66,7 +67,8 @@
     "password-empty": "The password should not be empty",
     "create-tutor": "Failed to create tutor",
     "folder-exists": "Folder/File already exists",
-    "create-group": "Error creating group"
+    "create-group": "Error creating group",
+    "update-group": "Error updating group"
   },
   "settings": {
     "settings": "Settings"

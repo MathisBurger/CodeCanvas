@@ -10,7 +10,13 @@
   "cols": {
     "title": "Titel",
     "members-count": "Anzahl der Mitglieder",
-    "tutor": "Tutor"
+    "tutor": "Tutor",
+    "join-policy": "Betrittsrestriktionen"
+  },
+  "join-policy": {
+    "request": "Anfrage",
+    "open": "Offen",
+    "closed": "Geschlossen"
   },
   "actions": {
     "request-join": "Beitritt anfragen",

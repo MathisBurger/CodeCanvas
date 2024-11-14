@@ -11,6 +11,7 @@
     "settings": "Einstellungen",
     "log-out": "Abmelden",
     "create-group": "Gruppe erstellen",
+    "update-group": "Gruppe aktualisieren",
     "notifications": "Benachrichtigungen"
   },
   "cols": {
@@ -66,7 +67,8 @@
     "password-empty": "Das Passwort darf nicht leer sein",
     "create-tutor": "Erstellung des Tutors fehlgeschlagen",
     "folder-exists": "Ordner/Datei existiert bereits",
-    "create-group": "Fehler beim Erstellen der Gruppe"
+    "create-group": "Fehler beim Erstellen der Gruppe",
+    "update-group": "Fehler beim Aktualisieren der Gruppe"
   },
   "settings": {
     "settings": "Einstellungen"

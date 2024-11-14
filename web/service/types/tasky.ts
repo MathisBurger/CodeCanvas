@@ -1,5 +1,11 @@
 import { FileStructureTree } from "@/components/FileStructure";
 
+export enum GroupJoinRequestPolicy {
+  Request='request',
+  Open='open',
+  Closed='closed',
+}
+
 export interface GroupsResponse {
   groups: MinifiedGroup[];
   total: number;
@@ -11,6 +17,7 @@ export interface MinifiedGroup {
   title: string;
   member_count: number;
   tutor: TaskyUser;
+  join_policy: GroupJoinRequestPolicy;
 }
 
 export interface Group {
@@ -19,6 +26,7 @@ export interface Group {
   members: TaskyUser[];
   tutor: TaskyUser;
   request_count: number;
+  join_policy: GroupJoinRequestPolicy;
 }
 
 export interface TaskyUser {
