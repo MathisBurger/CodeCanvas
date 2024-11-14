@@ -8,6 +8,7 @@ use tasky::models::group::CreateGroup;
 use tasky::models::group::Group;
 use tasky::security::IsGranted;
 use tasky::security::SecurityAction;
+use tasky::models::group::JoinRequestPolicy;
 
 #[test]
 fn test_create_group() {
