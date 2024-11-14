@@ -43,7 +43,8 @@ pub async fn handle_create_multipart(
     db: &mut DB,
     mut assignment: Assignment,
 ) -> Result<Assignment, ApiError> {
-    // TODO: Validate runner config
+    validate_runner_config(&form.runner_config)?;
+
     let mut file_structure = form.file_structure.0;
     if !file_structure_contains_files(&file_structure) {
         return Err(ApiError::BadRequest {
@@ -87,6 +88,8 @@ pub async fn handle_update_multipart(
     db: &mut DB,
     mut assignment: Assignment,
 ) -> Result<Assignment, ApiError> {
+    validate_runner_config(&form.runner_config)?;
+
     let mut new_file_structure = form.file_structure.0;
     if !file_structure_contains_files(&new_file_structure) {
         return Err(ApiError::BadRequest {
@@ -175,4 +178,25 @@ async fn create_files_and_update_ids(
     for (i, file) in actual_files.iter_mut().enumerate() {
         file.object_id = Some(mongo_files.get(i).unwrap().to_hex());
     }
+}
+
+/// Validates the runner config
+fn validate_runner_config(config: &RunnerData) -> Result<(), ApiError> {
+    if !vec![".5", "1"].contains(&config.runner_cpu.as_str()) {
+        return Err(ApiError::BadRequest {
+            message: "You entered an unallowed CPU value".to_string(),
+        });
+    }
+    if !vec!["50m", "100m", "200m", "300m", "500m"].contains(&config.runner_memory.as_str()) {
+        return Err(ApiError::BadRequest {
+            message: "You entered an unallowed memory value".to_string(),
+        });
+    }
+    if !vec!["20s", "60s", "120s", "180s", "240s", "300s"].contains(&config.runner_timeout.as_str())
+    {
+        return Err(ApiError::BadRequest {
+            message: "You entered an unallowed timeout value".to_string(),
+        });
+    }
+    Ok(())
 }
