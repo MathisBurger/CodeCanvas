@@ -5,11 +5,16 @@ package api;
 service UsernatorApi {
   rpc GetUser (UserRequest) returns (UserResponse) {}
   rpc GetUsers (UsersRequest) returns (UsersResponse) {}
+  rpc SearchStudents (SearchStudentsRequest) returns (UsersResponse) {}
 }
 
 
 message UserRequest {
   uint64 userId = 1;
+}
+
+message SearchStudentsRequest {
+  string search = 1;
 }
 
 message UserResponse {

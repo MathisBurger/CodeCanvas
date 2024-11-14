@@ -21,11 +21,13 @@
   "actions": {
     "request-join": "Request Join",
     "create-group": "Create group",
+    "enlist-user": "Enlist user",
     "enlist": "Enlist"
   },
   "messages": {
     "join-request-created-title": "Join Request created",
     "join-request-created-text": "Created join request on group ",
+    "unknown-user": "Unknown user",
     "enlisted-title": "Enlisted",
     "enlisted-text": "You successfully enlisted into group "
   }
