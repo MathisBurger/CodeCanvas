@@ -18,7 +18,7 @@ import {
   AssignmentWish,
   CodeComment,
   AssignmentWishesResponse,
-  Notification,
+  Notification, TaskyUser,
 } from "@/service/types/tasky";
 import { FileStructureTree } from "@/components/FileStructure";
 import { Spotlight3Response } from "@/service/types/spotlight";
@@ -295,6 +295,14 @@ class ApiService {
 
   public async removeAllNotificationsForUser(): Promise<void> {
     await this.delete<any>("/tasky/notifications");
+  }
+
+  public async searchUsersToEnlist(groupId: number, search: string): Promise<TaskyUser[]> {
+    return await this.get<TaskyUser[]>(`/tasky/groups/${groupId}/enlistable?search=${search}`);
+  }
+
+  public async enlistUser(groupId: number, userId: number): Promise<void> {
+    await this.post<any>(`/tasky/groups/${groupId}/enlist/${userId}`, {});
   }
 
   public async createOrUpdateCodeTests(

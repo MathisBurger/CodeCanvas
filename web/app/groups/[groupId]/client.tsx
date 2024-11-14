@@ -1,26 +1,22 @@
 "use client";
-import { Badge, Pagination, Tabs } from "@mantine/core";
-import React, { useState } from "react";
-import {
-  Group,
-  GroupJoinRequestResponse,
-  TaskyUser,
-} from "@/service/types/tasky";
-import EntityList, {
-  EntityListCol,
-  EntityListRowAction,
-} from "@/components/EntityList";
+import {Badge, Button, Group, Pagination, Stack, Tabs} from "@mantine/core";
+import React, {useState} from "react";
+import {Group as TaskyGroup, GroupJoinRequestResponse, TaskyUser,} from "@/service/types/tasky";
+import EntityList, {EntityListCol, EntityListRowAction,} from "@/components/EntityList";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import useClientQuery from "@/hooks/useClientQuery";
-import { UserRoles } from "@/service/types/usernator";
+import {UserRoles} from "@/service/types/usernator";
 import GroupAssignmentsTab from "@/components/assignments/GroupAssignmentsTab";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import { isGranted } from "@/service/auth";
+import {isGranted} from "@/service/auth";
 import GroupAssignmentWishesTab from "@/components/group/GroupAssignmentWishesTab";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
+import EnlistUserModal from "@/components/group/EnlistUserModal";
 
-const MembersComponent: React.FC<{ members: TaskyUser[] }> = ({ members }) => {
-  const { t } = useTranslation("common");
+const MembersComponent: React.FC<{ members: TaskyUser[], groupId: number, refetch: () => void }> = ({ members, groupId, refetch }) => {
+  const { t } = useTranslation(["common", "group"]);
+  const {user} = useCurrentUser();
+  const [enlistModalOpen, setEnlistModalOpen] = useState<boolean>(false);
 
   const cols: EntityListCol[] = [
     {
@@ -33,11 +29,23 @@ const MembersComponent: React.FC<{ members: TaskyUser[] }> = ({ members }) => {
     },
   ];
 
-  return <EntityList cols={cols} rows={members} />;
+  return (
+      <Stack gap={10}>
+        <Group justify="flex-end">
+          {isGranted(user, [UserRoles.Tutor, UserRoles.Admin]) && (
+              <Button onClick={() => setEnlistModalOpen(true)}>{t('group:actions.enlist-user')}</Button>
+          )}
+        </Group>
+        <EntityList cols={cols} rows={members} />
+        {enlistModalOpen && (
+            <EnlistUserModal onClose={() => setEnlistModalOpen(false)} groupId={groupId} refetch={refetch} />
+        )}
+      </Stack>
+  );
 };
 
 export const JoinRequestsComponent: React.FC<{
-  group: Group | null;
+  group: TaskyGroup | null;
   refetchParent: () => void;
 }> = ({ group, refetchParent }) => {
   const api = useApiServiceClient();
@@ -100,7 +108,7 @@ export const JoinRequestsComponent: React.FC<{
 };
 
 export const TabsComponent: React.FC<{
-  group: Group | null;
+  group: TaskyGroup | null;
   refetch: () => void;
 }> = ({ group, refetch }) => {
   const { user } = useCurrentUser();
@@ -132,7 +140,9 @@ export const TabsComponent: React.FC<{
           <GroupAssignmentsTab group={group} />
         </Tabs.Panel>
         <Tabs.Panel value="members">
-          <MembersComponent members={group?.members ?? []} />
+          {group && (
+              <MembersComponent members={group?.members ?? []} groupId={group?.id} refetch={refetch} />
+          )}
         </Tabs.Panel>
         <Tabs.Panel value="assignmentWishes">
           {group !== null && <GroupAssignmentWishesTab group={group} />}
