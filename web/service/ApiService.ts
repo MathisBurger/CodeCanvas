@@ -113,6 +113,10 @@ class ApiService {
     );
   }
 
+  public async removeUserFromGroup(groupId: number, memberId: number): Promise<void> {
+    await this.delete<any>(`/tasky/groups/${groupId}/members/${memberId}`);
+  }
+
   public async createAssignment(
     groupId: number,
     title: string,

@@ -12,11 +12,25 @@ import {isGranted} from "@/service/auth";
 import GroupAssignmentWishesTab from "@/components/group/GroupAssignmentWishesTab";
 import {useTranslation} from "react-i18next";
 import EnlistUserModal from "@/components/group/EnlistUserModal";
+import {showNotification} from "@mantine/notifications";
 
-const MembersComponent: React.FC<{ members: TaskyUser[], groupId: number, refetch: () => void }> = ({ members, groupId, refetch }) => {
+const MembersComponent: React.FC<{ members: TaskyUser[], group: TaskyGroup, refetch: () => void }> = ({ members, group, refetch }) => {
   const { t } = useTranslation(["common", "group"]);
   const {user} = useCurrentUser();
+  const api = useApiServiceClient();
   const [enlistModalOpen, setEnlistModalOpen] = useState<boolean>(false);
+
+  const removeUser = async (memberId: number) => {
+    try {
+      await api.removeUserFromGroup(group.id, memberId);
+      refetch();
+    } catch (e: any) {
+      showNotification({
+        title: t('messages.error'),
+        message: e.message ?? "",
+      });
+    }
+  }
 
   const cols: EntityListCol[] = [
     {
@@ -29,6 +43,17 @@ const MembersComponent: React.FC<{ members: TaskyUser[], groupId: number, refetc
     },
   ];
 
+  const rowActions: EntityListRowAction[] = [
+    {
+      name: t('common:actions.remove'),
+      color: 'red',
+      onClick: (row) => removeUser(row.id),
+      auth: [UserRoles.Tutor, UserRoles.Admin],
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      authFunc: (_) => (isGranted(user, [UserRoles.Tutor]) && group.tutor.id === user?.id) || isGranted(user, [UserRoles.Admin])
+    }
+  ];
+
   return (
       <Stack gap={10}>
         <Group justify="flex-end">
@@ -36,9 +61,9 @@ const MembersComponent: React.FC<{ members: TaskyUser[], groupId: number, refetc
               <Button onClick={() => setEnlistModalOpen(true)}>{t('group:actions.enlist-user')}</Button>
           )}
         </Group>
-        <EntityList cols={cols} rows={members} />
+        <EntityList cols={cols} rows={members} rowActions={rowActions} />
         {enlistModalOpen && (
-            <EnlistUserModal onClose={() => setEnlistModalOpen(false)} groupId={groupId} refetch={refetch} />
+            <EnlistUserModal onClose={() => setEnlistModalOpen(false)} groupId={group.id} refetch={refetch} />
         )}
       </Stack>
   );
@@ -141,7 +166,7 @@ export const TabsComponent: React.FC<{
         </Tabs.Panel>
         <Tabs.Panel value="members">
           {group && (
-              <MembersComponent members={group?.members ?? []} groupId={group?.id} refetch={refetch} />
+              <MembersComponent members={group?.members ?? []} group={group} refetch={refetch} />
           )}
         </Tabs.Panel>
         <Tabs.Panel value="assignmentWishes">
