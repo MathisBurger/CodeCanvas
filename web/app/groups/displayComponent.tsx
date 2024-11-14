@@ -73,15 +73,31 @@ const GroupsDisplayComponent = ({
       onClick: (row) =>
         api.createGroupJoinRequest(row.id).then(() => {
           notifications.show({
-            title: t("messages.join-request-created-title"),
-            message: t("messages.join-request-created-text") + row.title,
+            title: t("group:messages.join-request-created-title"),
+            message: t("group: messages.join-request-created-text") + row.title,
           });
           if (refetch) refetch();
         }),
       auth: [UserRoles.Student],
       authFunc: (row) =>
         (user?.groups ?? []).map((g) => g.id).indexOf(row.id) === -1 &&
-        page === "groups",
+        page === "groups" && row.join_policy === GroupJoinRequestPolicy.Request,
+    },
+    {
+      color: "blue",
+      name: t("group:actions.enlist"),
+      onClick: (row) =>
+          api.createGroupJoinRequest(row.id).then(() => {
+            notifications.show({
+              title: t("group:messages.enlisted-title"),
+              message: t("group:messages.enlisted-text") + row.title,
+            });
+            if (refetch) refetch();
+          }),
+      auth: [UserRoles.Student],
+      authFunc: (row) =>
+          (user?.groups ?? []).map((g) => g.id).indexOf(row.id) === -1 &&
+          page === "groups" && row.join_policy === GroupJoinRequestPolicy.Open,
     },
   ];
 

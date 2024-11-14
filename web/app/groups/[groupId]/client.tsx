@@ -2,7 +2,7 @@
 import { Badge, Pagination, Tabs } from "@mantine/core";
 import React, { useState } from "react";
 import {
-  Group,
+  Group, GroupJoinRequestPolicy,
   GroupJoinRequestResponse,
   TaskyUser,
 } from "@/service/types/tasky";
@@ -114,7 +114,7 @@ export const TabsComponent: React.FC<{
         <Tabs.Tab value="assignmentWishes">
           {t("tabs.assignment-wishes")}
         </Tabs.Tab>
-        {isGranted(user, [UserRoles.Admin, UserRoles.Tutor]) && (
+        {isGranted(user, [UserRoles.Admin, UserRoles.Tutor]) && group?.join_policy === GroupJoinRequestPolicy.Request &&  (
           <Tabs.Tab
             value="joinRequests"
             rightSection={
@@ -139,7 +139,7 @@ export const TabsComponent: React.FC<{
         </Tabs.Panel>
         {isGranted(user, [UserRoles.Admin, UserRoles.Tutor]) && (
           <Tabs.Panel value="joinRequests">
-            {group !== null && group !== undefined && (
+            {group !== null && group !== undefined && group.join_policy === GroupJoinRequestPolicy.Request &&  (
               <JoinRequestsComponent group={group} refetchParent={refetch} />
             )}
           </Tabs.Panel>

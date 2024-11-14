@@ -149,6 +149,7 @@ pub async fn update_group(
         group
             .members
             .extend(requests.iter().map(|r| Some(r.requestor)));
+        GroupJoinRequestRepository::delete_all_requests_for_group(group.id, conn);
     } else if group.join_policy == JoinRequestPolicy::Closed {
         let requests = GroupJoinRequestRepository::get_group_requests_no_pagination(group.id, conn);
         for join_request in requests.iter() {

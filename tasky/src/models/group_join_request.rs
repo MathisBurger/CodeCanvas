@@ -107,4 +107,11 @@ impl GroupJoinRequestRepository {
             .execute(conn)
             .expect("Cannot delete request");
     }
+
+    /// Deletes all group join requests for a specific group
+    pub fn delete_all_requests_for_group(group_id: i32, conn: &mut DB) {
+        diesel::delete(dsl::group_join_requests.filter(dsl::group_id.eq(group_id)))
+            .execute(conn)
+            .expect("Cannot delete request");
+    }
 }
