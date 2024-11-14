@@ -8,6 +8,7 @@ use tasky::models::group::CreateGroup;
 use tasky::models::group::Group;
 use tasky::security::IsGranted;
 use tasky::security::SecurityAction;
+use tasky::models::group::JoinRequestPolicy;
 
 #[test]
 fn test_create_group() {
@@ -17,6 +18,7 @@ fn test_create_group() {
         title: "group".to_string(),
         members: vec![],
         tutor: 1,
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(group.is_granted(SecurityAction::Create, &admin), false);
 }
@@ -29,6 +31,7 @@ fn test_read_group_as_admin() {
         title: "group".to_string(),
         members: vec![],
         tutor: 1,
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(group.is_granted(SecurityAction::Read, &admin), true);
 }
@@ -41,6 +44,7 @@ fn test_read_group_as_tutor() {
         title: "group".to_string(),
         members: vec![],
         tutor: 1,
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(group.is_granted(SecurityAction::Read, &admin), true);
 }
@@ -53,6 +57,7 @@ fn test_read_group_as_wrong_tutor() {
         title: "group".to_string(),
         members: vec![],
         tutor: 2,
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(group.is_granted(SecurityAction::Read, &admin), false);
 }
@@ -65,6 +70,7 @@ fn test_read_group_as_student() {
         title: "group".to_string(),
         members: vec![Some(1)],
         tutor: 2,
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(group.is_granted(SecurityAction::Read, &admin), true);
 }
@@ -77,6 +83,7 @@ fn test_read_group_as_wrong_student() {
         title: "group".to_string(),
         members: vec![],
         tutor: 2,
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(group.is_granted(SecurityAction::Read, &admin), false);
 }
@@ -89,6 +96,7 @@ fn test_update_as_admin() {
         title: "group".to_string(),
         members: vec![],
         tutor: 2,
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(group.is_granted(SecurityAction::Update, &user), true);
 }
@@ -101,6 +109,7 @@ fn test_update_as_tutor() {
         title: "group".to_string(),
         members: vec![],
         tutor: 1,
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(group.is_granted(SecurityAction::Update, &user), true);
 }
@@ -113,6 +122,7 @@ fn test_update_as_wrong_tutor() {
         title: "group".to_string(),
         members: vec![],
         tutor: 2,
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(group.is_granted(SecurityAction::Update, &user), false);
 }
@@ -125,6 +135,7 @@ fn test_update_as_student() {
         title: "group".to_string(),
         members: vec![],
         tutor: 2,
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(group.is_granted(SecurityAction::Update, &user), false);
 }
@@ -137,6 +148,7 @@ fn test_delete_as_admin() {
         title: "group".to_string(),
         members: vec![],
         tutor: 2,
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(group.is_granted(SecurityAction::Delete, &user), false);
 }
@@ -149,6 +161,7 @@ fn test_delete_as_tutor() {
         title: "group".to_string(),
         members: vec![],
         tutor: 1,
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(group.is_granted(SecurityAction::Delete, &user), false);
 }
@@ -161,6 +174,7 @@ fn test_delete_as_wrong_tutor() {
         title: "group".to_string(),
         members: vec![],
         tutor: 2,
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(group.is_granted(SecurityAction::Delete, &user), false);
 }
@@ -173,6 +187,7 @@ fn test_delete_as_student() {
         title: "group".to_string(),
         members: vec![],
         tutor: 2,
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(group.is_granted(SecurityAction::Delete, &user), false);
 }
@@ -184,6 +199,7 @@ fn test_create_create_as_student() {
         title: "".to_string(),
         tutor: 1,
         members: vec![],
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(create.is_granted(SecurityAction::Create, &user), false);
 }
@@ -195,6 +211,7 @@ fn test_create_create_as_tutor() {
         title: "".to_string(),
         tutor: 1,
         members: vec![],
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(create.is_granted(SecurityAction::Create, &user), true);
 }
@@ -206,6 +223,7 @@ fn test_create_create_as_admin() {
         title: "".to_string(),
         tutor: 1,
         members: vec![],
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(create.is_granted(SecurityAction::Create, &user), false);
 }
@@ -217,6 +235,7 @@ fn test_create_create_pending() {
         title: "".to_string(),
         tutor: 1,
         members: vec![],
+        join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(create.is_granted(SecurityAction::Read, &user), false);
     assert_eq!(create.is_granted(SecurityAction::Update, &user), false);

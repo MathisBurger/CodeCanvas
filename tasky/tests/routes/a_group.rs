@@ -1,7 +1,7 @@
 use super::*;
 use actix_http::StatusCode;
 use serial_test::serial;
-use tasky::routes::group::CreateGroupRequest;
+use tasky::{models::group::JoinRequestPolicy, routes::group::CreateGroupRequest};
 
 #[actix_web::test]
 #[serial]
@@ -11,6 +11,7 @@ async fn test_a_create_group_as_student() {
         .uri("/create_group")
         .set_json(CreateGroupRequest {
             title: "name123".to_string(),
+            join_policy: JoinRequestPolicy::Request,
         });
     req = student(req);
     let resp = test::call_service(&app, req.to_request()).await;
@@ -25,6 +26,7 @@ async fn test_b_create_group_as_tutor() {
         .uri("/create_group")
         .set_json(CreateGroupRequest {
             title: "name".to_string(),
+            join_policy: JoinRequestPolicy::Request,
         });
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
@@ -39,6 +41,7 @@ async fn test_c_create_group_as_tutor_duplicate_name() {
         .uri("/create_group")
         .set_json(CreateGroupRequest {
             title: "name".to_string(),
+            join_policy: JoinRequestPolicy::Request,
         });
     req = tutor(req);
     let resp = test::call_service(&app, req.to_request()).await;
@@ -53,6 +56,7 @@ async fn test_d_create_group_as_admin() {
         .uri("/create_group")
         .set_json(CreateGroupRequest {
             title: "name2".to_string(),
+            join_policy: JoinRequestPolicy::Request,
         });
     req = admin(req);
     let resp = test::call_service(&app, req.to_request()).await;

@@ -4,13 +4,14 @@ import EntityList, {
   EntityListRowAction,
 } from "@/components/EntityList";
 import { useRouter } from "next/navigation";
-import { MinifiedGroup } from "@/service/types/tasky";
+import {GroupJoinRequestPolicy, MinifiedGroup} from "@/service/types/tasky";
 import { UserRoles } from "@/service/types/usernator";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import { notifications } from "@mantine/notifications";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { isGranted } from "@/service/auth";
 import { useTranslation } from "react-i18next";
+import GroupJoinPolicyBadge from "@/components/group/GroupJoinPolicyBadge";
 
 interface DisplayComponentProps {
   groups: MinifiedGroup[];
@@ -43,6 +44,12 @@ const GroupsDisplayComponent = ({
       label: t("group:cols.tutor"),
       getter: (row) => row.tutor.username,
     },
+    {
+      field: 'join_policy',
+      label: t("group:cols.join-policy"),
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      render: (value, _1) => <GroupJoinPolicyBadge policy={value as string} />
+    }
   ];
   const api = useApiServiceClient();
   const { user } = useCurrentUser();
@@ -66,15 +73,31 @@ const GroupsDisplayComponent = ({
       onClick: (row) =>
         api.createGroupJoinRequest(row.id).then(() => {
           notifications.show({
-            title: t("messages.join-request-created-title"),
-            message: t("messages.join-request-created-text") + row.title,
+            title: t("group:messages.join-request-created-title"),
+            message: t("group: messages.join-request-created-text") + row.title,
           });
           if (refetch) refetch();
         }),
       auth: [UserRoles.Student],
       authFunc: (row) =>
         (user?.groups ?? []).map((g) => g.id).indexOf(row.id) === -1 &&
-        page === "groups",
+        page === "groups" && row.join_policy === GroupJoinRequestPolicy.Request,
+    },
+    {
+      color: "blue",
+      name: t("group:actions.enlist"),
+      onClick: (row) =>
+          api.createGroupJoinRequest(row.id).then(() => {
+            notifications.show({
+              title: t("group:messages.enlisted-title"),
+              message: t("group:messages.enlisted-text") + row.title,
+            });
+            if (refetch) refetch();
+          }),
+      auth: [UserRoles.Student],
+      authFunc: (row) =>
+          (user?.groups ?? []).map((g) => g.id).indexOf(row.id) === -1 &&
+          page === "groups" && row.join_policy === GroupJoinRequestPolicy.Open,
     },
   ];
 

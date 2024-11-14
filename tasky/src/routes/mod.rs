@@ -20,6 +20,7 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(group::get_group)
         .service(group::get_all_groups)
         .service(group::get_all_my_groups)
+        .service(group::update_group)
         .service(group::get_enlistable_users)
         .service(group::enlist_user)
         .service(group::remove_user)

@@ -1,8 +1,15 @@
 "use client";
-import {Badge, Button, Group, Pagination, Stack, Tabs} from "@mantine/core";
-import React, {useState} from "react";
-import {Group as TaskyGroup, GroupJoinRequestResponse, TaskyUser,} from "@/service/types/tasky";
-import EntityList, {EntityListCol, EntityListRowAction,} from "@/components/EntityList";
+import { Badge, Pagination, Tabs, Group, Button, Stack } from "@mantine/core";
+import React, { useState } from "react";
+import {
+  Group as TaskyGroup, GroupJoinRequestPolicy,
+  GroupJoinRequestResponse,
+  TaskyUser,
+} from "@/service/types/tasky";
+import EntityList, {
+  EntityListCol,
+  EntityListRowAction,
+} from "@/components/EntityList";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import useClientQuery from "@/hooks/useClientQuery";
 import {UserRoles} from "@/service/types/usernator";
@@ -147,7 +154,7 @@ export const TabsComponent: React.FC<{
         <Tabs.Tab value="assignmentWishes">
           {t("tabs.assignment-wishes")}
         </Tabs.Tab>
-        {isGranted(user, [UserRoles.Admin, UserRoles.Tutor]) && (
+        {isGranted(user, [UserRoles.Admin, UserRoles.Tutor]) && group?.join_policy === GroupJoinRequestPolicy.Request &&  (
           <Tabs.Tab
             value="joinRequests"
             rightSection={
@@ -174,7 +181,7 @@ export const TabsComponent: React.FC<{
         </Tabs.Panel>
         {isGranted(user, [UserRoles.Admin, UserRoles.Tutor]) && (
           <Tabs.Panel value="joinRequests">
-            {group !== null && group !== undefined && (
+            {group !== null && group !== undefined && group.join_policy === GroupJoinRequestPolicy.Request &&  (
               <JoinRequestsComponent group={group} refetchParent={refetch} />
             )}
           </Tabs.Panel>
