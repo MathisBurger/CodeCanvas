@@ -1,3 +1,4 @@
+use chrono::NaiveDateTime;
 use tasky::{
     models::group_join_request::GroupJoinRequest,
     security::{IsGranted, SecurityAction},
@@ -14,6 +15,10 @@ fn test_create_permitted() {
         group_id: 1,
         requestor: 1,
         id: 1,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(req.is_granted(SecurityAction::Create, &admin), false);
     assert_eq!(req.is_granted(SecurityAction::Create, &tutor), false);
@@ -27,6 +32,10 @@ fn test_student_perms() {
         group_id: 1,
         requestor: 1,
         id: 1,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(req.is_granted(SecurityAction::Read, &user), false);
     assert_eq!(req.is_granted(SecurityAction::Update, &user), false);
@@ -40,6 +49,10 @@ fn test_wrong_tutor_perms() {
         group_id: 1,
         requestor: 1,
         id: 1,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(req.is_granted(SecurityAction::Read, &user), false);
     assert_eq!(req.is_granted(SecurityAction::Update, &user), false);
@@ -53,6 +66,10 @@ fn test_tutor_perms() {
         group_id: 1,
         requestor: 1,
         id: 1,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(req.is_granted(SecurityAction::Read, &user), true);
     assert_eq!(req.is_granted(SecurityAction::Update, &user), true);
@@ -66,6 +83,10 @@ fn test_admin_perms() {
         group_id: 1,
         requestor: 1,
         id: 1,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(req.is_granted(SecurityAction::Read, &user), true);
     assert_eq!(req.is_granted(SecurityAction::Update, &user), true);

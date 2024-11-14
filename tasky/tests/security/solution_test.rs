@@ -1,3 +1,4 @@
+use chrono::NaiveDateTime;
 use tasky::{
     models::solution::{NewSolution, Solution},
     security::{IsGranted, SecurityAction},
@@ -65,6 +66,10 @@ fn test_read_as_wrong_student() {
         file_structure: None,
         question_result: None,
         job_id: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(new.is_granted(SecurityAction::Read, &user), false);
 }
@@ -81,6 +86,10 @@ fn test_read_as_student() {
         file_structure: None,
         question_result: None,
         job_id: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(new.is_granted(SecurityAction::Read, &user), true);
 }
@@ -97,6 +106,10 @@ fn test_read_as_wrong_tutor() {
         file_structure: None,
         question_result: None,
         job_id: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(new.is_granted(SecurityAction::Read, &user), false);
 }
@@ -113,6 +126,10 @@ fn test_read_as_tutor() {
         file_structure: None,
         question_result: None,
         job_id: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(new.is_granted(SecurityAction::Read, &user), true);
 }
@@ -129,6 +146,10 @@ fn test_read_as_admin() {
         file_structure: None,
         question_result: None,
         job_id: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(new.is_granted(SecurityAction::Read, &user), true);
 }
@@ -145,6 +166,10 @@ fn test_update_as_wrong_student() {
         file_structure: None,
         question_result: None,
         job_id: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(new.is_granted(SecurityAction::Update, &user), false);
 }
@@ -161,6 +186,10 @@ fn test_update_as_student() {
         file_structure: None,
         question_result: None,
         job_id: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(new.is_granted(SecurityAction::Update, &user), false);
 }
@@ -177,6 +206,10 @@ fn test_update_as_wrong_tutor() {
         file_structure: None,
         question_result: None,
         job_id: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(new.is_granted(SecurityAction::Update, &user), false);
 }
@@ -193,6 +226,10 @@ fn test_update_as_tutor() {
         file_structure: None,
         question_result: None,
         job_id: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(new.is_granted(SecurityAction::Update, &user), true);
 }
@@ -209,6 +246,10 @@ fn test_update_as_admin() {
         file_structure: None,
         question_result: None,
         job_id: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(new.is_granted(SecurityAction::Update, &user), true);
 }

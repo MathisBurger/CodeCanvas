@@ -25,6 +25,10 @@ fn test_create_assignment_disabled() {
         runner_timeout: "".to_string(),
         runner_cpu: "".to_string(),
         question_catalogue: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(assignment.is_granted(SecurityAction::Create, &user), false);
 }
@@ -48,6 +52,10 @@ fn test_read_assignment_as_wrong_student() {
         runner_timeout: "".to_string(),
         runner_cpu: "".to_string(),
         question_catalogue: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(assignment.is_granted(SecurityAction::Read, &user), false);
 }
@@ -71,6 +79,10 @@ fn test_read_assignment_as_student() {
         runner_timeout: "".to_string(),
         runner_cpu: "".to_string(),
         question_catalogue: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(assignment.is_granted(SecurityAction::Read, &user), true);
 }
@@ -94,6 +106,10 @@ fn test_read_assignment_as_wrong_tutor() {
         runner_timeout: "".to_string(),
         runner_cpu: "".to_string(),
         question_catalogue: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(assignment.is_granted(SecurityAction::Read, &user), false);
 }
@@ -117,6 +133,10 @@ fn test_read_assignment_as_tutor() {
         runner_timeout: "".to_string(),
         runner_cpu: "".to_string(),
         question_catalogue: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(assignment.is_granted(SecurityAction::Read, &user), true);
 }
@@ -140,6 +160,10 @@ fn test_read_assignment_as_admin() {
         runner_timeout: "".to_string(),
         runner_cpu: "".to_string(),
         question_catalogue: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(assignment.is_granted(SecurityAction::Read, &user), true);
 }
@@ -163,6 +187,10 @@ fn test_update_assignment_as_wrong_student() {
         runner_timeout: "".to_string(),
         runner_cpu: "".to_string(),
         question_catalogue: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(assignment.is_granted(SecurityAction::Update, &user), false);
 }
@@ -186,6 +214,10 @@ fn test_update_assignment_as_student() {
         runner_timeout: "".to_string(),
         runner_cpu: "".to_string(),
         question_catalogue: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(assignment.is_granted(SecurityAction::Update, &user), false);
 }
@@ -209,6 +241,10 @@ fn test_update_assignment_as_wrong_tutor() {
         runner_timeout: "".to_string(),
         runner_cpu: "".to_string(),
         question_catalogue: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(assignment.is_granted(SecurityAction::Update, &user), false);
 }
@@ -232,6 +268,10 @@ fn test_update_assignment_as_tutor() {
         runner_timeout: "".to_string(),
         runner_cpu: "".to_string(),
         question_catalogue: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(assignment.is_granted(SecurityAction::Update, &user), true);
 }
@@ -255,6 +295,10 @@ fn test_update_assignment_as_admin() {
         runner_timeout: "".to_string(),
         runner_cpu: "".to_string(),
         question_catalogue: None,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(assignment.is_granted(SecurityAction::Update, &user), true);
 }

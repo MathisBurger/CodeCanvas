@@ -1,4 +1,5 @@
 use crate::schema::solutions::dsl;
+use chrono::NaiveDateTime;
 use diesel::associations::HasTable;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -71,6 +72,8 @@ pub struct Solution {
     pub job_id: Option<String>,
     pub group_id: Option<i32>,
     pub question_result: Option<serde_json::Value>,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 /// Struct to create a new solution

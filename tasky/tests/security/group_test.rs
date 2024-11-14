@@ -3,12 +3,13 @@ use crate::security::get_tutor;
 use crate::security::get_tutor_with_group;
 
 use super::get_admin;
+use chrono::NaiveDateTime;
 use tasky;
 use tasky::models::group::CreateGroup;
 use tasky::models::group::Group;
+use tasky::models::group::JoinRequestPolicy;
 use tasky::security::IsGranted;
 use tasky::security::SecurityAction;
-use tasky::models::group::JoinRequestPolicy;
 
 #[test]
 fn test_create_group() {
@@ -19,6 +20,10 @@ fn test_create_group() {
         members: vec![],
         tutor: 1,
         join_policy: JoinRequestPolicy::Request,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(group.is_granted(SecurityAction::Create, &admin), false);
 }
@@ -32,6 +37,10 @@ fn test_read_group_as_admin() {
         members: vec![],
         tutor: 1,
         join_policy: JoinRequestPolicy::Request,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(group.is_granted(SecurityAction::Read, &admin), true);
 }
@@ -45,6 +54,10 @@ fn test_read_group_as_tutor() {
         members: vec![],
         tutor: 1,
         join_policy: JoinRequestPolicy::Request,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(group.is_granted(SecurityAction::Read, &admin), true);
 }
@@ -58,6 +71,10 @@ fn test_read_group_as_wrong_tutor() {
         members: vec![],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(group.is_granted(SecurityAction::Read, &admin), false);
 }
@@ -71,6 +88,10 @@ fn test_read_group_as_student() {
         members: vec![Some(1)],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(group.is_granted(SecurityAction::Read, &admin), true);
 }
@@ -84,6 +105,10 @@ fn test_read_group_as_wrong_student() {
         members: vec![],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(group.is_granted(SecurityAction::Read, &admin), false);
 }
@@ -97,6 +122,10 @@ fn test_update_as_admin() {
         members: vec![],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(group.is_granted(SecurityAction::Update, &user), true);
 }
@@ -110,6 +139,10 @@ fn test_update_as_tutor() {
         members: vec![],
         tutor: 1,
         join_policy: JoinRequestPolicy::Request,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(group.is_granted(SecurityAction::Update, &user), true);
 }
@@ -123,6 +156,10 @@ fn test_update_as_wrong_tutor() {
         members: vec![],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(group.is_granted(SecurityAction::Update, &user), false);
 }
@@ -136,6 +173,10 @@ fn test_update_as_student() {
         members: vec![],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(group.is_granted(SecurityAction::Update, &user), false);
 }
@@ -149,6 +190,10 @@ fn test_delete_as_admin() {
         members: vec![],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(group.is_granted(SecurityAction::Delete, &user), false);
 }
@@ -162,6 +207,10 @@ fn test_delete_as_tutor() {
         members: vec![],
         tutor: 1,
         join_policy: JoinRequestPolicy::Request,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(group.is_granted(SecurityAction::Delete, &user), false);
 }
@@ -175,6 +224,10 @@ fn test_delete_as_wrong_tutor() {
         members: vec![],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(group.is_granted(SecurityAction::Delete, &user), false);
 }
@@ -188,6 +241,10 @@ fn test_delete_as_student() {
         members: vec![],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
+        created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
+        updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
+            .unwrap(),
     };
     assert_eq!(group.is_granted(SecurityAction::Delete, &user), false);
 }

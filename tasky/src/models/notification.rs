@@ -5,6 +5,8 @@ use diesel::sql_query;
 use diesel::sql_types::Integer;
 use serde::{Deserialize, Serialize};
 
+use chrono::NaiveDateTime;
+
 use super::group::GroupRepository;
 use super::DB;
 
@@ -17,6 +19,8 @@ pub struct Notification {
     pub title: String,
     pub content: String,
     pub targeted_users: Vec<Option<i32>>,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 /// notification insert type

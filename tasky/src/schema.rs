@@ -17,6 +17,8 @@ diesel::table! {
         title -> Varchar,
         description -> Text,
         group_id -> Int4,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
@@ -42,6 +44,8 @@ diesel::table! {
         runner_timeout -> Varchar,
         runner_cmd -> Text,
         question_catalogue -> Nullable<Jsonb>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
@@ -54,6 +58,8 @@ diesel::table! {
         commentor -> Int4,
         group_id -> Int4,
         solution_id -> Int4,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
@@ -62,6 +68,8 @@ diesel::table! {
         id -> Int4,
         requestor -> Int4,
         group_id -> Int4,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
@@ -75,6 +83,8 @@ diesel::table! {
         members -> Array<Nullable<Int4>>,
         tutor -> Int4,
         join_policy -> JoinRequestPolicy,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
@@ -85,6 +95,8 @@ diesel::table! {
         title -> Varchar,
         content -> Text,
         targeted_users -> Array<Nullable<Int4>>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
@@ -100,6 +112,8 @@ diesel::table! {
         job_id -> Nullable<Varchar>,
         group_id -> Nullable<Int4>,
         question_result -> Nullable<Jsonb>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 

@@ -2,6 +2,7 @@ use super::group_join_request::GroupJoinRequestRepository;
 use super::Paginate;
 use super::{PaginatedModel, DB};
 use crate::schema::groups::dsl;
+use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use diesel::{associations::HasTable, dsl::not};
 use serde::{Deserialize, Serialize};
@@ -27,6 +28,8 @@ pub struct Group {
     pub members: Vec<Option<i32>>,
     pub tutor: i32,
     pub join_policy: JoinRequestPolicy,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 /// Used to create a group in database
