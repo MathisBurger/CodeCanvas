@@ -35,6 +35,7 @@ func CreateServer(configPath string) *fiber.App {
 	app.Post("/register", controllers.RegisterUser)
 	app.Post("/login", controllers.LoginUser)
 	app.Post("/create_tutor", controllers.CreateTutor)
+	app.Post("/switch_tutor", controllers.SwitchToTutor)
 
 	// These endpoints are currently disabled and therefore not accessed
 	//app.Post("/reset_password", controllers.ResetPassword)
