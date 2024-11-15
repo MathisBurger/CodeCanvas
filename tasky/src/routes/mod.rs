@@ -24,6 +24,7 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(group::get_enlistable_users)
         .service(group::enlist_user)
         .service(group::remove_user)
+        .service(group::leave_group)
         .service(group_join_request::create_join_request)
         .service(group_join_request::get_join_requests)
         .service(group_join_request::approve_join_request)

@@ -13,6 +13,7 @@ import UpdateGroupModal from "@/components/group/UpdateGroupModal";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import {isGranted} from "@/service/auth";
 import {UserRoles} from "@/service/types/usernator";
+import LeaveGroupModal from "@/components/group/LeaveGroupModal";
 
 const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
   const id = parseInt(`${params.groupId}`, 10);
@@ -21,6 +22,7 @@ const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
   const [group, refetch] = useClientQuery<GroupType>(() => api.getGroup(id));
   const { addGroup } = useSpotlightStage2();
   const [updateModalOpen, setUpdateModalOpen] = useState<boolean>(false);
+  const [leaveModalOpen, setLeaveModalOpen] = useState<boolean>(false);
   const { t } = useTranslation("common");
 
   useEffect(() => {
@@ -48,6 +50,9 @@ const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
         {(isGranted(user, [UserRoles.Admin]) || group?.tutor.id === user?.id) && (
           <Button onClick={() => setUpdateModalOpen(true)}>{t('common:titles.update-group')}</Button>
         )}
+        {isGranted(user, [UserRoles.Student]) && (
+            <Button color="red" onClick={() => setLeaveModalOpen(true)}>{t('group:actions.leave')}</Button>
+        )}
       </Group>
       {group === null ? (
         <CentralLoading />
@@ -60,6 +65,9 @@ const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
               onClose={() => setUpdateModalOpen(false)}
               refetch={refetch}
           />
+      )}
+      {leaveModalOpen && group && (
+          <LeaveGroupModal groupId={group.id} onClose={() => setLeaveModalOpen(false)} />
       )}
     </Container>
   );

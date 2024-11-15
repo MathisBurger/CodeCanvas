@@ -22,13 +22,18 @@
     "request-join": "Beitritt anfragen",
     "create-group": "Gruppe erstellen",
     "enlist-user": "Nutzer einschreiben",
-    "enlist": "Einschreiben"
+    "enlist": "Einschreiben",
+    "leave": "Verlassen"
   },
   "messages": {
     "join-request-created-title": "Beitrittsanfrage erstellt",
     "join-request-created-text": "Beitrittsanfrage für die Gruppe erstellt ",
     "unknown-user": "Unbekannter Nutzer",
     "enlisted-title": "Eingeschrieben",
-    "enlisted-text": "Du wurdest erfolgreich eingeschrieben "
+    "enlisted-text": "Du wurdest erfolgreich eingeschrieben ",
+    "left-group": "Gruppe erfolgreich verlassen"
+  },
+  "text": {
+    "leave-group": "Bist du sicher, dass du die Gruppe verlassen möchtest?"
   }
 }

@@ -317,6 +317,10 @@ class ApiService {
     await this.post<any>("/usernator/switch_tutor", {});
   }
 
+  public async leaveGroup(groupId: number): Promise<void> {
+    await this.post<any>(`/tasky/groups/${groupId}/leave`, {});
+  }
+
   public async createOrUpdateCodeTests(
     groupId: number,
     assignmentId: number,
