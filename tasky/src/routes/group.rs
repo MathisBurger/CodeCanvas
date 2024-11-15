@@ -9,6 +9,7 @@ use crate::models::group_join_request::GroupJoinRequestRepository;
 use crate::response::group::{GroupResponse, GroupsResponse};
 use crate::response::shared::User;
 use crate::response::Enrich;
+use crate::security::StaticSecurity;
 use crate::security::{IsGranted, SecurityAction};
 use crate::AppState;
 use actix_web::delete;
@@ -275,6 +276,45 @@ pub async fn remove_user(
         .members
         .iter()
         .filter(|m| m.is_some() && m.unwrap() != path_data.1)
+        .copied()
+        .collect();
+    GroupRepository::update_group(group, conn);
+    Ok(HttpResponse::Ok().finish())
+}
+
+/// Endpoint to leave a specific group as student
+#[post("/groups/{id}/leave")]
+pub async fn leave_group(
+    data: web::Data<AppState>,
+    user: web::ReqData<UserData>,
+    path: web::Path<(i32,)>,
+) -> Result<HttpResponse, ApiError> {
+    let conn = &mut data.db.db.get().unwrap();
+    let path_data = path.into_inner();
+
+    let mut group = GroupRepository::get_by_id(path_data.0, conn).ok_or(ApiError::BadRequest {
+        message: "No access to group".to_string(),
+    })?;
+
+    if !group.is_granted(SecurityAction::Read, &user) {
+        return Err(ApiError::Forbidden {
+            message: "You are not allowed to leave this group".to_string(),
+        });
+    }
+
+    if !StaticSecurity::is_granted(crate::security::StaticSecurityAction::IsStudent, &user) {
+        return Err(ApiError::Forbidden {
+            message: "You are not a student and not able to leave this group".to_string(),
+        });
+    }
+
+    // TODO: When switching to more scalabe approach, consider adding membership verification here
+    // This is not nessesary for application security but would be a little extra
+
+    group.members = group
+        .members
+        .iter()
+        .filter(|m| m.is_some() && m.unwrap() != user.user_id)
         .copied()
         .collect();
     GroupRepository::update_group(group, conn);
