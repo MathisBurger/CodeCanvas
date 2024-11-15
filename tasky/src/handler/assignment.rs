@@ -182,18 +182,17 @@ async fn create_files_and_update_ids(
 
 /// Validates the runner config
 fn validate_runner_config(config: &RunnerData) -> Result<(), ApiError> {
-    if !vec![".5", "1"].contains(&config.runner_cpu.as_str()) {
+    if ![".5", "1"].contains(&config.runner_cpu.as_str()) {
         return Err(ApiError::BadRequest {
             message: "You entered an unallowed CPU value".to_string(),
         });
     }
-    if !vec!["50m", "100m", "200m", "300m", "500m"].contains(&config.runner_memory.as_str()) {
+    if !["50m", "100m", "200m", "300m", "500m"].contains(&config.runner_memory.as_str()) {
         return Err(ApiError::BadRequest {
             message: "You entered an unallowed memory value".to_string(),
         });
     }
-    if !vec!["20s", "60s", "120s", "180s", "240s", "300s"].contains(&config.runner_timeout.as_str())
-    {
+    if !["20s", "60s", "120s", "180s", "240s", "300s"].contains(&config.runner_timeout.as_str()) {
         return Err(ApiError::BadRequest {
             message: "You entered an unallowed timeout value".to_string(),
         });
