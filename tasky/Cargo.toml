@@ -32,6 +32,7 @@ awc = "3.5.1"
 actix-http = "3.9.0"
 serial_test = "0.5"
 diesel_full_text_search = "2.2.0"
+actix-rt = "2.10.0"
 
 [build-dependencies]
 tonic-build = "0.12.2"

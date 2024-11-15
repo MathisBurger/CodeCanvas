@@ -6,6 +6,7 @@ use futures::future::join;
 use log::info;
 use std::net::SocketAddr;
 use tasky::auth_middleware::Auth;
+use tasky::deletion_scheduler;
 use tasky::routes::init_services;
 use tasky::spotlight;
 use tasky::tasky_grpc::tasky_api_server::TaskyApiServer;
@@ -31,6 +32,13 @@ async fn main() -> std::io::Result<()> {
         )
         .await
     };
+
+    let db_pool = state.clone().db.db.clone();
+    actix_rt::spawn(async move {
+        let db_conn = &mut db_pool.get().unwrap();
+        deletion_scheduler::scheduler(db_conn).await;
+    });
+
     let actix = HttpServer::new(move || {
         App::new()
             .wrap(middleware::Logger::default())

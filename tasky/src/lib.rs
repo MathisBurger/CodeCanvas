@@ -13,6 +13,7 @@ pub struct AppState {
 }
 
 pub mod auth_middleware;
+pub mod deletion_scheduler;
 pub mod error;
 pub mod grpc;
 pub mod handler;
