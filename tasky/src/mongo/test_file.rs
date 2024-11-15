@@ -55,4 +55,14 @@ impl TestFileCollection {
             .unwrap();
         read_cursor(cursor).await
     }
+
+    /// Deletes all entries with assignment ID
+    pub async fn delete_for_assignment_ids(ids: Vec<i32>, mongodb: &mongodb::Database) {
+        let query = doc! { "assignment_id": { "$in": ids } };
+        mongodb
+            .collection::<TestFile>("test_files")
+            .delete_many(query, None)
+            .await
+            .expect("Unable to delete entries");
+    }
 }

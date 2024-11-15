@@ -136,6 +136,15 @@ impl SolutionRepository {
             .expect("Cannot update solution");
     }
 
+    /// Gets all ids of solutions that are assigned to a specific group
+    pub fn get_ids_for_group(group_id: i32, conn: &mut DB) -> Vec<i32> {
+        dsl::solutions
+            .select(dsl::id)
+            .filter(dsl::group_id.eq(group_id))
+            .get_results::<i32>(conn)
+            .expect("Cannot load solution IDs")
+    }
+
     /// Creates an new solution
     pub fn create_solution(new: NewSolution, conn: &mut DB) -> Solution {
         NotificationRepository::create_notification(
