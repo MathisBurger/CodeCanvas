@@ -31,9 +31,11 @@
     "unknown-user": "Unbekannter Nutzer",
     "enlisted-title": "Eingeschrieben",
     "enlisted-text": "Du wurdest erfolgreich eingeschrieben ",
-    "left-group": "Gruppe erfolgreich verlassen"
+    "left-group": "Gruppe erfolgreich verlassen",
+    "delete-group": "Gruppe erfolgreich gelöscht"
   },
   "text": {
-    "leave-group": "Bist du sicher, dass du die Gruppe verlassen möchtest?"
+    "leave-group": "Bist du sicher, dass du die Gruppe verlassen möchtest?",
+    "delete-group": "Bist du sicher, dass du die Gruppe löschen möchtest?"
   }
 }

@@ -31,9 +31,11 @@
     "unknown-user": "Unknown user",
     "enlisted-title": "Enlisted",
     "enlisted-text": "You successfully enlisted into group ",
-    "left-group": "Left group successfully"
+    "left-group": "Left group successfully",
+    "delete-group": "Delete group successfully"
   },
   "text": {
-    "leave-group": "Are you sure you want to leave the group?"
+    "leave-group": "Are you sure you want to leave the group?",
+    "delete-group": "Are you sure you want to delete the group?"
   }
 }
