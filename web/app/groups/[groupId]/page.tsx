@@ -14,6 +14,7 @@ import useCurrentUser from "@/hooks/useCurrentUser";
 import {isGranted} from "@/service/auth";
 import {UserRoles} from "@/service/types/usernator";
 import LeaveGroupModal from "@/components/group/LeaveGroupModal";
+import DeleteGroupModal from "@/components/group/DeleteGroupModal";
 
 const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
   const id = parseInt(`${params.groupId}`, 10);
@@ -23,6 +24,7 @@ const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
   const { addGroup } = useSpotlightStage2();
   const [updateModalOpen, setUpdateModalOpen] = useState<boolean>(false);
   const [leaveModalOpen, setLeaveModalOpen] = useState<boolean>(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
   const { t } = useTranslation("common");
 
   useEffect(() => {
@@ -48,7 +50,10 @@ const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
             <GroupJoinPolicyBadge policy={group.join_policy} />
         )}
         {(isGranted(user, [UserRoles.Admin]) || group?.tutor.id === user?.id) && (
-          <Button onClick={() => setUpdateModalOpen(true)}>{t('common:titles.update-group')}</Button>
+          <>
+            <Button onClick={() => setUpdateModalOpen(true)}>{t('common:titles.update-group')}</Button>
+            <Button color="red" onClick={() => setDeleteModalOpen(true)}>{t('common:actions.delete')}</Button>
+          </>
         )}
         {isGranted(user, [UserRoles.Student]) && (
             <Button color="red" onClick={() => setLeaveModalOpen(true)}>{t('group:actions.leave')}</Button>
@@ -68,6 +73,9 @@ const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
       )}
       {leaveModalOpen && group && (
           <LeaveGroupModal groupId={group.id} onClose={() => setLeaveModalOpen(false)} />
+      )}
+      {deleteModalOpen && group !== null && (
+          <DeleteGroupModal groupId={group.id} onClose={() => setDeleteModalOpen(false)} />
       )}
     </Container>
   );

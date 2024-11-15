@@ -146,4 +146,13 @@ impl AssignmentRepository {
             .execute(conn)
             .expect("Cannot update assignment");
     }
+
+    /// Gets all ids of assignments that are assigned to a specific group
+    pub fn get_ids_for_group(group_id: i32, conn: &mut DB) -> Vec<i32> {
+        dsl::assignments
+            .select(dsl::id)
+            .filter(dsl::group_id.eq(group_id))
+            .get_results::<i32>(conn)
+            .expect("Cannot load assignment IDs")
+    }
 }

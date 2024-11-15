@@ -55,4 +55,13 @@ impl TaskFileCollection {
             .unwrap();
         read_cursor(cursor).await
     }
+
+    pub async fn delete_for_solution_ids(ids: Vec<i32>, mongodb: &mongodb::Database) {
+        let query = doc! { "solution_id": { "$in": ids } };
+        mongodb
+            .collection::<TaskFile>("task_files")
+            .delete_many(query, None)
+            .await
+            .expect("Unable to delete entries");
+    }
 }

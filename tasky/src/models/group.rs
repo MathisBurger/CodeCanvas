@@ -131,4 +131,11 @@ impl GroupRepository {
             .load_and_count_pages::<Group>(conn)
             .expect("Cannot fetch groups for member")
     }
+
+    /// Delete group
+    pub fn delete_group(group_id: i32, conn: &mut DB) {
+        diesel::delete(dsl::groups.filter(dsl::id.eq(group_id)))
+            .execute(conn)
+            .expect("Cannot delete group");
+    }
 }

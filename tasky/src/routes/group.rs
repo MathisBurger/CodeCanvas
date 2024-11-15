@@ -4,8 +4,12 @@ use crate::api::SearchStudentsRequest;
 use crate::api::UserRequest;
 use crate::auth_middleware::UserData;
 use crate::error::ApiError;
+use crate::models::assignment::AssignmentRepository;
 use crate::models::group::{CreateGroup, GroupRepository, JoinRequestPolicy};
 use crate::models::group_join_request::GroupJoinRequestRepository;
+use crate::models::solution::SolutionRepository;
+use crate::mongo::task_file::TaskFileCollection;
+use crate::mongo::test_file::TestFileCollection;
 use crate::response::group::{GroupResponse, GroupsResponse};
 use crate::response::shared::User;
 use crate::response::Enrich;
@@ -318,5 +322,35 @@ pub async fn leave_group(
         .copied()
         .collect();
     GroupRepository::update_group(group, conn);
+    Ok(HttpResponse::Ok().finish())
+}
+
+/// Endpoint to delete group
+#[delete("/groups/{id}")]
+pub async fn delete_group(
+    data: web::Data<AppState>,
+    user: web::ReqData<UserData>,
+    path: web::Path<(i32,)>,
+) -> Result<HttpResponse, ApiError> {
+    let conn = &mut data.db.db.get().unwrap();
+    let path_data = path.into_inner();
+
+    let mut group = GroupRepository::get_by_id(path_data.0, conn).ok_or(ApiError::BadRequest {
+        message: "No access to group".to_string(),
+    })?;
+
+    if !group.is_granted(SecurityAction::Update, &user) {
+        return Err(ApiError::Forbidden {
+            message: "You are not allowed to delete this group".to_string(),
+        });
+    }
+
+    let solution_ids = SolutionRepository::get_ids_for_group(group.id, conn);
+    TaskFileCollection::delete_for_solution_ids(solution_ids, &data.mongodb).await;
+    let assignment_ids = AssignmentRepository::get_ids_for_group(group.id, conn);
+    TestFileCollection::delete_for_assignment_ids(assignment_ids, &data.mongodb).await;
+
+    GroupRepository::delete_group(group.id, conn);
+
     Ok(HttpResponse::Ok().finish())
 }

@@ -321,6 +321,10 @@ class ApiService {
     await this.post<any>(`/tasky/groups/${groupId}/leave`, {});
   }
 
+  public async deleteGroup(groupId: number): Promise<void> {
+    await this.delete<any>(`/tasky/groups/${groupId}`);
+  }
+
   public async createOrUpdateCodeTests(
     groupId: number,
     assignmentId: number,
