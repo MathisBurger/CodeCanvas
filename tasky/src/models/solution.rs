@@ -186,6 +186,7 @@ impl SolutionRepository {
                     .and(dsl::approval_status.ne("REJECTED")),
             )
             .select(Solution::as_select())
+            .group_by(dsl::id)
             .paginate(page)
             .load_and_count_pages::<Solution>(conn)
             .expect("Cannot load pending solutions for tutor")

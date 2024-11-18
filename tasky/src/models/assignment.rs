@@ -174,6 +174,7 @@ impl AssignmentRepository {
                     crate::schema::solutions::dsl::approval_status.eq("APPROVED"),
                 )))
             .select(Assignment::as_select())
+            .group_by(dsl::id)
             .paginate(page)
             .load_and_count_pages::<Assignment>(conn)
             .expect("Cannot fetch pending assignments for student")
