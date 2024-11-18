@@ -98,6 +98,29 @@ pub async fn get_solutions_for_user(
     Ok(HttpResponse::Ok().json(response))
 }
 
+#[get("/user/{id}/solutions")]
+pub async fn get_solutions_for_user_by_id(
+    data: web::Data<AppState>,
+    user: web::ReqData<UserData>,
+    pagination: web::Query<PaginationParams>,
+    path: web::Path<(i32,)>,
+) -> Result<HttpResponse, ApiError> {
+    let user_data = user.into_inner();
+    let conn = &mut data.db.db.get().unwrap();
+
+    if !StaticSecurity::is_granted(StaticSecurityAction::IsAdmin, &user_data) {
+        return Err(ApiError::Forbidden {
+            message: "This method is only allowed for admins".to_string(),
+        });
+    }
+
+    let solutions =
+        SolutionRepository::get_solutions_for_user(path.into_inner().0, pagination.page, conn);
+
+    let response = SolutionsResponse::enrich(&solutions, &mut data.user_api.clone(), conn).await?;
+    Ok(HttpResponse::Ok().json(response))
+}
+
 #[get("/tutor_solutions")]
 pub async fn get_tutor_solutions(
     data: web::Data<AppState>,

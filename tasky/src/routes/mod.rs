@@ -52,6 +52,7 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(solution::approve_solution)
         .service(solution::reject_solution)
         .service(solution::get_solution_files)
+        .service(solution::get_solutions_for_user_by_id)
         .service(solution::get_tutor_solutions)
         .service(assignment_wish::create_wish)
         .service(assignment_wish::get_wishes)
