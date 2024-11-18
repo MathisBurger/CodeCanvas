@@ -33,6 +33,7 @@ pub struct Group {
     pub join_policy: JoinRequestPolicy,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
+    pub verified: bool,
 }
 
 /// Used to create a group in database

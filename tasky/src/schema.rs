@@ -85,6 +85,7 @@ diesel::table! {
         join_policy -> JoinRequestPolicy,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+        verified -> Bool,
     }
 }
 

@@ -18,6 +18,7 @@ pub struct GroupResponse {
     pub tutor: User,
     pub request_count: i32,
     pub join_policy: JoinRequestPolicy,
+    pub verified: bool,
 }
 
 /// The minified group response
@@ -28,6 +29,7 @@ pub struct MinifiedGroupResponse {
     pub member_count: i32,
     pub tutor: User,
     pub join_policy: JoinRequestPolicy,
+    pub verified: bool,
 }
 
 /// The groups response
@@ -56,6 +58,7 @@ impl Enrich<Group> for MinifiedGroupResponse {
             member_count: from.members.len() as i32,
             tutor: tut.into_inner().into(),
             join_policy: from.join_policy.clone(),
+            verified: from.verified,
         })
     }
 }
@@ -114,6 +117,7 @@ impl Enrich<Group> for GroupResponse {
                 .collect(),
             tutor: tut.into_inner().into(),
             join_policy: from.join_policy.clone(),
+            verified: from.verified,
             request_count,
         })
     }

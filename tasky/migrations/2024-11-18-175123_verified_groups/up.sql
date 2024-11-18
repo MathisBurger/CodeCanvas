@@ -1,0 +1,1 @@
+ALTER TABLE groups ADD COLUMN verified BOOLEAN NOT NULL DEFAULT false;
