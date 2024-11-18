@@ -115,14 +115,14 @@ impl GroupRepository {
             .order(dsl::verified.desc())
             .paginate(page)
             .load_and_count_pages::<Group>(conn);
-        if result.is_err() {
+        if let Ok(model) = result {
+            model
+        } else {
             PaginatedModel {
                 results: vec![],
                 total: 0,
                 page,
             }
-        } else {
-            result.unwrap()
         }
     }
 
