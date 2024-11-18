@@ -7,6 +7,7 @@ import useApiServiceClient from "@/hooks/useApiServiceClient";
 import { User } from "@/service/types/usernator";
 import { useEffect } from "react";
 import { publicRoutes } from "@/static/routes";
+import Link from "next/link";
 
 const Header = () => {
   const api = useApiServiceClient();
@@ -32,13 +33,15 @@ const Header = () => {
     <Box pr={20}>
       <header>
         <Group justify="space-between" h="100%">
-          <Image
-            lightHidden
-            src="/CodeCanvas-dark.png"
-            h={100}
-            alt="CompanyLogo"
-          />
-          <Image darkHidden src="/CodeCanvas.png" h={100} alt="CompanyLogo" />
+          <Link href="/">
+            <Image
+                lightHidden
+                src="/CodeCanvas-dark.png"
+                h={100}
+                alt="CompanyLogo"
+            />
+            <Image darkHidden src="/CodeCanvas.png" h={100} alt="CompanyLogo" />
+          </Link>
           <SsrHeader user={user} />
         </Group>
       </header>
