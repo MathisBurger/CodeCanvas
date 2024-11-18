@@ -1,8 +1,10 @@
 use super::notification::NotificationRepository;
+use super::solution::ApprovalStatus;
 use super::{Paginate, PaginatedModel, DB};
 use crate::schema::assignments::dsl;
 use chrono::NaiveDateTime;
 use diesel::associations::HasTable;
+use diesel::dsl::not;
 use diesel::prelude::*;
 use diesel::{
     prelude::{Insertable, Queryable},
@@ -154,5 +156,26 @@ impl AssignmentRepository {
             .filter(dsl::group_id.eq(group_id))
             .get_results::<i32>(conn)
             .expect("Cannot load assignment IDs")
+    }
+
+    /// Gets all pending assignments for students
+    pub fn get_student_pending_assignments(
+        student_id: i32,
+        page: i64,
+        conn: &mut DB,
+    ) -> PaginatedModel<Assignment> {
+        dsl::assignments
+            .left_join(crate::schema::groups::table)
+            .left_join(crate::schema::solutions::table)
+            .filter(crate::schema::groups::dsl::members.contains(vec![Some(student_id)]))
+            .filter(not(crate::schema::solutions::dsl::submitter_id
+                .eq(student_id)
+                .and(
+                    crate::schema::solutions::dsl::approval_status.eq("APPROVED"),
+                )))
+            .select(Assignment::as_select())
+            .paginate(page)
+            .load_and_count_pages::<Assignment>(conn)
+            .expect("Cannot fetch pending assignments for student")
     }
 }

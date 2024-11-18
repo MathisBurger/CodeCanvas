@@ -170,4 +170,24 @@ impl SolutionRepository {
             .get_result::<Solution>(conn)
             .expect("Cannot create new solution")
     }
+
+    /// Gets all pending solutions for tutor
+    pub fn get_pending_solutions_for_tutor(
+        tutor_id: i32,
+        page: i64,
+        conn: &mut DB,
+    ) -> PaginatedModel<Solution> {
+        dsl::solutions
+            .left_join(crate::schema::groups::table)
+            .filter(crate::schema::groups::dsl::tutor.eq(tutor_id))
+            .filter(
+                dsl::approval_status
+                    .ne("APPROVED")
+                    .and(dsl::approval_status.ne("REJECTED")),
+            )
+            .select(Solution::as_select())
+            .paginate(page)
+            .load_and_count_pages::<Solution>(conn)
+            .expect("Cannot load pending solutions for tutor")
+    }
 }

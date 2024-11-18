@@ -2,6 +2,7 @@ use super::PaginationParams;
 use crate::models::assignment_wish::AssignmentWishRepository;
 use crate::models::group::GroupRepository;
 use crate::security::{IsGranted, SecurityAction};
+use crate::security::{StaticSecurity, StaticSecurityAction};
 use crate::{
     auth_middleware::UserData, error::ApiError, models::assignment_wish::CreateAssignmentWish,
     AppState,
@@ -137,4 +138,23 @@ pub async fn delete_wish(
     }
     AssignmentWishRepository::delete_wish(&wish.unwrap(), conn);
     Ok(HttpResponse::Ok().finish())
+}
+
+#[get("/tutor_assignment_wishes")]
+pub async fn tutor_pending_wishes(
+    data: web::Data<AppState>,
+    user: web::ReqData<UserData>,
+    pagination: web::Query<PaginationParams>,
+) -> Result<HttpResponse, ApiError> {
+    let user_data = user.into_inner();
+    let conn = &mut data.db.db.get().unwrap();
+
+    if !StaticSecurity::is_granted(StaticSecurityAction::IsTutor, &user_data) {
+        return Err(ApiError::BadRequest {
+            message: "Cannot get as non tutor".to_string(),
+        });
+    }
+    let wishes =
+        AssignmentWishRepository::get_tutor_wishes(user_data.user_id, pagination.page, conn);
+    Ok(HttpResponse::Ok().json(wishes))
 }
