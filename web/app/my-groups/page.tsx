@@ -1,5 +1,5 @@
 "use client";
-import { Button, Container, Pagination, Title } from "@mantine/core";
+import {Button, Container, Pagination, Title} from "@mantine/core";
 import { GroupsResponse } from "@/service/types/tasky";
 import GroupsDisplayComponent from "@/app/groups/displayComponent";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
@@ -20,7 +20,7 @@ const GroupsPage = () => {
   );
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const { user } = useCurrentUser();
-  const { t } = useTranslation("group");
+  const { t } = useTranslation(["group", "common"]);
 
   return (
     <Container fluid>

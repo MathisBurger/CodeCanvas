@@ -14,6 +14,12 @@ pub struct PaginationParams {
     pub page: i64,
 }
 
+#[derive(Deserialize)]
+pub struct PaginatedParamsWithSearch {
+    pub page: i64,
+    pub search: Option<String>,
+}
+
 /// Initializes all endpoints
 pub fn init_services(cfg: &mut web::ServiceConfig) {
     cfg.service(group::create_group)
