@@ -15,8 +15,8 @@ pub mod code_comment;
 pub mod database;
 pub mod group;
 pub mod group_join_request;
-pub mod solution;
 pub mod notification;
+pub mod solution;
 
 pub type DB = PooledConnection<ConnectionManager<PgConnection>>;
 
@@ -46,6 +46,8 @@ impl<T> Paginate for T {
 impl<T> Paginated<T> {
     const PAGE_SIZE: i64 = 50;
 
+    /// This function is used for queries that are not boxed. If you want to use dynamic queries
+    /// you will have to use the alternative implementation for pagination.
     pub fn load_and_count_pages<'a, U>(self, conn: &mut DB) -> QueryResult<PaginatedModel<U>>
     where
         T: LoadQuery<'a, PgConnection, U> + LimitDsl + SelectDsl<CountStar> + Clone,

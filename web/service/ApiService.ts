@@ -69,8 +69,8 @@ class ApiService {
     return await this.post<Group>(`/tasky/groups/${groupId}`, { title, join_policy });
   }
 
-  public async getGroups(page?: number): Promise<GroupsResponse> {
-    return await this.get<GroupsResponse>(`/tasky/groups?page=${page ?? 1}`);
+  public async getGroups(page?: number, search?: string): Promise<GroupsResponse> {
+    return await this.get<GroupsResponse>(`/tasky/groups?page=${page ?? 1}&search=${search ?? ""}`);
   }
 
   public async getMyGroups(page?: number): Promise<GroupsResponse> {
