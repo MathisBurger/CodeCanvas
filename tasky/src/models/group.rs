@@ -1,8 +1,11 @@
 use super::group_join_request::GroupJoinRequestRepository;
 use super::Paginate;
 use super::{PaginatedModel, DB};
+use crate::schema;
 use crate::schema::groups::dsl;
 use chrono::NaiveDateTime;
+use diesel::dsl::count_star;
+use diesel::pg::Pg;
 use diesel::prelude::*;
 use diesel::{associations::HasTable, dsl::not};
 use serde::{Deserialize, Serialize};
@@ -116,20 +119,38 @@ impl GroupRepository {
     pub fn get_groups_for_not_member(
         member_id: i32,
         page: i64,
+        search: Option<String>,
         conn: &mut DB,
     ) -> PaginatedModel<Group> {
         let requested: Vec<i32> = GroupJoinRequestRepository::get_user_requests(member_id, conn)
             .into_iter()
             .map(|x| x.group_id)
             .collect();
-        dsl::groups
-            .filter(not(dsl::tutor
-                .eq(member_id)
-                .or(dsl::id.eq_any(requested))
-                .or(dsl::members.contains(vec![Some(member_id)]))))
-            .paginate(page)
-            .load_and_count_pages::<Group>(conn)
-            .expect("Cannot fetch groups for member")
+
+        let total = dsl::groups
+            .into_boxed()
+            .filter(apply_search_filter(
+                member_id,
+                requested.clone(),
+                search.clone(),
+            ))
+            .select(count_star())
+            .get_result::<i64>(conn)
+            .expect("Result cannot be fetched");
+
+        let results = dsl::groups
+            .into_boxed()
+            .filter(apply_search_filter(member_id, requested, search))
+            .limit(50)
+            .offset((page - 1) * 50)
+            .load::<Group>(conn)
+            .expect("Result cannot be fetched");
+
+        PaginatedModel {
+            total: total,
+            results: results,
+            page: page,
+        }
     }
 
     /// Delete group
@@ -138,4 +159,27 @@ impl GroupRepository {
             .execute(conn)
             .expect("Cannot delete group");
     }
+}
+
+fn apply_search_filter(
+    member_id: i32,
+    requested: Vec<i32>,
+    search: Option<String>,
+) -> Box<dyn BoxableExpression<schema::groups::table, Pg, SqlType = diesel::sql_types::Bool>> {
+    let base_predicate = not(dsl::tutor
+        .eq(member_id)
+        .or(dsl::id.eq_any(requested))
+        .or(dsl::members.contains(vec![Some(member_id)])));
+    let query: Box<
+        dyn BoxableExpression<schema::groups::table, Pg, SqlType = diesel::sql_types::Bool>,
+    > = if let Some(ref search_value) = search {
+        Box::new(
+            dsl::title
+                .like(format!("%{}%", search_value))
+                .and(base_predicate),
+        )
+    } else {
+        Box::new(base_predicate)
+    };
+    query
 }

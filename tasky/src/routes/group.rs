@@ -1,4 +1,4 @@
-use super::PaginationParams;
+use super::{PaginatedParamsWithSearch, PaginationParams};
 use crate::api::usernator_api_client::UsernatorApiClient;
 use crate::api::SearchStudentsRequest;
 use crate::api::UserRequest;
@@ -64,13 +64,14 @@ pub async fn create_group(
 pub async fn get_all_groups(
     data: web::Data<AppState>,
     user: web::ReqData<UserData>,
-    pagination: web::Query<PaginationParams>,
+    pagination: web::Query<PaginatedParamsWithSearch>,
 ) -> Result<HttpResponse, ApiError> {
     let conn = &mut data.db.db.get().unwrap();
 
     let groups = GroupRepository::get_groups_for_not_member(
         user.into_inner().user_id,
         pagination.page,
+        pagination.search.clone(),
         conn,
     );
     let resp = GroupsResponse::enrich(&groups, &mut data.user_api.clone(), conn).await?;
