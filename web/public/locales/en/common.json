@@ -5,6 +5,8 @@
   "report-bug": "Report bug",
   "students": "Students",
   "tutors": "Tutors",
+  "yes": "Yes",
+  "no": "No",
   "titles": {
     "create-tutor": "Create Tutor",
     "spotlight-actions": "Spotlight actions",

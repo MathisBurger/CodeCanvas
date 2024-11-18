@@ -15,6 +15,8 @@ import {isGranted} from "@/service/auth";
 import {UserRoles} from "@/service/types/usernator";
 import LeaveGroupModal from "@/components/group/LeaveGroupModal";
 import DeleteGroupModal from "@/components/group/DeleteGroupModal";
+import VerifiedBadge from "@/components/VerifiedBadge";
+import NavigateBack from "@/components/NavigateBack";
 
 const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
   const id = parseInt(`${params.groupId}`, 10);
@@ -26,6 +28,17 @@ const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
   const [leaveModalOpen, setLeaveModalOpen] = useState<boolean>(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
   const { t } = useTranslation("common");
+
+  const changeVerifiedState = async () => {
+    if (group) {
+      if (group.verified) {
+        await api.unverify(group.id);
+      } else {
+        await api.verify(group.id);
+      }
+      refetch();
+    }
+  }
 
   useEffect(() => {
     if (group) {
@@ -43,11 +56,15 @@ const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
 
   return (
     <Container fluid>
+      <NavigateBack />
       <Group>
         <Title>{group?.title ?? "Loading"}</Title>
         <Badge>{group?.tutor?.username ?? "Loading"}</Badge>
         {group?.join_policy && (
             <GroupJoinPolicyBadge policy={group.join_policy} />
+        )}
+        {group?.verified && (
+            <VerifiedBadge />
         )}
         {(isGranted(user, [UserRoles.Admin]) || group?.tutor.id === user?.id) && (
           <>
@@ -57,6 +74,9 @@ const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
         )}
         {isGranted(user, [UserRoles.Student]) && (
             <Button color="red" onClick={() => setLeaveModalOpen(true)}>{t('group:actions.leave')}</Button>
+        )}
+        {isGranted(user, [UserRoles.Admin]) && (
+            <Button color="cyan" onClick={changeVerifiedState}>{group?.verified ? t('group:actions.unverify') : t('group:actions.verify')}</Button>
         )}
       </Group>
       {group === null ? (

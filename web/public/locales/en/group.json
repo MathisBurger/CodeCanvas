@@ -11,7 +11,8 @@
     "title": "Title",
     "members-count": "Members count",
     "tutor": "Tutor",
-    "join-policy": "Join policy"
+    "join-policy": "Join policy",
+    "verified": "Verified"
   },
   "join-policy": {
     "request": "Request",
@@ -23,7 +24,9 @@
     "create-group": "Create group",
     "enlist-user": "Enlist user",
     "enlist": "Enlist",
-    "leave": "Leave"
+    "leave": "Leave",
+    "verify": "Verify",
+    "unverify": "Unverify"
   },
   "messages": {
     "join-request-created-title": "Join Request created",
@@ -36,6 +39,7 @@
   },
   "text": {
     "leave-group": "Are you sure you want to leave the group?",
-    "delete-group": "Are you sure you want to delete the group?"
+    "delete-group": "Are you sure you want to delete the group?",
+    "verified-tooltip": "This group has been verified by the administrator. He ensured the contents of the groups are valid and good."
   }
 }

@@ -341,6 +341,14 @@ class ApiService {
     return await this.get<AssignmentsResponse>(`/tasky/student_pending_assignments?page=${page}`);
   }
 
+  public async verify(groupId: number): Promise<void> {
+    await this.post<any>(`/tasky/groups/${groupId}/verify`, {});
+  }
+
+  public async unverify(groupId: number): Promise<void> {
+    await this.post<any>(`/tasky/groups/${groupId}/unverify`, {});
+  }
+
   public async createOrUpdateCodeTests(
     groupId: number,
     assignmentId: number,

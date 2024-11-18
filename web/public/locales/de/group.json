@@ -11,7 +11,8 @@
     "title": "Titel",
     "members-count": "Anzahl der Mitglieder",
     "tutor": "Tutor",
-    "join-policy": "Betrittsrestriktionen"
+    "join-policy": "Betrittsrestriktionen",
+    "verified": "Verifiziert"
   },
   "join-policy": {
     "request": "Anfrage",
@@ -23,7 +24,9 @@
     "create-group": "Gruppe erstellen",
     "enlist-user": "Nutzer einschreiben",
     "enlist": "Einschreiben",
-    "leave": "Verlassen"
+    "leave": "Verlassen",
+    "verify": "Verifizieren",
+    "unverify": "Entverifizieren"
   },
   "messages": {
     "join-request-created-title": "Beitrittsanfrage erstellt",
@@ -36,6 +39,7 @@
   },
   "text": {
     "leave-group": "Bist du sicher, dass du die Gruppe verlassen möchtest?",
-    "delete-group": "Bist du sicher, dass du die Gruppe löschen möchtest?"
+    "delete-group": "Bist du sicher, dass du die Gruppe löschen möchtest?",
+    "verified-tooltip": "Diese Gruppe wurde von dem Administrator verifiziert. Das bedeutet, er hat die bestehenden Inhalte überprüft und diese als sinnvoll und korrekt festgestellt."
   }
 }

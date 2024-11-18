@@ -27,6 +27,7 @@ export interface Group {
   tutor: TaskyUser;
   request_count: number;
   join_policy: GroupJoinRequestPolicy;
+  verified: boolean;
 }
 
 export interface TaskyUser {
