@@ -147,9 +147,9 @@ impl GroupRepository {
             .expect("Result cannot be fetched");
 
         PaginatedModel {
-            total: total,
-            results: results,
-            page: page,
+            total,
+            results,
+            page,
         }
     }
 
