@@ -1,7 +1,8 @@
 import { UserRoles } from "@/service/types/usernator";
 import {
+  IconAssembly,
   IconDashboard,
-  IconFile,
+  IconFile, IconGift,
   IconSchool,
   IconUsersGroup,
 } from "@tabler/icons-react";
@@ -55,6 +56,27 @@ export const routes: Route[] = [
     name: "solutions",
     description: "All your personal solutions",
     icon: <IconFile />,
+    authRoles: [UserRoles.Student],
+  },
+  {
+    path: "/pending-solutions",
+    name: "solutions",
+    description: "All the pending solutions",
+    icon: <IconFile />,
+    authRoles: [UserRoles.Tutor],
+  },
+  {
+    path: "/pending-wishes",
+    name: "wishes",
+    description: "All the pending wishes",
+    icon: <IconGift />,
+    authRoles: [UserRoles.Tutor],
+  },
+  {
+    path: "/pending-assignments",
+    name: "assignments",
+    description: "All the assignments wishes",
+    icon: <IconAssembly />,
     authRoles: [UserRoles.Student],
   },
 ];

@@ -28,6 +28,7 @@
     "title": "Titel",
     "description": "Beschreibung",
     "test-file": "Testdatei",
+    "group_id": "Gruppen ID",
     "search": "Suche"
   },
   "actions": {

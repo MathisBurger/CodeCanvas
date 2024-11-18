@@ -1,24 +1,15 @@
 use super::PaginationParams;
-use crate::handler::assignment::handle_update_multipart;
-use crate::models::assignment::QuestionCatalogueElement;
-use crate::AppState;
-use actix_multipart::form::MultipartForm;
-use actix_web::get;
-use actix_web::post;
-use actix_web::web;
-use actix_web::HttpResponse;
-use chrono::NaiveDateTime;
-use serde::Serialize;
-
 use crate::auth_middleware::UserData;
 use crate::error::ApiError;
 use crate::handler::assignment::handle_create_multipart;
+use crate::handler::assignment::handle_update_multipart;
 use crate::handler::assignment::CreateCodeTestMultipart;
 use crate::handler::questions::handle_catalogue_creation;
 use crate::models::assignment::Assignment;
 use crate::models::assignment::AssignmentLanguage;
 use crate::models::assignment::AssignmentRepository;
 use crate::models::assignment::CreateAssignment;
+use crate::models::assignment::QuestionCatalogueElement;
 use crate::models::group::Group;
 use crate::models::group::GroupRepository;
 use crate::models::DB;
@@ -29,8 +20,17 @@ use crate::response::Enrich;
 use crate::security::IsGranted;
 use crate::security::SecurityAction;
 use crate::security::StaticSecurity;
+use crate::security::StaticSecurityAction;
 use crate::util::mongo::parse_object_ids;
+use crate::AppState;
+use actix_multipart::form::MultipartForm;
+use actix_web::get;
+use actix_web::post;
+use actix_web::web;
+use actix_web::HttpResponse;
 use chrono::DateTime;
+use chrono::NaiveDateTime;
+use serde::Serialize;
 use serde::{Deserialize, Deserializer};
 
 fn deserialize_naive_datetime<'de, D>(deserializer: D) -> Result<Option<NaiveDateTime>, D::Error>
@@ -320,6 +320,30 @@ pub async fn create_question_catalogue(
     response.authorize(&user_data);
     response.determine_completed(&user_data, &assignment);
     Ok(HttpResponse::Ok().json(response))
+}
+
+#[get("/student_pending_assignments")]
+pub async fn get_student_pending_assignments(
+    data: web::Data<AppState>,
+    user: web::ReqData<UserData>,
+    pagination: web::Query<PaginationParams>,
+) -> Result<HttpResponse, ApiError> {
+    let user_data = user.into_inner();
+    let conn = &mut data.db.db.get().unwrap();
+
+    if !StaticSecurity::is_granted(StaticSecurityAction::IsStudent, &user_data) {
+        return Err(ApiError::BadRequest {
+            message: "Cannot get as non student".to_string(),
+        });
+    }
+    let assignments = AssignmentRepository::get_student_pending_assignments(
+        user_data.user_id,
+        pagination.page,
+        conn,
+    );
+    let enriched =
+        AssignmentsResponse::enrich(&assignments, &mut data.user_api.clone(), conn).await?;
+    Ok(HttpResponse::Ok().json(enriched))
 }
 
 /// Gets group and assignment from request params and connection.

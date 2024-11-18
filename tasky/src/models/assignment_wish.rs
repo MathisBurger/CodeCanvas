@@ -70,4 +70,19 @@ impl AssignmentWishRepository {
             .execute(conn)
             .expect("Cannot delete assignment wish");
     }
+
+    /// Gets all assignment wishes for a tutor
+    pub fn get_tutor_wishes(
+        tutor_id: i32,
+        page: i64,
+        conn: &mut DB,
+    ) -> PaginatedModel<AssignmentWish> {
+        dsl::assignment_wishes
+            .left_join(crate::schema::groups::table)
+            .filter(crate::schema::groups::dsl::tutor.eq(tutor_id))
+            .select(AssignmentWish::as_select())
+            .paginate(page)
+            .load_and_count_pages::<AssignmentWish>(conn)
+            .expect("Cannot fetch tutor assignment wishes")
+    }
 }

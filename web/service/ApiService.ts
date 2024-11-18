@@ -329,6 +329,18 @@ class ApiService {
     return await this.get<SolutionsResponse>(`/tasky/user/${id}/solutions?page=${page}`);
   }
 
+  public async getPendingSolutions(page: number): Promise<SolutionsResponse> {
+    return await this.get<SolutionsResponse>(`/tasky/tutor_solutions?page=${page}`);
+  }
+
+  public async getPendingWishes(page: number): Promise<AssignmentWishesResponse> {
+    return await this.get<AssignmentWishesResponse>(`/tasky/tutor_assignment_wishes?page=${page}`);
+  }
+
+  public async getPendingAssignments(page: number): Promise<AssignmentsResponse> {
+    return await this.get<AssignmentsResponse>(`/tasky/student_pending_assignments?page=${page}`);
+  }
+
   public async createOrUpdateCodeTests(
     groupId: number,
     assignmentId: number,

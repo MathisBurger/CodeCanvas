@@ -19,7 +19,8 @@
   },
   "titles": {
     "create-comment": "Kommentar erstellen",
-    "your-comment": "Ihr Kommentar"
+    "your-comment": "Ihr Kommentar",
+    "pending-solutions": "Ausstehende Lösungen"
   },
   "cols": {
     "assignment": "Aufgabe",

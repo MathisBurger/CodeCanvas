@@ -23,7 +23,9 @@
     "create-assignment": "Aufgabe erstellen",
     "update-assignment": "Aufgabe aktualisieren",
     "question-catalogue": "Fragenkatalog",
-    "create-wish": "Aufgabenwunsch erstellen"
+    "create-wish": "Aufgabenwunsch erstellen",
+    "pending-wishes": "Offene Wünsche",
+    "pending-assignments": "Offene Aufgaben"
   },
   "messages": {
     "failed-solution-creation": "Fehler beim Erstellen der Lösung",

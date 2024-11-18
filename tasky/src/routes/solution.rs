@@ -121,6 +121,30 @@ pub async fn get_solutions_for_user_by_id(
     Ok(HttpResponse::Ok().json(response))
 }
 
+#[get("/tutor_solutions")]
+pub async fn get_tutor_solutions(
+    data: web::Data<AppState>,
+    user: web::ReqData<UserData>,
+    pagination: web::Query<PaginationParams>,
+) -> Result<HttpResponse, ApiError> {
+    let user_data = user.into_inner();
+    let conn = &mut data.db.db.get().unwrap();
+
+    if !StaticSecurity::is_granted(StaticSecurityAction::IsTutor, &user_data) {
+        return Err(ApiError::BadRequest {
+            message: "Cannot get as non tutor".to_string(),
+        });
+    }
+
+    let solutions = SolutionRepository::get_pending_solutions_for_tutor(
+        user_data.user_id,
+        pagination.page,
+        conn,
+    );
+    let response = SolutionsResponse::enrich(&solutions, &mut data.user_api.clone(), conn).await?;
+    Ok(HttpResponse::Ok().json(response))
+}
+
 /// Endpoint to get all solutions for an assignment
 #[get("/assignments/{assignment_id}/solutions")]
 pub async fn get_solutions_for_assignment(
