@@ -105,7 +105,7 @@ impl GroupRepository {
         page: i64,
         conn: &mut DB,
     ) -> PaginatedModel<Group> {
-        dsl::groups
+        let result = dsl::groups
             .filter(
                 dsl::tutor
                     .eq(member_id)
@@ -114,8 +114,16 @@ impl GroupRepository {
             .group_by((dsl::id, dsl::verified))
             .order(dsl::verified.desc())
             .paginate(page)
-            .load_and_count_pages::<Group>(conn)
-            .expect("Cannot fetch groups for member")
+            .load_and_count_pages::<Group>(conn);
+        if result.is_err() {
+            return PaginatedModel {
+                results: vec![],
+                total: 0,
+                page,
+            };
+        } else {
+            return result.unwrap();
+        }
     }
 
     /// Gets all groups a user is member or tutor of
@@ -148,12 +156,19 @@ impl GroupRepository {
             .order(dsl::verified.desc())
             .limit(50)
             .offset((page - 1) * 50)
-            .load::<Group>(conn)
-            .expect("Result cannot be fetched");
+            .load::<Group>(conn);
+
+        if results.is_err() {
+            return PaginatedModel {
+                total: 0,
+                results: vec![],
+                page,
+            };
+        }
 
         PaginatedModel {
             total,
-            results,
+            results: results.unwrap(),
             page,
         }
     }
