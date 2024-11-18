@@ -111,6 +111,7 @@ impl GroupRepository {
                     .eq(member_id)
                     .or(dsl::members.contains(vec![Some(member_id)])),
             )
+            .group_by((dsl::id, dsl::verified))
             .order(dsl::verified.desc())
             .paginate(page)
             .load_and_count_pages::<Group>(conn)
@@ -141,6 +142,7 @@ impl GroupRepository {
             .expect("Result cannot be fetched");
 
         let results = dsl::groups
+            .group_by((dsl::id, dsl::verified))
             .into_boxed()
             .filter(apply_search_filter(member_id, requested, search))
             .order(dsl::verified.desc())
