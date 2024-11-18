@@ -27,7 +27,8 @@
     "password-placeholder": "Your password",
     "title": "Title",
     "description": "Description",
-    "test-file": "Test File"
+    "test-file": "Test File",
+    "group_id": "Group ID"
   },
   "actions": {
     "approve": "Approve",

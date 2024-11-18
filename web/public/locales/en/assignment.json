@@ -23,7 +23,9 @@
     "create-assignment": "Create assignment",
     "update-assignment": "Update assignment",
     "question-catalogue": "Question catalogue",
-    "create-wish": "Create assignment wish"
+    "create-wish": "Create assignment wish",
+    "pending-wishes": "Pending wishes",
+    "pending-assignments": "Pending assignments"
   },
   "messages": {
     "failed-solution-creation": "Error creating solution",

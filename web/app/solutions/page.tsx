@@ -30,12 +30,12 @@ const PersonalSolutionsPage = () => {
     },
     {
       field: "assignment",
-      label: t("cols.assignment"),
+      label: t("solution:cols.assignment"),
       getter: (row) => row.assignment.title,
     },
     {
       field: "approval_status",
-      label: t("cols.approval-status"),
+      label: t("solution:cols.approval-status"),
       render: (value) => <SolutionBadge status={value as string} />,
     },
   ];
