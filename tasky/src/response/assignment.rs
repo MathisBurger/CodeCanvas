@@ -61,6 +61,7 @@ pub struct MinifiedAssignmentResponse {
     pub description: String,
     pub language: AssignmentLanguage,
     pub completed: Option<bool>,
+    pub group_id: i32,
 }
 
 /// A vec of assignments
@@ -83,6 +84,7 @@ impl Enrich<Assignment> for MinifiedAssignmentResponse {
             description: from.description.clone(),
             language: from.language.clone(),
             completed: None,
+            group_id: from.group_id,
         })
     }
 }

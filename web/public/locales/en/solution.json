@@ -19,7 +19,8 @@
   },
   "titles": {
     "create-comment": "Create comment",
-    "your-comment": "Your comment"
+    "your-comment": "Your comment",
+    "pending-solutions": "Pending solutions"
   },
   "cols": {
     "assignment": "Assignment",

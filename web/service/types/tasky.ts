@@ -66,6 +66,7 @@ export interface Assignment {
   runner_timeout: string | null;
   runner_cmd: string | null;
   completed: boolean | null;
+  group_id: number;
 }
 
 export interface AssignmentsResponse {
