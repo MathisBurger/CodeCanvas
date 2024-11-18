@@ -5,6 +5,8 @@
   "report-bug": "Fehler melden",
   "students": "Studierende",
   "tutors": "Tutoren",
+  "yes": "Ja",
+  "no": "Nein",
   "titles": {
     "create-tutor": "Tutor erstellen",
     "spotlight-actions": "Spotlight-Aktionen",

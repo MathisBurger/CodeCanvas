@@ -33,6 +33,7 @@ pub struct Group {
     pub join_policy: JoinRequestPolicy,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
+    pub verified: bool,
 }
 
 /// Used to create a group in database
@@ -104,15 +105,25 @@ impl GroupRepository {
         page: i64,
         conn: &mut DB,
     ) -> PaginatedModel<Group> {
-        dsl::groups
+        let result = dsl::groups
             .filter(
                 dsl::tutor
                     .eq(member_id)
                     .or(dsl::members.contains(vec![Some(member_id)])),
             )
+            .group_by((dsl::id, dsl::verified))
+            .order(dsl::verified.desc())
             .paginate(page)
-            .load_and_count_pages::<Group>(conn)
-            .expect("Cannot fetch groups for member")
+            .load_and_count_pages::<Group>(conn);
+        if let Ok(model) = result {
+            model
+        } else {
+            PaginatedModel {
+                results: vec![],
+                total: 0,
+                page,
+            }
+        }
     }
 
     /// Gets all groups a user is member or tutor of
@@ -139,16 +150,25 @@ impl GroupRepository {
             .expect("Result cannot be fetched");
 
         let results = dsl::groups
+            .group_by((dsl::id, dsl::verified))
             .into_boxed()
             .filter(apply_search_filter(member_id, requested, search))
+            .order(dsl::verified.desc())
             .limit(50)
             .offset((page - 1) * 50)
-            .load::<Group>(conn)
-            .expect("Result cannot be fetched");
+            .load::<Group>(conn);
+
+        if results.is_err() {
+            return PaginatedModel {
+                total: 0,
+                results: vec![],
+                page,
+            };
+        }
 
         PaginatedModel {
             total,
-            results,
+            results: results.unwrap(),
             page,
         }
     }

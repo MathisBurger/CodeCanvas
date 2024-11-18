@@ -32,19 +32,16 @@ const DashboardPage = () => {
         </Grid.Col>
         <Grid.Col span={8}>
           <Card shadow="sm" padding="xl" mt={20}>
-            <Title order={2}>Release v0.2.1</Title>
+            <Title order={2}>Release v0.2.2</Title>
             <Text>
               We had some groundbreaking changes within our app for the current
               release:
               <br />
-              - JavaFX support <br/>
+              - Verified groups <br/>
+              - Group leaving and deletion <br/>
+              - Group join policy feature update <br/>
               - Notification system <br/>
-              - Stage3 Spotlight <br/>
-              - Assignment test editing <br/>
-              - Completion indicator on assignments <br/>
-              - Some more backlinks <br/>
-              - Big performance improvements for web <br/>
-              - Minor bug fixes
+              - Convert to tutor account <br/>
             </Text>
           </Card>
         </Grid.Col>

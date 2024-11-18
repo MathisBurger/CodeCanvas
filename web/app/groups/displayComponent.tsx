@@ -12,6 +12,7 @@ import useCurrentUser from "@/hooks/useCurrentUser";
 import { isGranted } from "@/service/auth";
 import { useTranslation } from "react-i18next";
 import GroupJoinPolicyBadge from "@/components/group/GroupJoinPolicyBadge";
+import VerifiedBadge from "@/components/VerifiedBadge";
 
 interface DisplayComponentProps {
   groups: MinifiedGroup[];
@@ -34,6 +35,9 @@ const GroupsDisplayComponent = ({
     {
       field: "title",
       label: t("group:cols.title"),
+      render: (title, row) => (
+          <p>{title}&nbsp;{row.verified ? <VerifiedBadge /> : null} </p>
+      )
     },
     {
       field: "member_count",

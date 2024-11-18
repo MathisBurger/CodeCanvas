@@ -355,3 +355,51 @@ pub async fn delete_group(
 
     Ok(HttpResponse::Ok().finish())
 }
+
+/// Endpoint to verify a group
+#[post("/groups/{id}/verify")]
+pub async fn verify_group(
+    data: web::Data<AppState>,
+    user: web::ReqData<UserData>,
+    path: web::Path<(i32,)>,
+) -> Result<HttpResponse, ApiError> {
+    let conn = &mut data.db.db.get().unwrap();
+    let path_data = path.into_inner();
+
+    let mut group = GroupRepository::get_by_id(path_data.0, conn).ok_or(ApiError::BadRequest {
+        message: "No access to group".to_string(),
+    })?;
+
+    if !StaticSecurity::is_granted(crate::security::StaticSecurityAction::IsAdmin, &user) {
+        return Err(ApiError::Forbidden {
+            message: "Only admins are allowed to verify groups".to_string(),
+        });
+    }
+    group.verified = true;
+    GroupRepository::update_group(group, conn);
+    Ok(HttpResponse::Ok().finish())
+}
+
+/// Endpoint to unverify a group
+#[post("/groups/{id}/unverify")]
+pub async fn unverify_group(
+    data: web::Data<AppState>,
+    user: web::ReqData<UserData>,
+    path: web::Path<(i32,)>,
+) -> Result<HttpResponse, ApiError> {
+    let conn = &mut data.db.db.get().unwrap();
+    let path_data = path.into_inner();
+
+    let mut group = GroupRepository::get_by_id(path_data.0, conn).ok_or(ApiError::BadRequest {
+        message: "No access to group".to_string(),
+    })?;
+
+    if !StaticSecurity::is_granted(crate::security::StaticSecurityAction::IsAdmin, &user) {
+        return Err(ApiError::Forbidden {
+            message: "Only admins are allowed to unverify groups".to_string(),
+        });
+    }
+    group.verified = false;
+    GroupRepository::update_group(group, conn);
+    Ok(HttpResponse::Ok().finish())
+}

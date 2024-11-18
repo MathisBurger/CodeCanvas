@@ -24,6 +24,7 @@ fn test_create_group() {
             .unwrap(),
         updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
             .unwrap(),
+        verified: false,
     };
     assert_eq!(group.is_granted(SecurityAction::Create, &admin), false);
 }
@@ -41,6 +42,7 @@ fn test_read_group_as_admin() {
             .unwrap(),
         updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
             .unwrap(),
+        verified: false,
     };
     assert_eq!(group.is_granted(SecurityAction::Read, &admin), true);
 }
@@ -58,6 +60,7 @@ fn test_read_group_as_tutor() {
             .unwrap(),
         updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
             .unwrap(),
+        verified: false,
     };
     assert_eq!(group.is_granted(SecurityAction::Read, &admin), true);
 }
@@ -75,6 +78,7 @@ fn test_read_group_as_wrong_tutor() {
             .unwrap(),
         updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
             .unwrap(),
+        verified: false,
     };
     assert_eq!(group.is_granted(SecurityAction::Read, &admin), false);
 }
@@ -92,6 +96,7 @@ fn test_read_group_as_student() {
             .unwrap(),
         updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
             .unwrap(),
+        verified: false,
     };
     assert_eq!(group.is_granted(SecurityAction::Read, &admin), true);
 }
@@ -109,6 +114,7 @@ fn test_read_group_as_wrong_student() {
             .unwrap(),
         updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
             .unwrap(),
+        verified: false,
     };
     assert_eq!(group.is_granted(SecurityAction::Read, &admin), false);
 }
@@ -126,6 +132,7 @@ fn test_update_as_admin() {
             .unwrap(),
         updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
             .unwrap(),
+        verified: false,
     };
     assert_eq!(group.is_granted(SecurityAction::Update, &user), true);
 }
@@ -143,6 +150,7 @@ fn test_update_as_tutor() {
             .unwrap(),
         updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
             .unwrap(),
+        verified: false,
     };
     assert_eq!(group.is_granted(SecurityAction::Update, &user), true);
 }
@@ -160,6 +168,7 @@ fn test_update_as_wrong_tutor() {
             .unwrap(),
         updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
             .unwrap(),
+        verified: false,
     };
     assert_eq!(group.is_granted(SecurityAction::Update, &user), false);
 }
@@ -177,6 +186,7 @@ fn test_update_as_student() {
             .unwrap(),
         updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
             .unwrap(),
+        verified: false,
     };
     assert_eq!(group.is_granted(SecurityAction::Update, &user), false);
 }
@@ -194,6 +204,7 @@ fn test_delete_as_admin() {
             .unwrap(),
         updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
             .unwrap(),
+        verified: false,
     };
     assert_eq!(group.is_granted(SecurityAction::Delete, &user), false);
 }
@@ -211,6 +222,7 @@ fn test_delete_as_tutor() {
             .unwrap(),
         updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
             .unwrap(),
+        verified: false,
     };
     assert_eq!(group.is_granted(SecurityAction::Delete, &user), false);
 }
@@ -228,6 +240,7 @@ fn test_delete_as_wrong_tutor() {
             .unwrap(),
         updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
             .unwrap(),
+        verified: false,
     };
     assert_eq!(group.is_granted(SecurityAction::Delete, &user), false);
 }
@@ -245,6 +258,7 @@ fn test_delete_as_student() {
             .unwrap(),
         updated_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
             .unwrap(),
+        verified: false,
     };
     assert_eq!(group.is_granted(SecurityAction::Delete, &user), false);
 }
