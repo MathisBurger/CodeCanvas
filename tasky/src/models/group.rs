@@ -116,13 +116,13 @@ impl GroupRepository {
             .paginate(page)
             .load_and_count_pages::<Group>(conn);
         if result.is_err() {
-            return PaginatedModel {
+            PaginatedModel {
                 results: vec![],
                 total: 0,
                 page,
-            };
+            }
         } else {
-            return result.unwrap();
+            result.unwrap()
         }
     }
 
