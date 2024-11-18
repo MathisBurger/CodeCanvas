@@ -325,6 +325,10 @@ class ApiService {
     await this.delete<any>(`/tasky/groups/${groupId}`);
   }
 
+  public async getUserSolutions(id: number, page: number): Promise<SolutionsResponse> {
+    return await this.get<SolutionsResponse>(`/tasky/user/${id}/solutions?page=${page}`);
+  }
+
   public async createOrUpdateCodeTests(
     groupId: number,
     assignmentId: number,
