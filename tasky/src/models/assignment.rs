@@ -1,5 +1,4 @@
 use super::notification::NotificationRepository;
-use super::solution::ApprovalStatus;
 use super::{Paginate, PaginatedModel, DB};
 use crate::schema::assignments::dsl;
 use chrono::NaiveDateTime;

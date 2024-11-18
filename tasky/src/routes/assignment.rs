@@ -341,7 +341,7 @@ pub async fn get_student_pending_assignments(
         pagination.page,
         conn,
     );
-    let mut enriched =
+    let enriched =
         AssignmentsResponse::enrich(&assignments, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(enriched))
 }
