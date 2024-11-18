@@ -27,7 +27,8 @@
     "password-placeholder": "Ihr Passwort",
     "title": "Titel",
     "description": "Beschreibung",
-    "test-file": "Testdatei"
+    "test-file": "Testdatei",
+    "search": "Suche"
   },
   "actions": {
     "approve": "Genehmigen",
