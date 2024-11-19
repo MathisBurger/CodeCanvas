@@ -6,6 +6,8 @@ use diesel::{
     RunQueryDsl, Selectable,
 };
 
+use super::Paginate;
+use super::PaginatedModel;
 use super::DB;
 
 #[derive(Queryable, Selectable, Clone, Insertable)]
@@ -82,5 +84,19 @@ impl GroupMemberRepository {
             .select(count_star())
             .get_result::<i64>(conn)
             .expect("Cannot fetch member count")
+    }
+
+    /// Gets all group member IDs
+    pub fn get_members_ids_paginated(
+        group_id: i32,
+        page: i64,
+        conn: &mut DB,
+    ) -> PaginatedModel<i32> {
+        group_members::dsl::group_members
+            .filter(group_members::dsl::group_id.eq(group_id))
+            .select(group_members::dsl::member_id)
+            .paginate(page)
+            .load_and_count_pages::<i32>(conn)
+            .expect("Cannot load group members")
     }
 }

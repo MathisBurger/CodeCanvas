@@ -6,6 +6,7 @@ use tonic::transport::Channel;
 pub mod assignment;
 pub mod group;
 pub mod group_join_request;
+pub mod group_member;
 pub mod grpc;
 pub mod shared;
 pub mod solution;

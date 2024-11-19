@@ -6,6 +6,7 @@ pub mod assignment_wish;
 pub mod code_comment;
 pub mod group;
 pub mod group_join_request;
+pub mod group_member;
 pub mod notifications;
 pub mod solution;
 
@@ -34,6 +35,7 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(group::delete_group)
         .service(group::verify_group)
         .service(group::unverify_group)
+        .service(group_member::members_paginated)
         .service(group_join_request::create_join_request)
         .service(group_join_request::get_join_requests)
         .service(group_join_request::approve_join_request)
