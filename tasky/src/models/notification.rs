@@ -59,7 +59,7 @@ impl NotificationRepository {
             .iter()
             .map(|u| NotificationTarget {
                 notification_id: created.id,
-                user_id: u.clone(),
+                user_id: *u,
             })
             .collect();
 
