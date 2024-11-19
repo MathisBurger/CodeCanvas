@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import {
   Group as TaskyGroup, GroupJoinRequestPolicy,
   GroupJoinRequestResponse,
-  TaskyUser,
 } from "@/service/types/tasky";
 import EntityList, {
   EntityListCol,
@@ -21,11 +20,13 @@ import {useTranslation} from "react-i18next";
 import EnlistUserModal from "@/components/group/EnlistUserModal";
 import {showNotification} from "@mantine/notifications";
 
-const MembersComponent: React.FC<{ members: TaskyUser[], group: TaskyGroup, refetch: () => void }> = ({ members, group, refetch }) => {
+const MembersComponent: React.FC<{ group: TaskyGroup}> = ({ group }) => {
   const { t } = useTranslation(["common", "group"]);
   const {user} = useCurrentUser();
   const api = useApiServiceClient();
   const [enlistModalOpen, setEnlistModalOpen] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
+  const [members, refetch] = useClientQuery(() => api.getGroupMembers(group.id, page), [group.id, page]);
 
   const removeUser = async (memberId: number) => {
     try {
@@ -68,7 +69,12 @@ const MembersComponent: React.FC<{ members: TaskyUser[], group: TaskyGroup, refe
               <Button onClick={() => setEnlistModalOpen(true)}>{t('group:actions.enlist-user')}</Button>
           )}
         </Group>
-        <EntityList cols={cols} rows={members} rowActions={rowActions} />
+        <EntityList cols={cols} rows={members?.members ?? []} rowActions={rowActions} />
+        <Pagination
+            total={Math.ceil((members?.total ?? 0) / 50)}
+            value={page}
+            onChange={setPage}
+        />
         {enlistModalOpen && (
             <EnlistUserModal onClose={() => setEnlistModalOpen(false)} groupId={group.id} refetch={refetch} />
         )}
@@ -173,7 +179,7 @@ export const TabsComponent: React.FC<{
         </Tabs.Panel>
         <Tabs.Panel value="members">
           {group && (
-              <MembersComponent members={group?.members ?? []} group={group} refetch={refetch} />
+              <MembersComponent group={group} />
           )}
         </Tabs.Panel>
         <Tabs.Panel value="assignmentWishes">

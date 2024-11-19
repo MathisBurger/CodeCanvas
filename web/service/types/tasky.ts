@@ -23,7 +23,6 @@ export interface MinifiedGroup {
 export interface Group {
   id: number;
   title: string;
-  members: TaskyUser[];
   tutor: TaskyUser;
   request_count: number;
   join_policy: GroupJoinRequestPolicy;
@@ -179,4 +178,9 @@ export interface Notification {
   id: number;
   title: string;
   content: string;
+}
+
+export interface GroupMembersResponse {
+  members: TaskyUser[];
+  total: number;
 }

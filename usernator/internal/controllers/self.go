@@ -30,10 +30,9 @@ func GetSelf(ctx *fiber.Ctx) error {
 		var tutor models.User
 		shared.Database.First(&tutor, "id = ?", group.GetTutorId())
 		groups = append(groups, models.Group{
-			ID:          uint(group.GetId()),
-			Name:        group.GetTitle(),
-			MemberCount: uint(group.GetMemberCount()),
-			Tutor:       tutor,
+			ID:    uint(group.GetId()),
+			Name:  group.GetTitle(),
+			Tutor: tutor,
 		})
 	}
 	resp := models.SelfUser{
