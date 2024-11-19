@@ -1,4 +1,5 @@
 use crate::security::get_student;
+use crate::security::get_student_with_group;
 use crate::security::get_tutor;
 use crate::security::get_tutor_with_group;
 
@@ -81,7 +82,7 @@ fn test_read_group_as_wrong_tutor() {
 
 #[test]
 fn test_read_group_as_student() {
-    let admin = get_student();
+    let admin = get_student_with_group();
     let mut group = Group {
         id: 1,
         title: "group".to_string(),
