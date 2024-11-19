@@ -10,6 +10,7 @@ use diesel::sql_types::SingleValue;
 use serde::Serialize;
 
 pub mod assignment;
+pub mod assignment_completion;
 pub mod assignment_wish;
 pub mod code_comment;
 pub mod database;
