@@ -129,6 +129,7 @@ diesel::joinable!(assignments -> groups (group_id));
 diesel::joinable!(code_comments -> groups (group_id));
 diesel::joinable!(code_comments -> solutions (solution_id));
 diesel::joinable!(group_join_requests -> groups (group_id));
+diesel::joinable!(group_members -> groups (group_id));
 diesel::joinable!(solutions -> assignments (assignment_id));
 diesel::joinable!(solutions -> groups (group_id));
 
