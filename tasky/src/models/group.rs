@@ -28,7 +28,6 @@ pub enum JoinRequestPolicy {
 pub struct Group {
     pub id: i32,
     pub title: String,
-    pub members: Vec<Option<i32>>,
     pub tutor: i32,
     pub join_policy: JoinRequestPolicy,
     pub created_at: NaiveDateTime,

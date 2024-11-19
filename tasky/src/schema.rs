@@ -74,13 +74,19 @@ diesel::table! {
 }
 
 diesel::table! {
+    group_members (group_id, member_id) {
+        group_id -> Int4,
+        member_id -> Int4,
+    }
+}
+
+diesel::table! {
     use diesel::sql_types::*;
     use super::sql_types::JoinRequestPolicy;
 
     groups (id) {
         id -> Int4,
         title -> Varchar,
-        members -> Array<Nullable<Int4>>,
         tutor -> Int4,
         join_policy -> JoinRequestPolicy,
         created_at -> Timestamp,
@@ -131,6 +137,7 @@ diesel::allow_tables_to_appear_in_same_query!(
     assignments,
     code_comments,
     group_join_requests,
+    group_members,
     groups,
     notifications,
     solutions,
