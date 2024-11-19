@@ -37,7 +37,6 @@ This project is completely community driven. Therefore, everyone can contribute 
 If you want to give some monetary compensation for the work we are doing, feel free to do so. There is currently no option to do that.
 Maybe also check [CONTRIBUTING.md](CONTRIBUTING.md)
 
-## Roadmap
+## NOTICE: Data fetching performance
 
-We plan on improving the application over time. Most of the upcoming changes will be bug fixes, but also some new cool features. 
-This project depends on your ideas. So if you have an idea about how to improve the application, feel free to open up an issue.
+Please notice that the application grew over time. There were no thoughts about the database schema before creation. Furthermore, diesel.rs as the library for database interactions was pretty new to me, which is the reason the data fetching is not optimal. Some mistakes in the schema have already been fixed and improved, but the data fetching is still very imperformant. Altough storing big amounts of data is no problem anymore, fetching might take a little longer, but is statically limited due to the pagination. So the application will work at constant speed with constant response times, but executes more SQL queries than nessesary. This is a known bug, but we do not want to face it currently, because it is not a problem yet. We might take a deeper look into it, when the platform gains more users and we want to reduce load on the application to save server costs. Furthermore, this feature might be faced with some good caching policies in the future.
