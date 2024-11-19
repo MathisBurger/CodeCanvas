@@ -44,3 +44,9 @@ Please note that the application has evolved over time, and no database schema w
 Although storing large amounts of data is no longer an issue, data retrieval can still take longer than desired. However, thanks to pagination, response times are statically limited and remain consistent, regardless of the dataset size. The downside is that the application executes more SQL queries than necessary. This inefficiency is a known issue, but it is not a priority at the moment, as it doesn't pose a significant problem yet.
 
 We plan to revisit this aspect when the platform gains more users and reducing server load becomes crucial to minimize operational costs. In the future, this inefficiency could potentially be mitigated through the implementation of effective caching strategies.
+
+## NOTICE: Code quality and improvement
+
+This code may not meet the expectations of those more experienced with Rust. When I first started working on this project, my understanding of Rust was still developing. Over the course of the project, I’ve learned a great deal, but as a result, the code may not fully adhere to best practices. I kindly ask for your understanding when reviewing it. Even now, as I revisit this project, I can see several areas where I would approach things differently.
+
+There may be some improvements in the future, but even after them, there will be some huge chunks of bad code from the perspective of an experienced rust developer.
