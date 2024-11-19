@@ -102,12 +102,18 @@ diesel::table! {
 }
 
 diesel::table! {
+    notification_targets (notification_id, user_id) {
+        notification_id -> Int4,
+        user_id -> Int4,
+    }
+}
+
+diesel::table! {
     notifications (id) {
         id -> Int4,
         #[max_length = 255]
         title -> Varchar,
         content -> Text,
-        targeted_users -> Array<Nullable<Int4>>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
     }
@@ -137,6 +143,7 @@ diesel::joinable!(code_comments -> groups (group_id));
 diesel::joinable!(code_comments -> solutions (solution_id));
 diesel::joinable!(group_join_requests -> groups (group_id));
 diesel::joinable!(group_members -> groups (group_id));
+diesel::joinable!(notification_targets -> notifications (notification_id));
 diesel::joinable!(solutions -> assignments (assignment_id));
 diesel::joinable!(solutions -> groups (group_id));
 
@@ -148,6 +155,7 @@ diesel::allow_tables_to_appear_in_same_query!(
     group_join_requests,
     group_members,
     groups,
+    notification_targets,
     notifications,
     solutions,
 );
