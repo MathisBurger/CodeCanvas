@@ -348,7 +348,7 @@ pub async fn get_student_pending_assignments(
 
 /// Gets group and assignment from request params and connection.
 /// Furthermore, it handles all the user security checks
-fn get_group_and_assignment(
+pub fn get_group_and_assignment(
     user_data: &UserData,
     path_data: (i32, i32),
     conn: &mut DB,

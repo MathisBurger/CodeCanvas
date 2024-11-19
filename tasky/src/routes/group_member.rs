@@ -33,5 +33,5 @@ pub async fn members_paginated(
     }
     let members = GroupMemberRepository::get_members_ids_paginated(group.id, pagination.page, conn);
     let enriched = GroupMembersResponse::enrich(&members, &mut data.user_api.clone(), conn).await?;
-    return Ok(HttpResponse::Ok().json(enriched));
+    Ok(HttpResponse::Ok().json(enriched))
 }

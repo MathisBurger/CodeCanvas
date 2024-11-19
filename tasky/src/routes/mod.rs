@@ -2,6 +2,7 @@ use actix_web::web;
 use serde::Deserialize;
 
 pub mod assignment;
+pub mod assignment_completion;
 pub mod assignment_wish;
 pub mod code_comment;
 pub mod group;

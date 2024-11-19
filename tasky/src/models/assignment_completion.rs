@@ -6,7 +6,7 @@ use diesel::{
 
 use crate::schema::assignment_completions;
 
-use super::DB;
+use super::{Paginate, PaginatedModel, DB};
 
 #[derive(Queryable, Selectable, Clone, Insertable)]
 #[diesel(primary_key(assignment_id, member_id))]
@@ -40,5 +40,19 @@ impl AssignmentCompletionRepository {
             .values(comp)
             .execute(conn)
             .expect("Cannot insert assignment completion");
+    }
+
+    /// Gets all completion IDs for assignment
+    pub fn get_completion_ids_for_assignment(
+        assignment_id: i32,
+        page: i64,
+        conn: &mut DB,
+    ) -> PaginatedModel<i32> {
+        assignment_completions::dsl::assignment_completions
+            .filter(assignment_completions::assignment_id.eq(assignment_id))
+            .select(assignment_completions::member_id)
+            .paginate(page)
+            .load_and_count_pages::<i32>(conn)
+            .expect("Cannot load completions")
     }
 }
