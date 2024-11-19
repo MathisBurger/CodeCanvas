@@ -126,7 +126,7 @@ impl SolutionRepository {
             &CreateNotification {
                 title: "Solution updated".to_string(),
                 content: format!("Your solution {} has been updated", solution.id),
-                targeted_users: vec![Some(solution.submitter_id)],
+                targeted_users: vec![solution.submitter_id],
             },
             conn,
         );
@@ -156,11 +156,11 @@ impl SolutionRepository {
                         .unwrap()
                         .title
                 ),
-                targeted_users: vec![Some(
+                targeted_users: vec![
                     GroupRepository::get_by_id(new.group_id, conn)
                         .unwrap()
                         .tutor,
-                )],
+                ],
             },
             conn,
         );

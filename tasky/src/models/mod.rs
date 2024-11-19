@@ -15,6 +15,7 @@ pub mod code_comment;
 pub mod database;
 pub mod group;
 pub mod group_join_request;
+pub mod group_member;
 pub mod notification;
 pub mod solution;
 

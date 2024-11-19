@@ -1,3 +1,4 @@
+use crate::schema::group_members;
 use crate::schema::notifications::dsl;
 use diesel::associations::HasTable;
 use diesel::prelude::*;
@@ -7,7 +8,6 @@ use serde::{Deserialize, Serialize};
 
 use chrono::NaiveDateTime;
 
-use super::group::GroupRepository;
 use super::DB;
 
 /// notification entry type
@@ -29,7 +29,7 @@ pub struct Notification {
 pub struct CreateNotification {
     pub title: String,
     pub content: String,
-    pub targeted_users: Vec<Option<i32>>,
+    pub targeted_users: Vec<i32>,
 }
 
 pub struct NotificationRepository;
@@ -51,11 +51,16 @@ impl NotificationRepository {
         group_id: i32,
         conn: &mut DB,
     ) -> Notification {
+        let members: Vec<i32> = group_members::dsl::group_members
+            .filter(group_members::dsl::group_id.eq(group_id))
+            .select(group_members::dsl::member_id)
+            .get_results::<i32>(conn)
+            .expect("Cannot fetch group members");
         Self::create_notification(
             &CreateNotification {
                 title,
                 content,
-                targeted_users: GroupRepository::get_by_id(group_id, conn).unwrap().members,
+                targeted_users: members,
             },
             conn,
         )

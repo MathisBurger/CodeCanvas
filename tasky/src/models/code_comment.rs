@@ -44,8 +44,8 @@ impl CodeCommentRepository {
         let solution = SolutionRepository::get_solution_by_id(create.solution_id, conn).unwrap();
         let group = GroupRepository::get_by_id(create.group_id, conn).unwrap();
         let targeted_users = match solution.submitter_id == create.commentor {
-            true => vec![Some(group.tutor)],
-            false => vec![Some(solution.submitter_id)],
+            true => vec![group.tutor],
+            false => vec![solution.submitter_id],
         };
         NotificationRepository::create_notification(
             &CreateNotification {
