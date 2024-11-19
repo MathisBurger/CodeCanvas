@@ -18,7 +18,7 @@ import {
   AssignmentWish,
   CodeComment,
   AssignmentWishesResponse,
-  Notification, GroupJoinRequestPolicy, TaskyUser, GroupMembersResponse,
+  Notification, GroupJoinRequestPolicy, TaskyUser, GroupMembersResponse, AssignmentCompletionsResponse,
 } from "@/service/types/tasky";
 import { FileStructureTree } from "@/components/FileStructure";
 import { Spotlight3Response } from "@/service/types/spotlight";
@@ -351,6 +351,10 @@ class ApiService {
 
   public async getGroupMembers(groupId: number, page: number): Promise<GroupMembersResponse> {
     return await this.get<GroupMembersResponse>(`/tasky/groups/${groupId}/members?page=${page}`);
+  }
+
+  public async getAssignmentCompletions(groupId: number, assignmentId: number, page: number): Promise<AssignmentCompletionsResponse> {
+    return await this.get<AssignmentCompletionsResponse>(`/tasky/groups/${groupId}/assignments/${assignmentId}/completions?page=${page}`);
   }
 
   public async createOrUpdateCodeTests(

@@ -184,3 +184,8 @@ export interface GroupMembersResponse {
   members: TaskyUser[];
   total: number;
 }
+
+export interface AssignmentCompletionsResponse {
+  completions: TaskyUser[];
+  total: number;
+}
