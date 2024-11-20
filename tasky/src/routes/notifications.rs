@@ -81,7 +81,7 @@ pub async fn create_system_wide_notifications(
     NotificationRepository::create_system_wide_notification(
         body.title.clone(),
         body.content.clone(),
-        body.show_until.unwrap().clone(),
+        body.show_until.unwrap(),
         conn,
     );
     Ok(HttpResponse::Ok().finish())
