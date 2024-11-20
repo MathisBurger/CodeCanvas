@@ -1,5 +1,6 @@
 use actix_web::web;
-use serde::Deserialize;
+use chrono::{DateTime, NaiveDateTime};
+use serde::{Deserialize, Deserializer};
 
 pub mod assignment;
 pub mod assignment_completion;
@@ -74,4 +75,24 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(notifications::create_system_wide_notifications)
         .service(notifications::delete_system_wide_notifications)
         .service(notifications::get_system_wide_notifications);
+}
+
+pub fn deserialize_naive_datetime<'de, D>(
+    deserializer: D,
+) -> Result<Option<NaiveDateTime>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let str_option: Option<String> = Deserialize::deserialize(deserializer).ok();
+    if str_option.is_none() {
+        return Ok(None);
+    }
+    let s = str_option.unwrap();
+    if let Ok(datetime_with_tz) = DateTime::parse_from_rfc3339(s.as_str()) {
+        // Convert to NaiveDateTime by discarding the time zone
+        return Ok(Some(datetime_with_tz.naive_utc()));
+    }
+    NaiveDateTime::parse_from_str(s.as_str(), "%Y-%m-%dT%H:%M:%S")
+        .map_err(serde::de::Error::custom)
+        .map(Some)
 }

@@ -55,6 +55,7 @@ pub async fn remove_user_from_all_notifications(
 struct CreateNotificationRequest {
     pub title: String,
     pub content: String,
+    #[serde(deserialize_with = "crate::routes::deserialize_naive_datetime")]
     pub show_until: Option<NaiveDateTime>,
 }
 
