@@ -1,5 +1,5 @@
-use crate::api::UsersRequest;
 use crate::models::assignment::QuestionCatalogue;
+use crate::models::assignment_completion::AssignmentCompletionRepository;
 use crate::models::PaginatedModel;
 use crate::security::{StaticSecurity, StaticSecurityAction};
 use crate::{api::usernator_api_client::UsernatorApiClient, auth_middleware::UserData};
@@ -14,7 +14,8 @@ use crate::{
     },
 };
 
-use super::{group::MinifiedGroupResponse, shared::User, Enrich};
+use super::DB;
+use super::{group::MinifiedGroupResponse, Enrich};
 
 /// An file on an assignment
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -42,7 +43,6 @@ pub struct AssignmentResponse {
     pub group: MinifiedGroupResponse,
     pub description: String,
     pub language: AssignmentLanguage,
-    pub completed_by: Vec<User>,
     pub question_catalogue: Option<QuestionCatalogue>,
     pub file_structure: Option<AssignmentFileStructure>,
     pub runner_cpu: String,
@@ -91,9 +91,13 @@ impl Enrich<Assignment> for MinifiedAssignmentResponse {
 
 impl MinifiedAssignmentResponse {
     /// Determines whether current user has completed assignment
-    pub fn determine_completed(&mut self, user: &UserData, source: &Assignment) {
+    pub fn determine_completed(&mut self, user: &UserData, source: &Assignment, conn: &mut DB) {
         if StaticSecurity::is_granted(StaticSecurityAction::IsStudent, user) {
-            self.completed = Some(source.completed_by.contains(&Some(user.user_id)));
+            self.completed = Some(AssignmentCompletionRepository::is_completed_by(
+                source.id,
+                user.user_id,
+                conn,
+            ));
         }
     }
 }
@@ -120,11 +124,16 @@ impl Enrich<PaginatedModel<Assignment>> for AssignmentsResponse {
 
 impl AssignmentsResponse {
     /// Determines whether current user has completed the assignments
-    pub fn determine_completed(&mut self, user: &UserData, source: &PaginatedModel<Assignment>) {
+    pub fn determine_completed(
+        &mut self,
+        user: &UserData,
+        source: &PaginatedModel<Assignment>,
+        conn: &mut DB,
+    ) {
         let reference: &mut Vec<MinifiedAssignmentResponse> = self.assignments.as_mut();
         for i in 0..reference.len() {
             let partial_response = reference.get_mut(i).unwrap();
-            partial_response.determine_completed(user, source.results.get(i).unwrap());
+            partial_response.determine_completed(user, source.results.get(i).unwrap(), conn);
         }
     }
 }
@@ -139,19 +148,6 @@ impl Enrich<Assignment> for AssignmentResponse {
     ) -> Result<Self, ApiError> {
         let group = GroupRepository::get_by_id(from.group_id, db_conn).unwrap();
         let group_response = MinifiedGroupResponse::enrich(&group, client, db_conn).await?;
-
-        let completed_by: Vec<u64> = from
-            .completed_by
-            .iter()
-            .filter(|x| x.is_some())
-            .map(|m| u64::try_from(m.unwrap()).unwrap())
-            .collect();
-
-        let users = client
-            .get_users(UsersRequest {
-                user_ids: completed_by,
-            })
-            .await?;
 
         let file_structure = serde_json::from_value(
             from.file_structure
@@ -174,12 +170,6 @@ impl Enrich<Assignment> for AssignmentResponse {
             group: group_response,
             description: from.description.clone(),
             language: from.language.clone(),
-            completed_by: users
-                .into_inner()
-                .users
-                .into_iter()
-                .map(|x| x.into())
-                .collect(),
             file_structure,
             question_catalogue,
             runner_cpu: from.runner_cpu.clone(),
@@ -206,9 +196,13 @@ impl AssignmentResponse {
     }
 
     /// Determines whether current user has completed the assignment
-    pub fn determine_completed(&mut self, user: &UserData, source: &Assignment) {
+    pub fn determine_completed(&mut self, user: &UserData, source: &Assignment, conn: &mut DB) {
         if StaticSecurity::is_granted(StaticSecurityAction::IsStudent, user) {
-            self.completed = Some(source.completed_by.contains(&Some(user.user_id)));
+            self.completed = Some(AssignmentCompletionRepository::is_completed_by(
+                source.id,
+                user.user_id,
+                conn,
+            ));
         }
     }
 }

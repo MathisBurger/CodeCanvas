@@ -2,10 +2,12 @@ use actix_web::web;
 use serde::Deserialize;
 
 pub mod assignment;
+pub mod assignment_completion;
 pub mod assignment_wish;
 pub mod code_comment;
 pub mod group;
 pub mod group_join_request;
+pub mod group_member;
 pub mod notifications;
 pub mod solution;
 
@@ -34,6 +36,7 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(group::delete_group)
         .service(group::verify_group)
         .service(group::unverify_group)
+        .service(group_member::members_paginated)
         .service(group_join_request::create_join_request)
         .service(group_join_request::get_join_requests)
         .service(group_join_request::approve_join_request)
@@ -47,6 +50,7 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(assignment::create_question_catalogue)
         .service(assignment::update_assignment_test)
         .service(assignment::get_student_pending_assignments)
+        .service(assignment_completion::assignment_completions)
         .service(solution::create_solution)
         .service(solution::get_solution)
         .service(solution::get_solutions_for_assignment)

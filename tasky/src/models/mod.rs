@@ -10,12 +10,15 @@ use diesel::sql_types::SingleValue;
 use serde::Serialize;
 
 pub mod assignment;
+pub mod assignment_completion;
 pub mod assignment_wish;
 pub mod code_comment;
 pub mod database;
 pub mod group;
 pub mod group_join_request;
+pub mod group_member;
 pub mod notification;
+pub mod notification_target;
 pub mod solution;
 
 pub type DB = PooledConnection<ConnectionManager<PgConnection>>;

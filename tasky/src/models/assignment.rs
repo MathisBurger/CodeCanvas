@@ -1,6 +1,7 @@
 use super::notification::NotificationRepository;
 use super::{Paginate, PaginatedModel, DB};
 use crate::schema::assignments::dsl;
+use crate::schema::{self, group_members};
 use chrono::NaiveDateTime;
 use diesel::associations::HasTable;
 use diesel::dsl::not;
@@ -59,7 +60,6 @@ pub struct Assignment {
     pub group_id: i32,
     pub description: String,
     pub language: AssignmentLanguage,
-    pub completed_by: Vec<Option<i32>>,
     pub file_structure: Option<serde_json::Value>,
     pub runner_cpu: String,
     pub runner_memory: String,
@@ -166,7 +166,10 @@ impl AssignmentRepository {
         dsl::assignments
             .left_join(crate::schema::groups::table)
             .left_join(crate::schema::solutions::table)
-            .filter(crate::schema::groups::dsl::members.contains(vec![Some(student_id)]))
+            .left_join(
+                schema::group_members::table.on(schema::groups::id.eq(group_members::group_id)),
+            )
+            .filter(group_members::dsl::member_id.eq(student_id))
             .filter(not(crate::schema::solutions::dsl::submitter_id
                 .eq(student_id)
                 .and(

@@ -1,13 +1,14 @@
+use crate::schema::group_members;
+use crate::schema::notification_targets;
 use crate::schema::notifications::dsl;
 use diesel::associations::HasTable;
 use diesel::prelude::*;
-use diesel::sql_query;
-use diesel::sql_types::Integer;
 use serde::{Deserialize, Serialize};
 
 use chrono::NaiveDateTime;
 
-use super::group::GroupRepository;
+use super::notification_target::NotificationTarget;
+use super::notification_target::NotificationTargetRepository;
 use super::DB;
 
 /// notification entry type
@@ -18,18 +19,23 @@ pub struct Notification {
     pub id: i32,
     pub title: String,
     pub content: String,
-    pub targeted_users: Vec<Option<i32>>,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
 }
 
-/// notification insert type
-#[derive(Insertable, Deserialize, Serialize)]
-#[diesel(table_name = crate::schema::notifications)]
+/// notification insert type for external calls
 pub struct CreateNotification {
     pub title: String,
     pub content: String,
-    pub targeted_users: Vec<Option<i32>>,
+    pub targeted_users: Vec<i32>,
+}
+
+/// create model used internally for notifications
+#[derive(Insertable)]
+#[diesel(table_name = crate::schema::notifications)]
+struct InternalCreate {
+    pub title: String,
+    pub content: String,
 }
 
 pub struct NotificationRepository;
@@ -37,11 +43,28 @@ pub struct NotificationRepository;
 impl NotificationRepository {
     /// Creates a new notification
     pub fn create_notification(notification: &CreateNotification, conn: &mut DB) -> Notification {
-        diesel::insert_into(dsl::notifications::table())
-            .values(notification)
+        let notification_create = InternalCreate {
+            title: notification.title.clone(),
+            content: notification.content.clone(),
+        };
+
+        let created = diesel::insert_into(dsl::notifications::table())
+            .values(notification_create)
             .returning(Notification::as_returning())
             .get_result::<Notification>(conn)
-            .expect("Cannot create new notification")
+            .expect("Cannot create new notification");
+
+        let targets: Vec<NotificationTarget> = notification
+            .targeted_users
+            .iter()
+            .map(|u| NotificationTarget {
+                notification_id: created.id,
+                user_id: *u,
+            })
+            .collect();
+
+        NotificationTargetRepository::create(targets, conn);
+        created
     }
 
     /// Creates a notification for a group
@@ -51,11 +74,16 @@ impl NotificationRepository {
         group_id: i32,
         conn: &mut DB,
     ) -> Notification {
+        let members: Vec<i32> = group_members::dsl::group_members
+            .filter(group_members::dsl::group_id.eq(group_id))
+            .select(group_members::dsl::member_id)
+            .get_results::<i32>(conn)
+            .expect("Cannot fetch group members");
         Self::create_notification(
             &CreateNotification {
                 title,
                 content,
-                targeted_users: GroupRepository::get_by_id(group_id, conn).unwrap().members,
+                targeted_users: members,
             },
             conn,
         )
@@ -64,27 +92,33 @@ impl NotificationRepository {
     /// Gets all notifications for a user
     pub fn get_notifications_for_user(user_id: i32, conn: &mut DB) -> Vec<Notification> {
         dsl::notifications
-            .filter(dsl::targeted_users.contains(vec![Some(user_id)]))
+            .left_join(notification_targets::table)
+            .filter(notification_targets::user_id.eq(user_id))
+            .select(Notification::as_select())
             .get_results::<Notification>(conn)
             .expect("Cannot get notifications for user")
     }
 
     /// Removes user from specfic notification
     pub fn remove_user_from_notification(id: i32, user_id: i32, conn: &mut DB) {
-        sql_query("UPDATE notifications SET targeted_users = array_remove(targeted_users, $1) WHERE id = $2")
-            .bind::<Integer, _>(user_id)
-            .bind::<Integer, _>(id)
-            .execute(conn)
-            .expect("Cannot remove user from notification");
-        sql_query("DELETE FROM notifications WHERE array_length(targeted_users, 1) IS NULL OR array_length(targeted_users, 1) = 0;").execute(conn).expect("Cannot remove pending notifications");
+        diesel::delete(
+            notification_targets::dsl::notification_targets.filter(
+                notification_targets::user_id
+                    .eq(user_id)
+                    .and(notification_targets::notification_id.eq(id)),
+            ),
+        )
+        .execute(conn)
+        .expect("Cannot remove user from notification");
     }
 
     /// Removes user from all notifiations
     pub fn remove_user_from_all_notification(user_id: i32, conn: &mut DB) {
-        sql_query("UPDATE notifications SET targeted_users = array_remove(targeted_users, $1) WHERE $1 = ANY(targeted_users)")
-            .bind::<Integer, _>(user_id)
-            .execute(conn)
-            .expect("Cannot remove user from notification");
-        sql_query("DELETE FROM notifications WHERE array_length(targeted_users, 1) IS NULL OR array_length(targeted_users, 1) = 0;").execute(conn).expect("Cannot remove pending notifications");
+        diesel::delete(
+            notification_targets::dsl::notification_targets
+                .filter(notification_targets::user_id.eq(user_id)),
+        )
+        .execute(conn)
+        .expect("Cannot remove user from notification");
     }
 }

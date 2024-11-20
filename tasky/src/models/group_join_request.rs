@@ -102,7 +102,7 @@ impl GroupJoinRequestRepository {
             &CreateNotification {
                 title: "Join request rejected".to_string(),
                 content: "One of your join requests has been rejected".to_string(),
-                targeted_users: vec![Some(req.requestor)],
+                targeted_users: vec![req.requestor],
             },
             conn,
         );

@@ -136,7 +136,7 @@ const AssignmentDetailsPage = ({
               <AssignmentSolutionsTab assignmentId={assignmentId} />
             </Tabs.Panel>
             <Tabs.Panel value="completedBy">
-              <AssignmentCompletedByTab completedBy={assignment.completed_by} />
+              <AssignmentCompletedByTab groupId={groupId} assignmentId={assignmentId} />
             </Tabs.Panel>
           </>
         )}

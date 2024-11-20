@@ -21,8 +21,7 @@ type SelfUser struct {
 }
 
 type Group struct {
-	ID          uint   `json:"id"`
-	Name        string `json:"name"`
-	MemberCount uint   `json:"member_count"`
-	Tutor       User   `json:"tutor"`
+	ID    uint   `json:"id"`
+	Name  string `json:"name"`
+	Tutor User   `json:"tutor"`
 }

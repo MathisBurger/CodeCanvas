@@ -1,6 +1,7 @@
 use super::PaginationParams;
 use crate::http::run_task;
 use crate::models::assignment::AssignmentLanguage;
+use crate::models::assignment_completion::{AssignmentCompletion, AssignmentCompletionRepository};
 use crate::models::solution::{ApprovalStatus, Solution, SolutionRepository};
 use crate::mongo::task_file::{TaskFile, TaskFileCollection};
 use crate::mongo::test_file::{TestFile, TestFileCollection};
@@ -181,8 +182,7 @@ pub async fn approve_solution(
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
 
-    let (mut assignment, mut solution) =
-        get_solution_and_assignment(path_data.0, &user_data, conn)?;
+    let (assignment, mut solution) = get_solution_and_assignment(path_data.0, &user_data, conn)?;
     if !solution.is_granted(SecurityAction::Update, &user_data) {
         return Err(ApiError::Forbidden {
             message: "You are not allowed to approve solution".to_string(),
@@ -192,14 +192,17 @@ pub async fn approve_solution(
     solution.approval_status = Some(ApprovalStatus::Approved.string());
     SolutionRepository::update_solution(solution.clone(), conn);
 
-    if !assignment
-        .completed_by
-        .contains(&Some(solution.submitter_id))
+    if !AssignmentCompletionRepository::is_completed_by(assignment.id, solution.submitter_id, conn)
     {
-        assignment.completed_by.push(Some(solution.submitter_id));
+        AssignmentCompletionRepository::create_completion(
+            AssignmentCompletion {
+                assignment_id: assignment.id,
+                member_id: solution.submitter_id,
+            },
+            conn,
+        );
     }
 
-    AssignmentRepository::update_assignment(assignment.clone(), conn);
     let response = SolutionResponse::enrich(&solution, &mut data.user_api.clone(), conn).await?;
     Ok(HttpResponse::Ok().json(response))
 }

@@ -13,7 +13,7 @@ impl IsGranted for Group {
                     || (StaticSecurity::is_granted(StaticSecurityAction::IsTutor, user)
                         && self.tutor == user.user_id)
                     || (StaticSecurity::is_granted(StaticSecurityAction::IsStudent, user)
-                        && self.members.contains(&Some(user.user_id)))
+                        && user.groups.contains(&self.id))
             }
             SecurityAction::Update => {
                 (StaticSecurity::is_granted(StaticSecurityAction::IsTutor, user)

@@ -11,6 +11,13 @@ pub mod sql_types {
 }
 
 diesel::table! {
+    assignment_completions (assignment_id, member_id) {
+        assignment_id -> Int4,
+        member_id -> Int4,
+    }
+}
+
+diesel::table! {
     assignment_wishes (id) {
         id -> Int4,
         #[max_length = 255]
@@ -34,7 +41,6 @@ diesel::table! {
         group_id -> Int4,
         description -> Text,
         language -> AssignmentLanguage,
-        completed_by -> Array<Nullable<Int4>>,
         file_structure -> Nullable<Jsonb>,
         #[max_length = 5]
         runner_cpu -> Varchar,
@@ -74,13 +80,19 @@ diesel::table! {
 }
 
 diesel::table! {
+    group_members (group_id, member_id) {
+        group_id -> Int4,
+        member_id -> Int4,
+    }
+}
+
+diesel::table! {
     use diesel::sql_types::*;
     use super::sql_types::JoinRequestPolicy;
 
     groups (id) {
         id -> Int4,
         title -> Varchar,
-        members -> Array<Nullable<Int4>>,
         tutor -> Int4,
         join_policy -> JoinRequestPolicy,
         created_at -> Timestamp,
@@ -90,12 +102,18 @@ diesel::table! {
 }
 
 diesel::table! {
+    notification_targets (notification_id, user_id) {
+        notification_id -> Int4,
+        user_id -> Int4,
+    }
+}
+
+diesel::table! {
     notifications (id) {
         id -> Int4,
         #[max_length = 255]
         title -> Varchar,
         content -> Text,
-        targeted_users -> Array<Nullable<Int4>>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
     }
@@ -118,20 +136,26 @@ diesel::table! {
     }
 }
 
+diesel::joinable!(assignment_completions -> assignments (assignment_id));
 diesel::joinable!(assignment_wishes -> groups (group_id));
 diesel::joinable!(assignments -> groups (group_id));
 diesel::joinable!(code_comments -> groups (group_id));
 diesel::joinable!(code_comments -> solutions (solution_id));
 diesel::joinable!(group_join_requests -> groups (group_id));
+diesel::joinable!(group_members -> groups (group_id));
+diesel::joinable!(notification_targets -> notifications (notification_id));
 diesel::joinable!(solutions -> assignments (assignment_id));
 diesel::joinable!(solutions -> groups (group_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
+    assignment_completions,
     assignment_wishes,
     assignments,
     code_comments,
     group_join_requests,
+    group_members,
     groups,
+    notification_targets,
     notifications,
     solutions,
 );

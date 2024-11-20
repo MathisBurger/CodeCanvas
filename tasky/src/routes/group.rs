@@ -7,6 +7,8 @@ use crate::error::ApiError;
 use crate::models::assignment::AssignmentRepository;
 use crate::models::group::{CreateGroup, GroupRepository, JoinRequestPolicy};
 use crate::models::group_join_request::GroupJoinRequestRepository;
+use crate::models::group_member::GroupMember;
+use crate::models::group_member::GroupMemberRepository;
 use crate::models::solution::SolutionRepository;
 use crate::mongo::task_file::TaskFileCollection;
 use crate::mongo::test_file::TestFileCollection;
@@ -45,7 +47,6 @@ pub async fn create_group(
     let mut new_group = CreateGroup {
         title: (req.title).clone(),
         tutor: user.user_id,
-        members: vec![],
         join_policy: req.join_policy.clone(),
     };
     if !new_group.is_granted(SecurityAction::Create, &user) {
@@ -157,13 +158,19 @@ pub async fn update_group(
     group.join_policy = req.join_policy.clone();
 
     if group.join_policy == JoinRequestPolicy::Open {
-        let requests = GroupJoinRequestRepository::get_group_requests_no_pagination(group.id, conn);
-        group
-            .members
-            .extend(requests.iter().map(|r| Some(r.requestor)));
+        let new_members: Vec<GroupMember> =
+            GroupJoinRequestRepository::get_group_requests_no_pagination(group.id, conn)
+                .iter()
+                .map(|r| GroupMember {
+                    member_id: r.requestor,
+                    group_id: r.group_id,
+                })
+                .collect();
+        GroupMemberRepository::insert_new_members(new_members, conn);
         GroupJoinRequestRepository::delete_all_requests_for_group(group.id, conn);
     } else if group.join_policy == JoinRequestPolicy::Closed {
         let requests = GroupJoinRequestRepository::get_group_requests_no_pagination(group.id, conn);
+
         for join_request in requests.iter() {
             GroupJoinRequestRepository::delete_request(join_request.clone(), conn);
         }
@@ -211,9 +218,12 @@ pub async fn get_enlistable_users(
         .into_iter()
         .map(|x| x.into())
         .collect();
+    let response_uids: Vec<i32> = users.iter().map(|u| i32::try_from(u.id).unwrap()).collect();
+    let enlisted_uids =
+        GroupMemberRepository::get_enlisted_from_selection(group.id, response_uids, conn);
     let filtered_users: Vec<&User> = users
         .iter()
-        .filter(|u| !group.members.contains(&Some(i32::try_from(u.id).unwrap())))
+        .filter(|u| enlisted_uids.contains(&i32::try_from(u.id).unwrap()))
         .collect();
     Ok(HttpResponse::Ok().json(filtered_users))
 }
@@ -247,13 +257,18 @@ pub async fn enlist_user(
             message: "The requested user does not exist".to_string(),
         });
     }
-    if group.members.contains(&Some(path_data.1)) {
+    if GroupMemberRepository::is_member(group.id, path_data.1, conn) {
         return Err(ApiError::BadRequest {
             message: "The user is already member of the group".to_string(),
         });
     }
-    group.members.push(Some(path_data.1));
-    GroupRepository::update_group(group, conn);
+    GroupMemberRepository::insert_member(
+        GroupMember {
+            group_id: group.id,
+            member_id: path_data.1,
+        },
+        conn,
+    );
     Ok(HttpResponse::Ok().finish())
 }
 
@@ -277,13 +292,7 @@ pub async fn remove_user(
         });
     }
 
-    group.members = group
-        .members
-        .iter()
-        .filter(|m| m.is_some() && m.unwrap() != path_data.1)
-        .copied()
-        .collect();
-    GroupRepository::update_group(group, conn);
+    GroupMemberRepository::remove_membership(group.id, user.user_id, conn);
     Ok(HttpResponse::Ok().finish())
 }
 
@@ -313,16 +322,7 @@ pub async fn leave_group(
         });
     }
 
-    // TODO: When switching to more scalabe approach, consider adding membership verification here
-    // This is not nessesary for application security but would be a little extra
-
-    group.members = group
-        .members
-        .iter()
-        .filter(|m| m.is_some() && m.unwrap() != user.user_id)
-        .copied()
-        .collect();
-    GroupRepository::update_group(group, conn);
+    GroupMemberRepository::remove_membership(group.id, user.user_id, conn);
     Ok(HttpResponse::Ok().finish())
 }
 

@@ -95,7 +95,7 @@ pub async fn get_all_group_assignments(
         AssignmentRepository::get_all_group_assignments(group.id, pagination.page, conn);
     let mut enriched =
         AssignmentsResponse::enrich(&assignments, &mut data.user_api.clone(), conn).await?;
-    enriched.determine_completed(&user_data, &assignments);
+    enriched.determine_completed(&user_data, &assignments, conn);
     Ok(HttpResponse::Ok().json(enriched))
 }
 
@@ -154,7 +154,7 @@ pub async fn get_assignment(
     let mut enrichted =
         AssignmentResponse::enrich(&assignment, &mut data.user_api.clone(), conn).await?;
     enrichted.authorize(&user_data);
-    enrichted.determine_completed(&user_data, &assignment);
+    enrichted.determine_completed(&user_data, &assignment, conn);
 
     Ok(HttpResponse::Ok().json(enrichted))
 }
@@ -186,7 +186,7 @@ pub async fn update_assignment(
     let mut enrichted =
         AssignmentResponse::enrich(&assignment, &mut data.user_api.clone(), conn).await?;
     enrichted.authorize(&user_data);
-    enrichted.determine_completed(&user_data, &assignment);
+    enrichted.determine_completed(&user_data, &assignment, conn);
     Ok(HttpResponse::Ok().json(enrichted))
 }
 
@@ -218,7 +218,7 @@ pub async fn create_assignment_test(
     let mut enriched =
         AssignmentResponse::enrich(&updated, &mut data.user_api.clone(), conn).await?;
     enriched.authorize(&user_data);
-    enriched.determine_completed(&user_data, &updated);
+    enriched.determine_completed(&user_data, &updated, conn);
     Ok(HttpResponse::Ok().json(enriched))
 }
 
@@ -249,7 +249,7 @@ pub async fn update_assignment_test(
     let mut enriched =
         AssignmentResponse::enrich(&updated, &mut data.user_api.clone(), conn).await?;
     enriched.authorize(&user_data);
-    enriched.determine_completed(&user_data, &updated);
+    enriched.determine_completed(&user_data, &updated, conn);
     Ok(HttpResponse::Ok().json(enriched))
 }
 
@@ -318,7 +318,7 @@ pub async fn create_question_catalogue(
     let mut response =
         AssignmentResponse::enrich(&assignment, &mut data.user_api.clone(), conn).await?;
     response.authorize(&user_data);
-    response.determine_completed(&user_data, &assignment);
+    response.determine_completed(&user_data, &assignment, conn);
     Ok(HttpResponse::Ok().json(response))
 }
 
@@ -348,7 +348,7 @@ pub async fn get_student_pending_assignments(
 
 /// Gets group and assignment from request params and connection.
 /// Furthermore, it handles all the user security checks
-fn get_group_and_assignment(
+pub fn get_group_and_assignment(
     user_data: &UserData,
     path_data: (i32, i32),
     conn: &mut DB,

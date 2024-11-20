@@ -1,4 +1,5 @@
 use crate::security::get_student;
+use crate::security::get_student_with_group;
 use crate::security::get_tutor;
 use crate::security::get_tutor_with_group;
 
@@ -17,7 +18,6 @@ fn test_create_group() {
     let mut group = Group {
         id: 1,
         title: "group".to_string(),
-        members: vec![],
         tutor: 1,
         join_policy: JoinRequestPolicy::Request,
         created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
@@ -35,7 +35,6 @@ fn test_read_group_as_admin() {
     let mut group = Group {
         id: 1,
         title: "group".to_string(),
-        members: vec![],
         tutor: 1,
         join_policy: JoinRequestPolicy::Request,
         created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
@@ -53,7 +52,6 @@ fn test_read_group_as_tutor() {
     let mut group = Group {
         id: 1,
         title: "group".to_string(),
-        members: vec![],
         tutor: 1,
         join_policy: JoinRequestPolicy::Request,
         created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
@@ -71,7 +69,6 @@ fn test_read_group_as_wrong_tutor() {
     let mut group = Group {
         id: 1,
         title: "group".to_string(),
-        members: vec![],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
         created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
@@ -85,11 +82,10 @@ fn test_read_group_as_wrong_tutor() {
 
 #[test]
 fn test_read_group_as_student() {
-    let admin = get_student();
+    let admin = get_student_with_group();
     let mut group = Group {
         id: 1,
         title: "group".to_string(),
-        members: vec![Some(1)],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
         created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
@@ -107,7 +103,6 @@ fn test_read_group_as_wrong_student() {
     let mut group = Group {
         id: 1,
         title: "group".to_string(),
-        members: vec![],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
         created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
@@ -125,7 +120,6 @@ fn test_update_as_admin() {
     let mut group = Group {
         id: 1,
         title: "group".to_string(),
-        members: vec![],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
         created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
@@ -143,7 +137,6 @@ fn test_update_as_tutor() {
     let mut group = Group {
         id: 1,
         title: "group".to_string(),
-        members: vec![],
         tutor: 1,
         join_policy: JoinRequestPolicy::Request,
         created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
@@ -161,7 +154,6 @@ fn test_update_as_wrong_tutor() {
     let mut group = Group {
         id: 1,
         title: "group".to_string(),
-        members: vec![],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
         created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
@@ -179,7 +171,6 @@ fn test_update_as_student() {
     let mut group = Group {
         id: 1,
         title: "group".to_string(),
-        members: vec![],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
         created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
@@ -197,7 +188,6 @@ fn test_delete_as_admin() {
     let mut group = Group {
         id: 1,
         title: "group".to_string(),
-        members: vec![],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
         created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
@@ -215,7 +205,6 @@ fn test_delete_as_tutor() {
     let mut group = Group {
         id: 1,
         title: "group".to_string(),
-        members: vec![],
         tutor: 1,
         join_policy: JoinRequestPolicy::Request,
         created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
@@ -233,7 +222,6 @@ fn test_delete_as_wrong_tutor() {
     let mut group = Group {
         id: 1,
         title: "group".to_string(),
-        members: vec![],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
         created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
@@ -251,7 +239,6 @@ fn test_delete_as_student() {
     let mut group = Group {
         id: 1,
         title: "group".to_string(),
-        members: vec![],
         tutor: 2,
         join_policy: JoinRequestPolicy::Request,
         created_at: NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S")
@@ -269,7 +256,6 @@ fn test_create_create_as_student() {
     let mut create = CreateGroup {
         title: "".to_string(),
         tutor: 1,
-        members: vec![],
         join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(create.is_granted(SecurityAction::Create, &user), false);
@@ -281,7 +267,6 @@ fn test_create_create_as_tutor() {
     let mut create = CreateGroup {
         title: "".to_string(),
         tutor: 1,
-        members: vec![],
         join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(create.is_granted(SecurityAction::Create, &user), true);
@@ -293,7 +278,6 @@ fn test_create_create_as_admin() {
     let mut create = CreateGroup {
         title: "".to_string(),
         tutor: 1,
-        members: vec![],
         join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(create.is_granted(SecurityAction::Create, &user), false);
@@ -305,7 +289,6 @@ fn test_create_create_pending() {
     let mut create = CreateGroup {
         title: "".to_string(),
         tutor: 1,
-        members: vec![],
         join_policy: JoinRequestPolicy::Request,
     };
     assert_eq!(create.is_granted(SecurityAction::Read, &user), false);

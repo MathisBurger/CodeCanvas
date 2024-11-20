@@ -4,8 +4,10 @@ use diesel::r2d2::{ConnectionManager, PooledConnection};
 use tonic::transport::Channel;
 
 pub mod assignment;
+pub mod assignment_completion;
 pub mod group;
 pub mod group_join_request;
+pub mod group_member;
 pub mod grpc;
 pub mod shared;
 pub mod solution;

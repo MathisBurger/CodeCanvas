@@ -3,6 +3,7 @@ use crate::auth_middleware::UserData;
 use crate::error::ApiError;
 use crate::models::group::{GroupRepository, JoinRequestPolicy};
 use crate::models::group_join_request::{CreateGroupJoinRequest, GroupJoinRequestRepository};
+use crate::models::group_member::{GroupMember, GroupMemberRepository};
 use crate::models::notification::{CreateNotification, NotificationRepository};
 use crate::response::group::GroupResponse;
 use crate::response::group_join_request::{GroupJoinRequestResponse, GroupJoinRequestsResponse};
@@ -20,7 +21,7 @@ pub async fn create_join_request(
 ) -> Result<HttpResponse, ApiError> {
     let conn = &mut data.db.db.get().unwrap();
 
-    let mut group =
+    let group =
         GroupRepository::get_by_id(path.into_inner().0, conn).ok_or(ApiError::BadRequest {
             message: "Group does not exist".to_string(),
         })?;
@@ -32,7 +33,7 @@ pub async fn create_join_request(
     }
 
     if !StaticSecurity::is_granted(StaticSecurityAction::IsStudent, &user)
-        || group.members.contains(&Some(user.user_id))
+        || GroupMemberRepository::is_member(group.id, user.user_id, conn)
     {
         return Err(ApiError::Forbidden {
             message: "The user is already member or not a student".to_string(),
@@ -40,7 +41,13 @@ pub async fn create_join_request(
     }
 
     if group.join_policy == JoinRequestPolicy::Open {
-        group.members.push(Some(user.user_id));
+        GroupMemberRepository::insert_member(
+            GroupMember {
+                group_id: group.id,
+                member_id: user.user_id,
+            },
+            conn,
+        );
         GroupRepository::update_group(group, conn);
         return Ok(HttpResponse::Ok().finish());
     }
@@ -63,7 +70,7 @@ pub async fn create_join_request(
         &CreateNotification {
             title: "New join request".to_string(),
             content: format!("New join request in group {}", group.title.clone()),
-            targeted_users: vec![Some(group.tutor)],
+            targeted_users: vec![group.tutor],
         },
         conn,
     );
@@ -124,8 +131,13 @@ pub async fn approve_join_request(
         });
     }
 
-    group.members.push(Some(request.requestor));
-    GroupRepository::update_group(group.clone(), conn);
+    GroupMemberRepository::insert_member(
+        GroupMember {
+            group_id: group.id,
+            member_id: request.requestor,
+        },
+        conn,
+    );
     GroupJoinRequestRepository::delete_request(request, conn);
 
     let enriched = GroupResponse::enrich(&group, &mut data.user_api.clone(), conn).await?;
