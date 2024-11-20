@@ -9,6 +9,7 @@ use crate::{
     error::ApiError,
     models::{
         assignment::{Assignment, AssignmentRepository},
+        group::Group,
         DB,
     },
     mongo::test_file::{TestFile, TestFileCollection},
@@ -42,8 +43,9 @@ pub async fn handle_create_multipart(
     mongodb: &Database,
     db: &mut DB,
     mut assignment: Assignment,
+    group: &Group,
 ) -> Result<Assignment, ApiError> {
-    validate_runner_config(&form.runner_config)?;
+    validate_runner_config(&form.runner_config, group)?;
 
     let mut file_structure = form.file_structure.0;
     if !file_structure_contains_files(&file_structure) {
@@ -87,8 +89,9 @@ pub async fn handle_update_multipart(
     mongodb: &Database,
     db: &mut DB,
     mut assignment: Assignment,
+    group: &Group,
 ) -> Result<Assignment, ApiError> {
-    validate_runner_config(&form.runner_config)?;
+    validate_runner_config(&form.runner_config, group)?;
 
     let mut new_file_structure = form.file_structure.0;
     if !file_structure_contains_files(&new_file_structure) {
@@ -181,18 +184,33 @@ async fn create_files_and_update_ids(
 }
 
 /// Validates the runner config
-fn validate_runner_config(config: &RunnerData) -> Result<(), ApiError> {
-    if ![".5", "1"].contains(&config.runner_cpu.as_str()) {
+fn validate_runner_config(config: &RunnerData, group: &Group) -> Result<(), ApiError> {
+    let cpu_options = match group.verified {
+        true => vec![".5", "1"],
+        false => vec![".5"],
+    };
+
+    let memory_options = match group.verified {
+        true => vec!["50m", "100m", "200m", "300m", "500m"],
+        false => vec!["50m", "100m", "200m"],
+    };
+
+    let timeout_options = match group.verified {
+        true => vec!["20s", "60s", "120s", "180s", "240s", "300s"],
+        false => vec!["20s", "60s"],
+    };
+
+    if !cpu_options.contains(&config.runner_cpu.as_str()) {
         return Err(ApiError::BadRequest {
             message: "You entered an unallowed CPU value".to_string(),
         });
     }
-    if !["50m", "100m", "200m", "300m", "500m"].contains(&config.runner_memory.as_str()) {
+    if !memory_options.contains(&config.runner_memory.as_str()) {
         return Err(ApiError::BadRequest {
             message: "You entered an unallowed memory value".to_string(),
         });
     }
-    if !["20s", "60s", "120s", "180s", "240s", "300s"].contains(&config.runner_timeout.as_str()) {
+    if !timeout_options.contains(&config.runner_timeout.as_str()) {
         return Err(ApiError::BadRequest {
             message: "You entered an unallowed timeout value".to_string(),
         });
