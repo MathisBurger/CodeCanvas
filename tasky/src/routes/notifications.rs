@@ -1,11 +1,12 @@
 use actix_web::{delete, get, post, web, HttpResponse};
+use chrono::NaiveDateTime;
 use serde::Deserialize;
 
 use crate::{
     auth_middleware::UserData,
     error::ApiError,
     models::{group::GroupRepository, notification::NotificationRepository},
-    security::{IsGranted, SecurityAction},
+    security::{IsGranted, SecurityAction, StaticSecurity, StaticSecurityAction},
     AppState,
 };
 
@@ -54,6 +55,47 @@ pub async fn remove_user_from_all_notifications(
 struct CreateNotificationRequest {
     pub title: String,
     pub content: String,
+    pub show_until: Option<NaiveDateTime>,
+}
+
+/// Endpoint to create system wide notification
+#[post("/system_wide_notifications")]
+pub async fn create_system_wide_notifications(
+    data: web::Data<AppState>,
+    user: web::ReqData<UserData>,
+    body: web::Json<CreateNotificationRequest>,
+) -> Result<HttpResponse, ApiError> {
+    let conn = &mut data.db.db.get().unwrap();
+
+    if !StaticSecurity::is_granted(StaticSecurityAction::IsAdmin, &user) {
+        return Err(ApiError::Forbidden {
+            message: "You cannot create system wide notificytions".to_string(),
+        });
+    }
+    if body.show_until.is_none() {
+        return Err(ApiError::BadRequest {
+            message: "Please supply an active deadline".to_string(),
+        });
+    }
+    NotificationRepository::create_system_wide_notification(
+        body.title.clone(),
+        body.content.clone(),
+        body.show_until.unwrap().clone(),
+        conn,
+    );
+    Ok(HttpResponse::Ok().finish())
+}
+
+/// Endpoint to get system wide notifications
+#[get("/system_wide_notifications")]
+pub async fn get_system_wide_notifications(
+    data: web::Data<AppState>,
+    _: web::ReqData<UserData>,
+) -> Result<HttpResponse, ApiError> {
+    let conn = &mut data.db.db.get().unwrap();
+
+    let notifications = NotificationRepository::get_system_wide(conn);
+    Ok(HttpResponse::Ok().json(notifications))
 }
 
 /// Endpoint to create group notification
@@ -81,5 +123,24 @@ pub async fn create_group_notification(
         group.id,
         conn,
     );
+    Ok(HttpResponse::Ok().finish())
+}
+
+/// Endpoint to delete system wide notification
+#[delete("/system_wide_notifications/{id}")]
+pub async fn delete_system_wide_notifications(
+    data: web::Data<AppState>,
+    user: web::ReqData<UserData>,
+    path: web::Path<(i32,)>,
+) -> Result<HttpResponse, ApiError> {
+    let conn = &mut data.db.db.get().unwrap();
+
+    if !StaticSecurity::is_granted(StaticSecurityAction::IsAdmin, &user) {
+        return Err(ApiError::BadRequest {
+            message: "You are not allowed to delete".to_string(),
+        });
+    }
+
+    NotificationRepository::delete(path.into_inner().0, conn);
     Ok(HttpResponse::Ok().finish())
 }

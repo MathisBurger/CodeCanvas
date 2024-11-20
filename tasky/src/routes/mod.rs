@@ -70,5 +70,8 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(notifications::get_notifiations)
         .service(notifications::remove_user_from_notification)
         .service(notifications::remove_user_from_all_notifications)
-        .service(notifications::create_group_notification);
+        .service(notifications::create_group_notification)
+        .service(notifications::create_system_wide_notifications)
+        .service(notifications::delete_system_wide_notifications)
+        .service(notifications::get_system_wide_notifications);
 }
