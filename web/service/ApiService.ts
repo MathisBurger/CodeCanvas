@@ -357,6 +357,10 @@ class ApiService {
     return await this.get<AssignmentCompletionsResponse>(`/tasky/groups/${groupId}/assignments/${assignmentId}/completions?page=${page}`);
   }
 
+  public async createGroupNotification(groupId: number, title: string, content: string): Promise<void> {
+    await this.post<any>(`/tasky/groups/${groupId}/notifications`, {title, content})
+  }
+
   public async createOrUpdateCodeTests(
     groupId: number,
     assignmentId: number,

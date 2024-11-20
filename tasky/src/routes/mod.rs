@@ -69,5 +69,6 @@ pub fn init_services(cfg: &mut web::ServiceConfig) {
         .service(code_comment::create_code_comment)
         .service(notifications::get_notifiations)
         .service(notifications::remove_user_from_notification)
-        .service(notifications::remove_user_from_all_notifications);
+        .service(notifications::remove_user_from_all_notifications)
+        .service(notifications::create_group_notification);
 }
