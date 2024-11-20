@@ -51,7 +51,8 @@
     "collapse-all": "Alle reduzieren",
     "navigate-back": "Zurück navigieren",
     "delete": "Löschen",
-    "clear-all": "Alle löschen"
+    "clear-all": "Alle löschen",
+    "create-notification": "Benachrichtigung erstellen"
   },
   "messages": {
     "login-failed": "Anmeldung fehlgeschlagen",
@@ -63,7 +64,8 @@
     "no-files-selected": "Keine Dateien ausgewählt",
     "copied-code": "Code kopiert!",
     "rejected-files": "Abgelehnte Dateien",
-    "switch-to-tutor-text": "Bist du sicher, dass du zu einem Tutor-Konto wechseln möchtest? Das bedeutet, dass du keine Aufgaben mehr bearbeiten kannst. Dsfür benötigst du einen weiteren Account. Also Tutor kannst du nur Aufgaben erstellen und verwalten innerhalb deiner eigenen Gruppen. Sei dir also deiner Entscheidung bewusst"
+    "switch-to-tutor-text": "Bist du sicher, dass du zu einem Tutor-Konto wechseln möchtest? Das bedeutet, dass du keine Aufgaben mehr bearbeiten kannst. Dsfür benötigst du einen weiteren Account. Also Tutor kannst du nur Aufgaben erstellen und verwalten innerhalb deiner eigenen Gruppen. Sei dir also deiner Entscheidung bewusst",
+    "successfully-created-notification": "Benachrichtigung erfolgreich erstelt"
   },
   "errors": {
     "title-empty": "Der Titel darf nicht leer sein",

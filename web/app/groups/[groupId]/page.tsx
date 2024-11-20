@@ -17,6 +17,7 @@ import LeaveGroupModal from "@/components/group/LeaveGroupModal";
 import DeleteGroupModal from "@/components/group/DeleteGroupModal";
 import VerifiedBadge from "@/components/VerifiedBadge";
 import NavigateBack from "@/components/NavigateBack";
+import CreateGroupNotificationModal from "@/components/CreateGroupNotificationModal";
 
 const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
   const id = parseInt(`${params.groupId}`, 10);
@@ -27,6 +28,7 @@ const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
   const [updateModalOpen, setUpdateModalOpen] = useState<boolean>(false);
   const [leaveModalOpen, setLeaveModalOpen] = useState<boolean>(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
+  const [createNotificationModalOpen, setCreateNotificationModalOpen] = useState<boolean>(false);
   const { t } = useTranslation("common");
 
   const changeVerifiedState = async () => {
@@ -70,6 +72,8 @@ const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
           <>
             <Button onClick={() => setUpdateModalOpen(true)}>{t('common:titles.update-group')}</Button>
             <Button color="red" onClick={() => setDeleteModalOpen(true)}>{t('common:actions.delete')}</Button>
+
+            <Button color="pink" onClick={() => setCreateNotificationModalOpen(true)}>{t('common:actions.create-notification')}</Button>
           </>
         )}
         {isGranted(user, [UserRoles.Student]) && (
@@ -96,6 +100,9 @@ const GroupDetailsPage = ({ params }: { params: { groupId: string } }) => {
       )}
       {deleteModalOpen && group !== null && (
           <DeleteGroupModal groupId={group.id} onClose={() => setDeleteModalOpen(false)} />
+      )}
+      {createNotificationModalOpen && group !== null && (
+          <CreateGroupNotificationModal groupId={group.id} onClose={() => setCreateNotificationModalOpen(false)} />
       )}
     </Container>
   );

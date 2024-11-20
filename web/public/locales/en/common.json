@@ -51,7 +51,8 @@
     "collapse-all": "Collapse all",
     "navigate-back": "Navigate back",
     "delete": "Delete",
-    "clear-all": "Clear all"
+    "clear-all": "Clear all",
+    "create-notification": "Create notification"
   },
   "messages": {
     "login-failed": "Login failed",
@@ -63,7 +64,8 @@
     "no-files-selected": "No files selected",
     "copied-code": "Copied code!",
     "rejected-files": "Rejected files",
-    "switch-to-tutor-text": "Are you sure you want to switch to a tutor account? This means you will no longer be able to work on tasks. For that, you would need a separate account. As a tutor, you can only create and manage tasks within your own groups. Please be sure of your decision."
+    "switch-to-tutor-text": "Are you sure you want to switch to a tutor account? This means you will no longer be able to work on tasks. For that, you would need a separate account. As a tutor, you can only create and manage tasks within your own groups. Please be sure of your decision.",
+    "successfully-created-notification": "Successfully created notification"
   },
   "errors": {
     "title-empty": "The title should not be empty",
