@@ -1,7 +1,7 @@
 "use client";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import {Container, Title, Text, Card, Grid, Group, Flex, Box} from "@mantine/core";
-import { IconTrophyFilled } from "@tabler/icons-react";
+import {Container, Title, Text, Card, Grid, Group, Flex, Box, Blockquote} from "@mantine/core";
+import {IconInfoCircle, IconTrophyFilled} from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import useClientQuery from "@/hooks/useClientQuery";
@@ -33,11 +33,9 @@ const DashboardPage = () => {
             ))}
           </Carousel>
       )}
-      <Card shadow="sm" padding="xl" mt={20}>
-        <Text mt="xs" c="dimmed" size="sm">
-          {t("us-again-text")}
-        </Text>
-      </Card>
+      <Blockquote color="indigo" icon={<IconInfoCircle />} mt="xl" cite="~ Development team">
+        {t('development-status')}
+      </Blockquote>
       <Grid>
         <Grid.Col span={4}>
           <Card shadow="sm" padding="xl" mt={20}>
@@ -52,16 +50,14 @@ const DashboardPage = () => {
         </Grid.Col>
         <Grid.Col span={8}>
           <Card shadow="sm" padding="xl" mt={20}>
-            <Title order={2}>Release v0.2.2</Title>
+            <Title order={2}>Release v0.2.2-stable</Title>
             <Text>
               We had some groundbreaking changes within our app for the current
               release:
               <br />
-              - Verified groups <br/>
-              - Group leaving and deletion <br/>
-              - Group join policy feature update <br/>
-              - Notification system <br/>
-              - Convert to tutor account <br/>
+              - Improved scalability <br/>
+              - Group and system wide notifications <br/>
+              - Limited runner options for unverified groups <br/>
             </Text>
           </Card>
         </Grid.Col>
