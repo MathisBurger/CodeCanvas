@@ -37,6 +37,16 @@ This project is completely community driven. Therefore, everyone can contribute 
 If you want to give some monetary compensation for the work we are doing, feel free to do so. There is currently no option to do that.
 Maybe also check [CONTRIBUTING.md](CONTRIBUTING.md)
 
+## Development status
+
+This project is now in its final phase, with all required features fully implemented. At this point, there is no concrete roadmap for further development, and the active development process for this application has been concluded.
+
+We will continue to address feature requests and bug reports on a case-by-case basis, implementing new features or fixes only if they align with our vision and appear valid. However, we will not introduce additional features independently.
+
+Our primary goal is to maintain the application’s simplicity and ease of use. Adding too many features could compromise this simplicity.
+
+We encourage you to share any feature requests or bug reports, but please understand that new features will only be added if driven by clear external needs.
+
 ## NOTICE: Data fetching performance
 
 Please note that the application has evolved over time, and no database schema was initially planned. Additionally, at the time of development, I was relatively new to using Diesel.rs as the library for database interactions. This has resulted in suboptimal data fetching. While some issues in the schema have already been addressed and improved, the current data fetching process remains inefficient.
