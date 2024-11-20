@@ -25,7 +25,7 @@ const DashboardPage = () => {
                 <Carousel.Slide key={notification.id}>
                   <Card h={200}>
                     <Box mx="xl">
-                      <Title>{notification.title}</Title>
+                      <Title order={2}>{notification.title}</Title>
                       <RichTextDisplay content={notification.content} fullSize={false} />
                     </Box>
                   </Card>
