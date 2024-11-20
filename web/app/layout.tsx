@@ -15,6 +15,7 @@ import "@mantine/notifications/styles.css";
 import "@mantine/spotlight/styles.css";
 import "@mantine/code-highlight/styles.css";
 import "@mantine/dropzone/styles.css";
+import '@mantine/carousel/styles.css';
 import { DatesProvider } from "@mantine/dates";
 import SpotlightWrapper from "@/components/spotlight/SpotlightWrapper";
 import Footer from "@/components/Footer";

@@ -1,7 +1,7 @@
 "use client";
 import {Button, Container, Stack, Title} from "@mantine/core";
 import {useTranslation} from "react-i18next";
-import EntityList, {EntityListCol} from "@/components/EntityList";
+import EntityList, {EntityListCol, EntityListRowAction} from "@/components/EntityList";
 import RichTextDisplay from "@/components/display/RichTextDisplay";
 import useClientQuery from "@/hooks/useClientQuery";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
@@ -28,12 +28,23 @@ const NotificationsPage = () => {
         }
     ];
 
+    const rowActions: EntityListRowAction[] = [
+        {
+            name: t('actions.delete'),
+            onClick: async (row) => {
+                await api.deleteSystemWideNotifications(row.id);
+                refetch();
+            },
+            color: 'red'
+        }
+    ]
+
     return (
         <Container fluid>
             <Stack gap={5}>
                 <Title>{t('common:titles.system-wide-notifications')}</Title>
                 <Button color="indigo" onClick={() => setCreateModalOpen(true)}>{t('common:actions.create-notification')}</Button>
-                <EntityList cols={cols} rows={notifications ?? []} />
+                <EntityList cols={cols} rows={notifications ?? []} rowActions={rowActions} />
             </Stack>
             {createModalOpen && (
                 <CreateSystemWideNotificationModal onClose={() => setCreateModalOpen(false)} refetch={refetch} />
