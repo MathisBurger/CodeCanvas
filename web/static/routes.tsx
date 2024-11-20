@@ -2,7 +2,7 @@ import { UserRoles } from "@/service/types/usernator";
 import {
   IconAssembly,
   IconDashboard,
-  IconFile, IconGift,
+  IconFile, IconGift, IconNotification,
   IconSchool,
   IconUsersGroup,
 } from "@tabler/icons-react";
@@ -78,6 +78,13 @@ export const routes: Route[] = [
     description: "All the assignments wishes",
     icon: <IconAssembly />,
     authRoles: [UserRoles.Student],
+  },
+  {
+    path: "/notifications",
+    name: "system-wide-notifications",
+    description: "All the system wide notifications",
+    icon: <IconNotification />,
+    authRoles: [UserRoles.Admin],
   },
 ];
 
