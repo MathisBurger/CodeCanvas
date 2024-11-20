@@ -116,6 +116,8 @@ diesel::table! {
         content -> Text,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+        show_until -> Nullable<Timestamp>,
+        system_wide -> Bool,
     }
 }
 

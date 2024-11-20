@@ -1,6 +1,7 @@
 use crate::schema::group_members;
 use crate::schema::notification_targets;
 use crate::schema::notifications::dsl;
+use crate::schema::notifications::table;
 use diesel::associations::HasTable;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -21,6 +22,8 @@ pub struct Notification {
     pub content: String,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
+    pub show_until: Option<NaiveDateTime>,
+    pub system_wide: bool,
 }
 
 /// notification insert type for external calls
@@ -36,6 +39,8 @@ pub struct CreateNotification {
 struct InternalCreate {
     pub title: String,
     pub content: String,
+    pub show_until: Option<NaiveDateTime>,
+    pub system_wide: bool,
 }
 
 pub struct NotificationRepository;
@@ -46,6 +51,8 @@ impl NotificationRepository {
         let notification_create = InternalCreate {
             title: notification.title.clone(),
             content: notification.content.clone(),
+            show_until: None,
+            system_wide: false,
         };
 
         let created = diesel::insert_into(dsl::notifications::table())
@@ -120,5 +127,42 @@ impl NotificationRepository {
         )
         .execute(conn)
         .expect("Cannot remove user from notification");
+    }
+
+    /// Creates an system wide notification
+    pub fn create_system_wide_notification(
+        title: String,
+        content: String,
+        show_until: NaiveDateTime,
+        conn: &mut DB,
+    ) {
+        diesel::insert_into(table)
+            .values(InternalCreate {
+                title: title.clone(),
+                content: content.clone(),
+                show_until: Some(show_until),
+                system_wide: true,
+            })
+            .execute(conn)
+            .expect("Cannot create system wide notification");
+    }
+
+    /// Gets all system wide notificytions
+    pub fn get_system_wide(conn: &mut DB) -> Vec<Notification> {
+        dsl::notifications
+            .filter(
+                dsl::system_wide
+                    .eq(true)
+                    .and(dsl::show_until.gt(diesel::dsl::now)),
+            )
+            .get_results::<Notification>(conn)
+            .expect("Cannot load all system wide notifications")
+    }
+
+    /// Deletes an notification by ID
+    pub fn delete(id: i32, conn: &mut DB) {
+        diesel::delete(dsl::notifications.filter(dsl::id.eq(id)))
+            .execute(conn)
+            .expect("Cannot delete notification");
     }
 }

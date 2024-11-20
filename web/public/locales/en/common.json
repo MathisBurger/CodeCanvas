@@ -15,7 +15,8 @@
     "create-group": "Create group",
     "update-group": "Update group",
     "notifications": "Notifications",
-    "switch-to-tutor": "Switch to tutor account"
+    "switch-to-tutor": "Switch to tutor account",
+    "system-wide-notifications": "System wide notifications"
   },
   "cols": {
     "id": "ID",

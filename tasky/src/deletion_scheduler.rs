@@ -24,7 +24,12 @@ pub async fn scheduler(conn: &mut DB) {
         )
         .execute(conn)
         .expect("Cannot delete notifications");
-
+        diesel::delete(
+            notification_dsl::notifications
+                .filter(notification_dsl::show_until.lt(diesel::dsl::now)),
+        )
+        .execute(conn)
+        .expect("Cannot delete system wide notifications");
         interval.tick().await;
     }
 }

@@ -361,6 +361,18 @@ class ApiService {
     await this.post<any>(`/tasky/groups/${groupId}/notifications`, {title, content})
   }
 
+  public async getSystemWideNotification(): Promise<Notification[]> {
+    return await this.get<Notification[]>('/tasky/system_wide_notifications');
+  }
+
+  public async createSystemWideNotification(title: string, content: string, show_until: Date): Promise<void> {
+    await this.post<any>('/tasky/system_wide_notifications', {title, content, show_until});
+  }
+
+  public async deleteSystemWideNotifications(id: number): Promise<void> {
+    await this.delete<any>('/tasky/system_wide_notifications/'+id, {});
+  }
+
   public async createOrUpdateCodeTests(
     groupId: number,
     assignmentId: number,

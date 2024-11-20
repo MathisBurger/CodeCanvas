@@ -15,7 +15,8 @@
     "create-group": "Gruppe erstellen",
     "update-group": "Gruppe aktualisieren",
     "notifications": "Benachrichtigungen",
-    "switch-to-tutor": "Zu einem Tutoren-Konto wechseln"
+    "switch-to-tutor": "Zu einem Tutoren-Konto wechseln",
+    "system-wide-notifications": "Systemweite Benachrichtigungen"
   },
   "cols": {
     "id": "ID",

@@ -28,34 +28,15 @@ use actix_web::get;
 use actix_web::post;
 use actix_web::web;
 use actix_web::HttpResponse;
-use chrono::DateTime;
 use chrono::NaiveDateTime;
+use serde::Deserialize;
 use serde::Serialize;
-use serde::{Deserialize, Deserializer};
-
-fn deserialize_naive_datetime<'de, D>(deserializer: D) -> Result<Option<NaiveDateTime>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let str_option: Option<String> = Deserialize::deserialize(deserializer).ok();
-    if str_option.is_none() {
-        return Ok(None);
-    }
-    let s = str_option.unwrap();
-    if let Ok(datetime_with_tz) = DateTime::parse_from_rfc3339(s.as_str()) {
-        // Convert to NaiveDateTime by discarding the time zone
-        return Ok(Some(datetime_with_tz.naive_utc()));
-    }
-    NaiveDateTime::parse_from_str(s.as_str(), "%Y-%m-%dT%H:%M:%S")
-        .map_err(serde::de::Error::custom)
-        .map(Some)
-}
 
 /// Request to create an assignment
 #[derive(Deserialize, Serialize)]
 pub struct CreateAssignmentRequest {
     pub title: String,
-    #[serde(deserialize_with = "deserialize_naive_datetime")]
+    #[serde(deserialize_with = "crate::routes::deserialize_naive_datetime")]
     pub due_date: Option<NaiveDateTime>,
     pub description: String,
     pub language: AssignmentLanguage,
@@ -65,7 +46,7 @@ pub struct CreateAssignmentRequest {
 #[derive(Deserialize, Serialize)]
 pub struct UpdateAssignmentRequest {
     pub title: String,
-    #[serde(deserialize_with = "deserialize_naive_datetime")]
+    #[serde(deserialize_with = "crate::routes::deserialize_naive_datetime")]
     pub due_date: Option<NaiveDateTime>,
     pub description: String,
 }
