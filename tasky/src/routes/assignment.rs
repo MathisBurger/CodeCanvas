@@ -183,7 +183,7 @@ pub async fn create_assignment_test(
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
 
-    let (_, mut assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
+    let (group, mut assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
     if !assignment.is_granted(SecurityAction::Update, &user_data) {
         return Err(ApiError::Forbidden {
             message: "You are not allowed to create code tests".to_string(),
@@ -195,7 +195,7 @@ pub async fn create_assignment_test(
             message: "Cannot create code tests on question based assignment".to_string(),
         });
     }
-    let updated = handle_create_multipart(form, &data.mongodb, conn, assignment).await?;
+    let updated = handle_create_multipart(form, &data.mongodb, conn, assignment, &group).await?;
     let mut enriched =
         AssignmentResponse::enrich(&updated, &mut data.user_api.clone(), conn).await?;
     enriched.authorize(&user_data);
@@ -214,7 +214,7 @@ pub async fn update_assignment_test(
     let path_data = path.into_inner();
     let conn = &mut data.db.db.get().unwrap();
 
-    let (_, mut assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
+    let (group, mut assignment) = get_group_and_assignment(&user_data, path_data, conn)?;
     if !assignment.is_granted(SecurityAction::Update, &user_data) {
         return Err(ApiError::Forbidden {
             message: "You are not allowed to create code tests".to_string(),
@@ -226,7 +226,7 @@ pub async fn update_assignment_test(
             message: "Cannot create code tests on question based assignment".to_string(),
         });
     }
-    let updated = handle_update_multipart(form, &data.mongodb, conn, assignment).await?;
+    let updated = handle_update_multipart(form, &data.mongodb, conn, assignment, &group).await?;
     let mut enriched =
         AssignmentResponse::enrich(&updated, &mut data.user_api.clone(), conn).await?;
     enriched.authorize(&user_data);

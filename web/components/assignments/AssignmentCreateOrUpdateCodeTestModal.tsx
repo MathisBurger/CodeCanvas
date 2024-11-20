@@ -11,6 +11,7 @@ import { useForm } from "@mantine/form";
 import { Assignment, RunnerConfig } from "@/service/types/tasky";
 import { useTranslation } from "react-i18next";
 import { removeObjectIds } from "@/utils/FileStructure";
+import useRunnerOptions from "@/hooks/useRunnerOptions";
 
 interface AssignmentCreateOrUpdateCodeTestModalProps {
   onClose: () => void;
@@ -19,9 +20,6 @@ interface AssignmentCreateOrUpdateCodeTestModalProps {
   refetch: () => void;
 }
 
-const cpuOptions = [".5", "1"];
-const memoryOptions = ["50m", "100m", "200m", "300m", "500m"];
-const timeoutOptions = ["20s", "60s", "120s", "180s", "240s", "300s"];
 
 const AssignmentCreateOrUpdateCodeTestModal = ({
   onClose,
@@ -36,6 +34,8 @@ const AssignmentCreateOrUpdateCodeTestModal = ({
   });
   const [files, setFiles] = useState<FileWithPath[]>([]);
   const { t } = useTranslation(["assignment", "common"]);
+
+  const {cpuOptions, memoryOptions, timeoutOptions} = useRunnerOptions(groupId);
 
   useEffect(() => {
     if (assignment.file_structure) {
