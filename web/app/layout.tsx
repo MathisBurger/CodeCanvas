@@ -109,6 +109,7 @@ export default function RootLayout({
             </DatesProvider>
           </MantineProvider>
         </CurrentUserContext.Provider>
+        <script defer data-domain="code-canvas.app" src="https://analytics.mathis-burger.de/js/script.js"></script>
       </body>
     </html>
   );
