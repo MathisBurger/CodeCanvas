@@ -201,7 +201,7 @@ fn compare_answers(question: &QuestionCatalogueElement, answer: Value) -> bool {
     if !match_question_type(question.answer_type.clone(), answer.clone()) {
         return false;
     }
-    return match question.answer_type {
+    match question.answer_type {
         AnswerType::Number => question.answer.as_number().unwrap() == answer.as_number().unwrap(),
         AnswerType::String => question.answer.as_str().unwrap() == answer.as_str().unwrap(),
         AnswerType::StrContains => answer
@@ -209,5 +209,5 @@ fn compare_answers(question: &QuestionCatalogueElement, answer: Value) -> bool {
             .unwrap()
             .contains(question.answer.as_str().unwrap()),
         AnswerType::Boolean => question.answer.as_bool().unwrap() == answer.as_bool().unwrap(),
-    };
+    }
 }

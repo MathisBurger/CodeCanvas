@@ -64,7 +64,7 @@ impl GroupRepository {
         if result.is_empty() {
             return None;
         }
-        return Some(result.first().unwrap().clone());
+        Some(result.first().unwrap().clone())
     }
 
     /// Inserts a group into the database
