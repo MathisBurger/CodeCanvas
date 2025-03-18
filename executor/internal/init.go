@@ -19,7 +19,7 @@ func LoadConfig() *config.Configuration {
 	if err != nil {
 		ctx := context.Background()
 		if err = envconfig.Process(ctx, c); err != nil {
-			panic(err.Error())
+			return nil
 		}
 		return c
 	}
