@@ -1,7 +1,7 @@
 module executor
 
 go 1.22
-toolchain go1.24.1
+toolchain go1.23.7
 
 require (
 	github.com/knadh/koanf/maps v0.1.1
