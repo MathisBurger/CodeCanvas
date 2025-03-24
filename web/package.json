@@ -23,6 +23,7 @@
     "@mantine/spotlight": "^7",
     "@mantine/tiptap": "^7",
     "@mantinex/dev-icons": "^1.0.2",
+    "@sentry/nextjs": "^9",
     "@tabler/icons-react": "^3.16.0",
     "@tiptap/extension-code-block-lowlight": "^2.8.0",
     "@tiptap/extension-color": "^2.8.0",
