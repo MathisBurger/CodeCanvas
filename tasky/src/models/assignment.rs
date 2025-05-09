@@ -1,7 +1,7 @@
 use super::notification::NotificationRepository;
 use super::{Paginate, PaginatedModel, DB};
 use crate::schema::assignments::dsl;
-use crate::schema::{self, group_members, groups, solutions};
+use crate::schema::{group_members, groups, solutions};
 use chrono::NaiveDateTime;
 use diesel::associations::HasTable;
 use diesel::dsl::not;
@@ -180,10 +180,6 @@ impl AssignmentRepository {
             .group_by(dsl::id)
             .paginate(page)
             .load_and_count_pages::<Assignment>(conn)
-            .map_err(|x| {
-                println!("{}", x.to_string());
-                x
-            })
-            .expect("jsdfl")
+            .expect("Cannot loading pending assignments")
     }
 }
