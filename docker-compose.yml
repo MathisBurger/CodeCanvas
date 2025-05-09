@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:latest
-    ports: 
+    ports:
       - "5434:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
@@ -10,7 +10,7 @@ services:
       - POSTGRES_USER=admin
   mongodb:
     image: mongodb/mongodb-community-server:latest
-    ports: 
+    ports:
       - "27017:27017"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
@@ -22,7 +22,7 @@ services:
       - "1025:1025"
   usernator:
     build: ./usernator
-    ports: 
+    ports:
       - "3001:3000"
       - "3004:3001"
     environment:
@@ -45,7 +45,7 @@ services:
       context: ./authy
       args:
         - ARCH=aarch64
-    ports: 
+    ports:
       - "3002:3000"
     environment:
       - JWT_SECRET=secret
@@ -59,7 +59,7 @@ services:
       context: ./tasky
       args:
         - ARCH=aarch64
-    ports: 
+    ports:
       - "3005:3000"
       - "3006:3001"
     environment:

@@ -4,9 +4,12 @@ use super::{PaginatedModel, DB};
 use crate::schema::group_members;
 use crate::schema::groups::dsl;
 use chrono::NaiveDateTime;
+use diesel::debug_query;
 use diesel::dsl::count_star;
+use diesel::pg::Pg;
 use diesel::prelude::*;
 use diesel::{associations::HasTable, dsl::not};
+use log::info;
 use serde::{Deserialize, Serialize};
 
 #[derive(diesel_derive_enum::DbEnum, Debug, Clone, Deserialize, Serialize, PartialEq)]
@@ -127,7 +130,7 @@ impl GroupRepository {
         }
     }
 
-    /// Gets all groups a user is member or tutor of
+    /// Gets all groups a user is no member or tutor of
     pub fn get_groups_for_not_member(
         member_id: i32,
         page: i64,
@@ -139,16 +142,20 @@ impl GroupRepository {
             .map(|x| x.group_id)
             .collect();
 
-        let base_predicate = not(dsl::tutor
-            .eq(member_id)
-            .or(dsl::id.eq_any(requested))
-            .or(group_members::dsl::member_id.eq(member_id)));
+        let base_predicate = not(dsl::tutor.eq(member_id).or(dsl::id.eq_any(requested)).or(
+            group_members::dsl::member_id
+                .eq(member_id)
+                .and(group_members::dsl::group_id.is_not_null()),
+        ));
 
         let total_base_query = dsl::groups
             .left_join(group_members::dsl::group_members)
             .select(count_star())
             .filter(base_predicate.clone())
             .into_boxed();
+
+        let sql_string = debug_query::<Pg, _>(&total_base_query).to_string();
+        println!("{}", sql_string);
 
         let total = match search.clone() {
             None => total_base_query
@@ -177,7 +184,8 @@ impl GroupRepository {
                 .load::<Group>(conn),
         };
 
-        if results.is_err() {
+        if let Err(e) = results {
+            info!("Error from database: {}", e);
             return PaginatedModel {
                 total: 0,
                 results: vec![],
