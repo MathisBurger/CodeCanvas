@@ -1,7 +1,7 @@
 use super::notification::NotificationRepository;
 use super::{Paginate, PaginatedModel, DB};
 use crate::schema::assignments::dsl;
-use crate::schema::{self, group_members};
+use crate::schema::{self, group_members, groups, solutions};
 use chrono::NaiveDateTime;
 use diesel::associations::HasTable;
 use diesel::dsl::not;
@@ -164,21 +164,26 @@ impl AssignmentRepository {
         conn: &mut DB,
     ) -> PaginatedModel<Assignment> {
         dsl::assignments
-            .left_join(crate::schema::groups::table)
-            .left_join(crate::schema::solutions::table)
-            .left_join(
-                schema::group_members::table.on(schema::groups::id.eq(group_members::group_id)),
-            )
+            .inner_join(groups::table.on(dsl::group_id.eq(groups::dsl::id)))
+            .inner_join(group_members::table.on(groups::id.eq(group_members::group_id)))
             .filter(group_members::dsl::member_id.eq(student_id))
-            .filter(not(crate::schema::solutions::dsl::submitter_id
-                .eq(student_id)
-                .and(
-                    crate::schema::solutions::dsl::approval_status.eq("APPROVED"),
-                )))
+            .filter(not(dsl::id.eq_any(
+                solutions::dsl::solutions
+                    .filter(
+                        solutions::submitter_id
+                            .eq(student_id)
+                            .and(solutions::approval_status.eq("APPROVED")),
+                    )
+                    .select(solutions::assignment_id),
+            )))
             .select(Assignment::as_select())
             .group_by(dsl::id)
             .paginate(page)
             .load_and_count_pages::<Assignment>(conn)
-            .expect("Cannot fetch pending assignments for student")
+            .map_err(|x| {
+                println!("{}", x.to_string());
+                x
+            })
+            .expect("jsdfl")
     }
 }

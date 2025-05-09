@@ -4,7 +4,7 @@ import { FormEvent, useMemo, useState } from "react";
 import { FileWithPath } from "@mantine/dropzone";
 import { extractFilesFromFileStructure } from "@/utils/FileStructure";
 import InternalDropzone from "@/components/InternalDropzone";
-import { notifications } from "@mantine/notifications";
+import { notifications, showNotification } from "@mantine/notifications";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
@@ -47,8 +47,15 @@ const CreateSolutionModal = ({
       });
       return;
     }
-    const resp = await api.createSolution(assignment.id, files);
-    router.push(`/solutions/${resp.id}`);
+    try {
+      const resp = await api.createSolution(assignment.id, files);
+      router.push(`/solutions/${resp.id}`);
+    } catch (e: any) {
+      showNotification({
+        title: t("common:messages.error"),
+        message: e?.message ?? "",
+      });
+    }
   };
 
   return (
