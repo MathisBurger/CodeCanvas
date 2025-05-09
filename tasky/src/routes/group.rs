@@ -292,7 +292,7 @@ pub async fn remove_user(
         });
     }
 
-    GroupMemberRepository::remove_membership(group.id, user.user_id, conn);
+    GroupMemberRepository::remove_membership(group.id, path_data.1, conn);
     Ok(HttpResponse::Ok().finish())
 }
 
