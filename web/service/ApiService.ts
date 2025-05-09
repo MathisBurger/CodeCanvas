@@ -18,7 +18,11 @@ import {
   AssignmentWish,
   CodeComment,
   AssignmentWishesResponse,
-  Notification, GroupJoinRequestPolicy, TaskyUser, GroupMembersResponse, AssignmentCompletionsResponse,
+  Notification,
+  GroupJoinRequestPolicy,
+  TaskyUser,
+  GroupMembersResponse,
+  AssignmentCompletionsResponse,
 } from "@/service/types/tasky";
 import { FileStructureTree } from "@/components/FileStructure";
 import { Spotlight3Response } from "@/service/types/spotlight";
@@ -61,16 +65,34 @@ class ApiService {
     );
   }
 
-  public async createGroup(title: string, join_policy: GroupJoinRequestPolicy): Promise<Group> {
-    return await this.post<Group>(`/tasky/create_group`, { title, join_policy });
+  public async createGroup(
+    title: string,
+    join_policy: GroupJoinRequestPolicy,
+  ): Promise<Group> {
+    return await this.post<Group>(`/tasky/create_group`, {
+      title,
+      join_policy,
+    });
   }
 
-  public async updateGroup(groupId: number, title: string, join_policy: GroupJoinRequestPolicy): Promise<Group> {
-    return await this.post<Group>(`/tasky/groups/${groupId}`, { title, join_policy });
+  public async updateGroup(
+    groupId: number,
+    title: string,
+    join_policy: GroupJoinRequestPolicy,
+  ): Promise<Group> {
+    return await this.post<Group>(`/tasky/groups/${groupId}`, {
+      title,
+      join_policy,
+    });
   }
 
-  public async getGroups(page?: number, search?: string): Promise<GroupsResponse> {
-    return await this.get<GroupsResponse>(`/tasky/groups?page=${page ?? 1}&search=${search ?? ""}`);
+  public async getGroups(
+    page?: number,
+    search?: string,
+  ): Promise<GroupsResponse> {
+    return await this.get<GroupsResponse>(
+      `/tasky/groups?page=${page ?? 1}&search=${search ?? ""}`,
+    );
   }
 
   public async getMyGroups(page?: number): Promise<GroupsResponse> {
@@ -117,7 +139,10 @@ class ApiService {
     );
   }
 
-  public async removeUserFromGroup(groupId: number, memberId: number): Promise<void> {
+  public async removeUserFromGroup(
+    groupId: number,
+    memberId: number,
+  ): Promise<void> {
     await this.delete<any>(`/tasky/groups/${groupId}/members/${memberId}`);
   }
 
@@ -294,7 +319,11 @@ class ApiService {
   }
 
   public async getNotifications(): Promise<Notification[]> {
-    return await this.get<Notification[]>(`/tasky/notifications`);
+    try {
+      return await this.get<Notification[]>(`/tasky/notifications`);
+    } catch {
+      return [];
+    }
   }
 
   public async removeNotificationForUser(id: number): Promise<void> {
@@ -305,8 +334,13 @@ class ApiService {
     await this.delete<any>("/tasky/notifications");
   }
 
-  public async searchUsersToEnlist(groupId: number, search: string): Promise<TaskyUser[]> {
-    return await this.get<TaskyUser[]>(`/tasky/groups/${groupId}/enlistable?search=${search}`);
+  public async searchUsersToEnlist(
+    groupId: number,
+    search: string,
+  ): Promise<TaskyUser[]> {
+    return await this.get<TaskyUser[]>(
+      `/tasky/groups/${groupId}/enlistable?search=${search}`,
+    );
   }
 
   public async enlistUser(groupId: number, userId: number): Promise<void> {
@@ -325,20 +359,35 @@ class ApiService {
     await this.delete<any>(`/tasky/groups/${groupId}`);
   }
 
-  public async getUserSolutions(id: number, page: number): Promise<SolutionsResponse> {
-    return await this.get<SolutionsResponse>(`/tasky/user/${id}/solutions?page=${page}`);
+  public async getUserSolutions(
+    id: number,
+    page: number,
+  ): Promise<SolutionsResponse> {
+    return await this.get<SolutionsResponse>(
+      `/tasky/user/${id}/solutions?page=${page}`,
+    );
   }
 
   public async getPendingSolutions(page: number): Promise<SolutionsResponse> {
-    return await this.get<SolutionsResponse>(`/tasky/tutor_solutions?page=${page}`);
+    return await this.get<SolutionsResponse>(
+      `/tasky/tutor_solutions?page=${page}`,
+    );
   }
 
-  public async getPendingWishes(page: number): Promise<AssignmentWishesResponse> {
-    return await this.get<AssignmentWishesResponse>(`/tasky/tutor_assignment_wishes?page=${page}`);
+  public async getPendingWishes(
+    page: number,
+  ): Promise<AssignmentWishesResponse> {
+    return await this.get<AssignmentWishesResponse>(
+      `/tasky/tutor_assignment_wishes?page=${page}`,
+    );
   }
 
-  public async getPendingAssignments(page: number): Promise<AssignmentsResponse> {
-    return await this.get<AssignmentsResponse>(`/tasky/student_pending_assignments?page=${page}`);
+  public async getPendingAssignments(
+    page: number,
+  ): Promise<AssignmentsResponse> {
+    return await this.get<AssignmentsResponse>(
+      `/tasky/student_pending_assignments?page=${page}`,
+    );
   }
 
   public async verify(groupId: number): Promise<void> {
@@ -349,28 +398,54 @@ class ApiService {
     await this.post<any>(`/tasky/groups/${groupId}/unverify`, {});
   }
 
-  public async getGroupMembers(groupId: number, page: number): Promise<GroupMembersResponse> {
-    return await this.get<GroupMembersResponse>(`/tasky/groups/${groupId}/members?page=${page}`);
+  public async getGroupMembers(
+    groupId: number,
+    page: number,
+  ): Promise<GroupMembersResponse> {
+    return await this.get<GroupMembersResponse>(
+      `/tasky/groups/${groupId}/members?page=${page}`,
+    );
   }
 
-  public async getAssignmentCompletions(groupId: number, assignmentId: number, page: number): Promise<AssignmentCompletionsResponse> {
-    return await this.get<AssignmentCompletionsResponse>(`/tasky/groups/${groupId}/assignments/${assignmentId}/completions?page=${page}`);
+  public async getAssignmentCompletions(
+    groupId: number,
+    assignmentId: number,
+    page: number,
+  ): Promise<AssignmentCompletionsResponse> {
+    return await this.get<AssignmentCompletionsResponse>(
+      `/tasky/groups/${groupId}/assignments/${assignmentId}/completions?page=${page}`,
+    );
   }
 
-  public async createGroupNotification(groupId: number, title: string, content: string): Promise<void> {
-    await this.post<any>(`/tasky/groups/${groupId}/notifications`, {title, content})
+  public async createGroupNotification(
+    groupId: number,
+    title: string,
+    content: string,
+  ): Promise<void> {
+    await this.post<any>(`/tasky/groups/${groupId}/notifications`, {
+      title,
+      content,
+    });
   }
 
   public async getSystemWideNotification(): Promise<Notification[]> {
-    return await this.get<Notification[]>('/tasky/system_wide_notifications');
+    return await this.get<Notification[]>("/tasky/system_wide_notifications");
   }
 
-  public async createSystemWideNotification(title: string, content: string, show_until: Date): Promise<void> {
-    await this.post<any>('/tasky/system_wide_notifications', {title, content, show_until});
+  public async createSystemWideNotification(
+    title: string,
+    content: string,
+    show_until: Date,
+  ): Promise<void> {
+    await this.post<any>("/tasky/system_wide_notifications", {
+      title,
+      content,
+      show_until,
+    });
   }
 
   public async deleteSystemWideNotifications(id: number): Promise<void> {
-    await this.delete<any>('/tasky/system_wide_notifications/'+id, {});
+    await this.delete<any>("/tasky/system_wide_notifications/" + id, {});
   }
 
   public async createOrUpdateCodeTests(
