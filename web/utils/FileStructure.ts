@@ -4,7 +4,6 @@ import {
   FileStructureFile,
   FileStructureTree,
 } from "@/components/FileStructure";
-import { FileWithPath } from "@mantine/dropzone";
 
 /**
  * Builds the mantine tree data from structure
@@ -231,9 +230,19 @@ export const filterFileStructureForDisplayMode = (
   const newFolders = [];
   for (const folder of structure.folders ?? []) {
     if (folder.files.length !== 0 || (folder.folders ?? []).length !== 0) {
-      newFolders.push(filterFileStructureForDisplayMode(folder, displayMode));
+      const childFolder = filterFileStructureForDisplayMode(
+        folder,
+        displayMode,
+      );
+      if (
+        childFolder.files.length !== 0 ||
+        (childFolder.folders ?? []).length !== 0
+      ) {
+        newFolders.push(folder);
+      }
     }
   }
+  structure.folders = newFolders;
   return structure;
 };
 

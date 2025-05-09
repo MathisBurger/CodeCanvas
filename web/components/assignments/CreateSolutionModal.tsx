@@ -21,7 +21,8 @@ const CreateSolutionModal = ({
   const [files, setFiles] = useState<FileWithPath[]>([]);
   const api = useApiServiceClient();
   const router = useRouter();
-  const { t } = useTranslation(["common", "assignment"]);
+  const { t } = useTranslation(["common"]);
+  const { t: t2 } = useTranslation(["assignment"]);
 
   const requiredFiles = useMemo<string[]>(
     () =>
@@ -41,7 +42,7 @@ const CreateSolutionModal = ({
     if (missingFiles.length > 0) {
       notifications.show({
         title: t("messages.error"),
-        message: `${t("errors.missing-files")} ${missingFiles.join(", ")}`,
+        message: `${t2("errors.missing-files")} ${missingFiles.join(", ")}`,
         color: "red",
       });
       return;
@@ -54,7 +55,7 @@ const CreateSolutionModal = ({
     <Modal
       opened
       onClose={onClose}
-      title={t("titles.create-solution")}
+      title={t2("titles.create-solution")}
       size="lg"
     >
       <form onSubmit={submit}>
