@@ -218,12 +218,13 @@ pub async fn get_enlistable_users(
         .into_iter()
         .map(|x| x.into())
         .collect();
+    println!("{:?}", users);
     let response_uids: Vec<i32> = users.iter().map(|u| i32::try_from(u.id).unwrap()).collect();
     let enlisted_uids =
         GroupMemberRepository::get_enlisted_from_selection(group.id, response_uids, conn);
     let filtered_users: Vec<&User> = users
         .iter()
-        .filter(|u| enlisted_uids.contains(&i32::try_from(u.id).unwrap()))
+        .filter(|u| !enlisted_uids.contains(&i32::try_from(u.id).unwrap()))
         .collect();
     Ok(HttpResponse::Ok().json(filtered_users))
 }
