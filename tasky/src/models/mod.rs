@@ -73,7 +73,17 @@ impl<T> Paginated<T> {
             .query
             .clone()
             .select(count_star())
-            .get_result::<i64>(conn)?;
+            .get_result::<i64>(conn)
+            .optional()?
+            .unwrap_or(0);
+
+        if total == 0 {
+            return Ok(PaginatedModel {
+                results: vec![],
+                page: self.page,
+                total,
+            });
+        }
 
         let results = self
             .query

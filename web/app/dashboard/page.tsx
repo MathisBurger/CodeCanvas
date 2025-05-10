@@ -1,11 +1,21 @@
 "use client";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import {Container, Title, Text, Card, Grid, Group, Flex, Box, Blockquote} from "@mantine/core";
-import {IconInfoCircle, IconTrophyFilled} from "@tabler/icons-react";
+import {
+  Container,
+  Title,
+  Text,
+  Card,
+  Grid,
+  Group,
+  Flex,
+  Box,
+  Blockquote,
+} from "@mantine/core";
+import { IconInfoCircle, IconTrophyFilled } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import useClientQuery from "@/hooks/useClientQuery";
-import {Carousel} from "@mantine/carousel";
+import { Carousel } from "@mantine/carousel";
 import RichTextDisplay from "@/components/display/RichTextDisplay";
 
 const DashboardPage = () => {
@@ -20,21 +30,29 @@ const DashboardPage = () => {
         {t("welcome-back")} {user?.username}!
       </Title>
       {notifications && notifications?.length > 0 && (
-          <Carousel withIndicators height={200}>
-            {notifications.map((notification) => (
-                <Carousel.Slide key={notification.id}>
-                  <Card h={200}>
-                    <Box mx="xl">
-                      <Title order={2}>{notification.title}</Title>
-                      <RichTextDisplay content={notification.content} fullSize={false} />
-                    </Box>
-                  </Card>
-                </Carousel.Slide>
-            ))}
-          </Carousel>
+        <Carousel withIndicators height={200}>
+          {notifications.map((notification) => (
+            <Carousel.Slide key={notification.id}>
+              <Card h={200}>
+                <Box mx="xl">
+                  <Title order={2}>{notification.title}</Title>
+                  <RichTextDisplay
+                    content={notification.content}
+                    fullSize={false}
+                  />
+                </Box>
+              </Card>
+            </Carousel.Slide>
+          ))}
+        </Carousel>
       )}
-      <Blockquote color="indigo" icon={<IconInfoCircle />} mt="xl" cite="~ Development team">
-        {t('development-status')}
+      <Blockquote
+        color="indigo"
+        icon={<IconInfoCircle />}
+        mt="xl"
+        cite="~ Development team"
+      >
+        {t("development-status")}
       </Blockquote>
       <Grid>
         <Grid.Col span={4}>
@@ -50,14 +68,11 @@ const DashboardPage = () => {
         </Grid.Col>
         <Grid.Col span={8}>
           <Card shadow="sm" padding="xl" mt={20}>
-            <Title order={2}>Release v0.2.2-stable</Title>
+            <Title order={2}>Release v0.2.2-fix</Title>
             <Text>
               We had some groundbreaking changes within our app for the current
               release:
-              <br />
-              - Improved scalability <br/>
-              - Group and system wide notifications <br/>
-              - Limited runner options for unverified groups <br/>
+              <br />- Fixed some bugs
             </Text>
           </Card>
         </Grid.Col>

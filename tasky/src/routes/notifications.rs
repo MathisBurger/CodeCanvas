@@ -99,12 +99,18 @@ pub async fn get_system_wide_notifications(
     Ok(HttpResponse::Ok().json(notifications))
 }
 
+#[derive(Deserialize)]
+struct CreateNotificationForGroupRequest {
+    pub title: String,
+    pub content: String,
+}
+
 /// Endpoint to create group notification
 #[post("/groups/{id}/notifications")]
 pub async fn create_group_notification(
     data: web::Data<AppState>,
     user: web::ReqData<UserData>,
-    body: web::Json<CreateNotificationRequest>,
+    body: web::Json<CreateNotificationForGroupRequest>,
     path: web::Path<(i32,)>,
 ) -> Result<HttpResponse, ApiError> {
     let conn = &mut data.db.db.get().unwrap();

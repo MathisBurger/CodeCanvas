@@ -188,11 +188,11 @@ fn handle_questions(
         }
     }
     solution.question_result = serde_json::to_value(result).ok();
-    solution.approval_status = Some(
-        all_correct
-            .then(|| ApprovalStatus::Successful.string())
-            .unwrap_or(ApprovalStatus::Failed.string()),
-    );
+    solution.approval_status = Some(if all_correct {
+        ApprovalStatus::Successful.string()
+    } else {
+        ApprovalStatus::Failed.string()
+    });
     Ok(())
 }
 

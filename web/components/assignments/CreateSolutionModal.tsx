@@ -4,7 +4,7 @@ import { FormEvent, useMemo, useState } from "react";
 import { FileWithPath } from "@mantine/dropzone";
 import { extractFilesFromFileStructure } from "@/utils/FileStructure";
 import InternalDropzone from "@/components/InternalDropzone";
-import { notifications } from "@mantine/notifications";
+import { notifications, showNotification } from "@mantine/notifications";
 import useApiServiceClient from "@/hooks/useApiServiceClient";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
@@ -21,7 +21,8 @@ const CreateSolutionModal = ({
   const [files, setFiles] = useState<FileWithPath[]>([]);
   const api = useApiServiceClient();
   const router = useRouter();
-  const { t } = useTranslation(["common", "assignment"]);
+  const { t } = useTranslation(["common"]);
+  const { t: t2 } = useTranslation(["assignment"]);
 
   const requiredFiles = useMemo<string[]>(
     () =>
@@ -41,20 +42,27 @@ const CreateSolutionModal = ({
     if (missingFiles.length > 0) {
       notifications.show({
         title: t("messages.error"),
-        message: `${t("errors.missing-files")} ${missingFiles.join(", ")}`,
+        message: `${t2("errors.missing-files")} ${missingFiles.join(", ")}`,
         color: "red",
       });
       return;
     }
-    const resp = await api.createSolution(assignment.id, files);
-    router.push(`/solutions/${resp.id}`);
+    try {
+      const resp = await api.createSolution(assignment.id, files);
+      router.push(`/solutions/${resp.id}`);
+    } catch (e: any) {
+      showNotification({
+        title: t("common:messages.error"),
+        message: e?.message ?? "",
+      });
+    }
   };
 
   return (
     <Modal
       opened
       onClose={onClose}
-      title={t("titles.create-solution")}
+      title={t2("titles.create-solution")}
       size="lg"
     >
       <form onSubmit={submit}>

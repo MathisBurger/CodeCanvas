@@ -102,6 +102,7 @@ impl NotificationRepository {
             .left_join(notification_targets::table)
             .filter(notification_targets::user_id.eq(user_id))
             .select(Notification::as_select())
+            .order(dsl::created_at.desc())
             .get_results::<Notification>(conn)
             .expect("Cannot get notifications for user")
     }

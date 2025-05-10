@@ -44,7 +44,11 @@ const SsrHeader: React.FC<SsrHeaderProps> = ({ user }) => {
     useState<boolean>(false);
 
   const clearAllNotifications = async () => {
-    await api.removeAllNotificationsForUser();
+    try {
+      await api.removeAllNotificationsForUser();
+    } catch (e) {
+      console.error(e);
+    }
     refetch();
   };
 
