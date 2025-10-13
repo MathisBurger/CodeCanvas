@@ -26,7 +26,7 @@ thiserror = "1.0.61"
 actix-multipart = "0.7.2"
 chrono = { version = "0.4.38", features = ["serde"] }
 tokio = { version = "1", features = ["full"] }
-mongodb = "2.1"
+mongodb = "3.2"
 bson = { version = "2", features = ["chrono-0_4"] }
 awc = "3.5.1"
 actix-http = "3.9.0"
