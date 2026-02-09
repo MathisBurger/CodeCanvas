@@ -5,7 +5,7 @@ go 1.23.0
 toolchain go1.23.7
 
 require (
-	github.com/gofiber/fiber/v2 v2.52.9
+	github.com/gofiber/fiber/v2 v2.52.11
 	github.com/lib/pq v1.10.9
 	github.com/sethvargo/go-envconfig v1.1.0
 	golang.org/x/crypto v0.35.0
