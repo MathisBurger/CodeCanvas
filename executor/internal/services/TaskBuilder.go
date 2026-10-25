@@ -5,20 +5,21 @@ import (
 	"errors"
 	"executor/internal/global"
 	"fmt"
+	"strconv"
+
 	"github.com/knadh/koanf/maps"
 	"github.com/runabol/tork/input"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"strconv"
 )
 
 func BuildTask(er ExecRequest) (input.Task, error) {
 	var image string
 
 	switch er.Assignment.Language {
-	case LanguageGo:
-		image = "golang:1.19"
+	//case LanguageGo:
+	//	image = "golang:1.19"
 	case LanguageJava:
 		image = "ghcr.io/mathisburger/cc-images-java:latest"
 	default:
