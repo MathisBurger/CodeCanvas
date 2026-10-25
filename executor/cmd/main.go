@@ -2,6 +2,7 @@ package main
 
 import (
 	"executor/internal"
+	"executor/internal/dockerproxy"
 	"executor/internal/global"
 	"executor/internal/handler"
 	"executor/tasky_grpc"
@@ -38,6 +39,13 @@ func main() {
 	client := tasky_grpc.NewTaskyApiClient(conn)
 
 	global.Tasky = &client
+
+	// all containers started by tork are created through this proxy,
+	// which drops all capabilities and sets no-new-privileges
+	if err := dockerproxy.Start(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
 	engine.RegisterEndpoint("POST", "/execute", handler.ExecuteHandler)
 	// Start the Tork CLI
