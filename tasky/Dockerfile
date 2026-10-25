@@ -1,4 +1,4 @@
-FROM rust:latest AS build
+FROM rust:1-bookworm AS build
 RUN USER=root cargo new --bin tasky
 WORKDIR ./tasky
 COPY ./Cargo.lock ./Cargo.lock
@@ -9,7 +9,7 @@ RUN rm src/*.rs
 RUN cargo install diesel_cli --no-default-features --features postgres
 
 COPY . .
-RUN apt-get update -y && apt-get install --no-install-recommends --assume-yes protobuf-compiler libldap-2.5-0
+RUN apt-get update -y && apt-get install --no-install-recommends --assume-yes protobuf-compiler
 RUN rm ./target/release/deps/tasky*
 ENV IS_DOCKER="true"
 RUN cargo build --release
